@@ -14,6 +14,7 @@ import type { CycleReport } from '../engine/patterns'
 import type { CompletedCycle, CycleWindowStatistics } from '../engine/stats'
 import { addDays } from '../engine/cycle'
 import { formatShort, localToday } from './dates'
+import { PERIODUS_ICON_BASE64 } from './periodusLogoData'
 
 // ---------------------------------------------------------------------------
 // File sharing / download helper
@@ -106,34 +107,20 @@ export async function shareOrDownloadPdf(filename: string, pdfBlob: Blob): Promi
 }
 
 // ---------------------------------------------------------------------------
-// Vector Logo Renderer (Draws Periodus Moonseed / Crescent badge)
+// Logo Renderer (Embeds Periodus Public Brand Icon)
 // ---------------------------------------------------------------------------
 
 function drawPeriodusLogo(doc: jsPDF, x: number, y: number, size = 18) {
-  const radius = size / 2
-  const cx = x + radius
-  const cy = y + radius
-
-  // Outer dark obsidian badge background
-  doc.setFillColor(25, 21, 14) // #19150E
-  doc.roundedRect(x, y, size, size, 3.5, 3.5, 'F')
-
-  // Luxury Gold Outline
-  doc.setDrawColor(217, 168, 65) // #D9A841
-  doc.setLineWidth(0.4)
-  doc.roundedRect(x, y, size, size, 3.5, 3.5, 'S')
-
-  // Golden Crescent Outer Body
-  doc.setFillColor(255, 225, 163) // #FFE1A3
-  doc.circle(cx - size * 0.05, cy, size * 0.28, 'F')
-
-  // Inner cutout to sculpt the crescent
-  doc.setFillColor(25, 21, 14) // matches background
-  doc.circle(cx + size * 0.1, cy - size * 0.04, size * 0.24, 'F')
-
-  // Golden Moonseed Starlet
-  doc.setFillColor(255, 225, 163)
-  doc.circle(cx + size * 0.16, cy + size * 0.14, size * 0.08, 'F')
+  try {
+    doc.addImage(PERIODUS_ICON_BASE64, 'PNG', x, y, size, size)
+  } catch (e) {
+    console.warn('PDF image rendering fallback:', e)
+    doc.setFillColor(25, 21, 14)
+    doc.roundedRect(x, y, size, size, 3.5, 3.5, 'F')
+    doc.setDrawColor(217, 168, 65)
+    doc.setLineWidth(0.4)
+    doc.roundedRect(x, y, size, size, 3.5, 3.5, 'S')
+  }
 }
 
 // ---------------------------------------------------------------------------
