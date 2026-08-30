@@ -14,6 +14,9 @@
     <!-- User-granted special access on Android 12+. The notifications plugin
          still degrades to inexact delivery when the user declines it. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Required to install APK updates downloaded from GitHub Releases.
+         Android 8+ enforces this; the user is prompted once in system settings. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="false"

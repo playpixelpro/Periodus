@@ -69,6 +69,9 @@ import {
   syncReminderPlans,
 } from '../native/notifications'
 import { isNative, nativePlatform } from '../native/runtime'
+import { checkForUpdate, type UpdateResult } from '../lib/updater'
+import { APP_VERSION } from '../lib/version'
+import { Browser } from '@capacitor/browser'
 import {
   clearSecureSecrets,
   deleteSecureSecret,
@@ -157,6 +160,8 @@ export function Settings() {
   const [reminders, setReminders] = useState<ReminderPreferences | null>(null)
   const [pregnancyMethod, setPregnancyMethod] =
     useState<PregnancyDatingMethod>('lmp')
+  const [updateResult, setUpdateResult] = useState<UpdateResult | null>(null)
+  const [updateBusy, setUpdateBusy] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -858,6 +863,25 @@ export function Settings() {
     location.reload()
   }
 
+  async function checkUpdates() {
+    setUpdateBusy(true)
+    setUpdateResult(null)
+    try {
+      const result = await checkForUpdate()
+      setUpdateResult(result)
+    } finally {
+      setUpdateBusy(false)
+    }
+  }
+
+  async function downloadUpdate(apkUrl: string) {
+    if (isNative) {
+      await Browser.open({ url: apkUrl, presentationStyle: 'popover' })
+    } else {
+      window.open(apkUrl, '_blank')
+    }
+  }
+
   return (
     <div className="page">
       <h1>Settings</h1>
@@ -1294,6 +1318,62 @@ export function Settings() {
           </button>
         )}
       </Section>
+
+      {(isNative && nativePlatform === 'android') && (
+        <Section title="App updates">
+          <div className="setting-row static-row">
+            <span>Current version</span>
+            <span className="muted">{APP_VERSION}</span>
+          </div>
+          {updateResult?.status === 'available' && (
+            <>
+              <div className="setting-row static-row">
+                <span>Latest version</span>
+                <span style={{ color: 'var(--rose-500)', fontWeight: 600 }}>
+                  {updateResult.latestVersion} ✦
+                </span>
+              </div>
+              {updateResult.releaseNotes && (
+                <div
+                  className="setting-row static-row"
+                  style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}
+                >
+                  <span style={{ fontWeight: 600, fontSize: 13 }}>What's new</span>
+                  <span className="muted" style={{ fontSize: 12, whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>
+                    {updateResult.releaseNotes.slice(0, 400)}
+                  </span>
+                </div>
+              )}
+              <button
+                className="setting-row"
+                style={{ color: 'var(--rose-500)', fontWeight: 600 }}
+                onClick={() => downloadUpdate(updateResult.apkUrl)}
+              >
+                <span>Download &amp; Install {updateResult.latestVersion}</span>
+                <span>↓</span>
+              </button>
+            </>
+          )}
+          {updateResult?.status === 'current' && (
+            <div className="setting-row static-row">
+              <span className="muted">You're on the latest version 🎉</span>
+            </div>
+          )}
+          {updateResult?.status === 'error' && (
+            <div className="setting-row static-row">
+              <span className="muted" style={{ fontSize: 13 }}>{updateResult.message}</span>
+            </div>
+          )}
+          <button
+            className="setting-row"
+            disabled={updateBusy}
+            onClick={checkUpdates}
+          >
+            <span>{updateBusy ? 'Checking…' : 'Check for updates'}</span>
+            <span className="muted">›</span>
+          </button>
+        </Section>
+      )}
 
       <Section title="Danger zone">
         <button className="setting-row" onClick={wipe} style={{ color: 'var(--red-500)' }}>
