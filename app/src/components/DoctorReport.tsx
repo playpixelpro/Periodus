@@ -29,7 +29,7 @@ import {
   type RangePresetId,
 } from '../lib/dateRange'
 import { formatShort, localToday } from '../lib/dates'
-import { exportCurrentReport } from '../native/reportExport'
+import { generateCycleReportPdf, shareOrDownloadPdf } from '../lib/pdfGenerator'
 import { useApp } from '../state/appStore'
 import '../styles/reports.css'
 
@@ -131,11 +131,20 @@ export function DoctorReport() {
   const age = data.birthYear ? new Date().getFullYear() - Number(data.birthYear) : null
 
   async function exportReport() {
+    if (!data) return
     setExportError(null)
     try {
-      await exportCurrentReport('Periodus doctor report')
+      const allLogs = await db.dailyLogs.toArray()
+      const allPeriodStarts = await getPeriodStarts()
+      const cycleReport = buildCycleReport(allLogs, allPeriodStarts, today)
+      const blob = generateCycleReportPdf({
+        report: cycleReport,
+        cycles: data.cycleLengths,
+        userDisplayName: data.displayName,
+      })
+      await shareOrDownloadPdf(`periodus-doctor-report-${today}.pdf`, blob)
     } catch {
-      setExportError('The report export sheet could not open. Please try again.')
+      setExportError('Could not generate PDF report. Please try again.')
     }
   }
 

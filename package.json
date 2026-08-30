@@ -10,3 +10,4 @@
     "preview": "pnpm --filter @lunara/app preview"
   }
 }
+

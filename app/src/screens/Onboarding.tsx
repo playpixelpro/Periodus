@@ -1501,7 +1501,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           title="Choose how the assistant runs."
           body="Core tracking and calculations work without AI. You bring your own credential; Periodus never ships a shared key."
         />
-        <div className="ob-option-stack">
+        <div className="ai-provider-grid">
           {AI_PROVIDER_OPTIONS.map((item) => (
             <OptionCard
               key={item.id}

@@ -4,7 +4,7 @@ import { db, getPeriodStarts } from '../db/schema'
 import { buildCycleReport } from '../engine/patterns'
 import { completedCycles } from '../engine/stats'
 import { formatShort, localToday } from '../lib/dates'
-import { exportCurrentReport } from '../native/reportExport'
+import { generateCycleReportPdf, shareOrDownloadPdf } from '../lib/pdfGenerator'
 import '../styles/health.css'
 import '../styles/reports.css'
 
@@ -20,6 +20,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
   const today = localToday()
   const [openEvidence, setOpenEvidence] = useState<string | null>(null)
   const [exportError, setExportError] = useState<string | null>(null)
+  const [exportBusy, setExportBusy] = useState(false)
   const data = useLiveQuery(async () => {
     const [periodStarts, logs] = await Promise.all([getPeriodStarts(), db.dailyLogs.toArray()])
     return {
@@ -29,11 +30,21 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
   }, [today])
 
   async function exportReport() {
+    if (!data) return
     setExportError(null)
+    setExportBusy(true)
     try {
-      await exportCurrentReport('Periodus private cycle report')
+      const profile = await db.healthProfile.get('main')
+      const blob = generateCycleReportPdf({
+        report: data.report,
+        cycles: data.cycles,
+        userDisplayName: profile?.displayName,
+      })
+      await shareOrDownloadPdf(`periodus-cycle-report-${today}.pdf`, blob)
     } catch {
-      setExportError('The report export sheet could not open. Please try again.')
+      setExportError('Could not generate PDF. Please try again.')
+    } finally {
+      setExportBusy(false)
     }
   }
 
@@ -46,10 +57,11 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
         <div className="health-topbar-title">Private cycle report</div>
         <button
           className="health-icon-button"
+          disabled={exportBusy}
           onClick={() => void exportReport()}
           aria-label="Export report"
         >
-          ↗
+          {exportBusy ? '…' : '↗'}
         </button>
       </header>
 
@@ -324,8 +336,12 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
                 {data.report.methodology} Bring the original dates and details—not only this
                 summary—to a healthcare appointment.
               </p>
-              <button className="health-action" onClick={() => void exportReport()}>
-                Print or save as PDF
+              <button
+                className="health-action"
+                disabled={exportBusy}
+                onClick={() => void exportReport()}
+              >
+                {exportBusy ? 'Generating PDF…' : 'Save or share PDF'}
               </button>
             </>
           )}
