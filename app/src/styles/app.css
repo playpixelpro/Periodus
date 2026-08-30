@@ -4721,16 +4721,16 @@ button.card:active {
 
 .ob-hero-art {
   position: relative;
-  min-height: 244px;
+  min-height: 220px;
   display: grid;
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.92), transparent 28%),
-    linear-gradient(145deg, rgba(251, 232, 231, 0.76), rgba(229, 242, 238, 0.78));
-  border: 1px solid rgba(82, 57, 65, 0.07);
-  border-radius: 34px;
-  box-shadow: 0 22px 55px rgba(90, 55, 67, 0.08);
+    radial-gradient(circle at 50% 35%, rgba(238, 195, 94, 0.15), transparent 60%),
+    linear-gradient(180deg, #242018 0%, #1A160F 100%);
+  border: 1px solid rgba(255, 225, 163, 0.16);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 225, 163, 0.12);
 }
 
 .ob-hero-art::before,
@@ -4738,41 +4738,43 @@ button.card:active {
   content: '';
   position: absolute;
   width: 220px;
-  height: 114px;
-  border: 1px dashed rgba(214, 75, 104, 0.21);
+  height: 110px;
+  border: 1px dashed rgba(238, 195, 94, 0.2);
   border-radius: 50%;
   transform: rotate(-15deg);
 }
 
 .ob-hero-art::after {
-  width: 184px;
-  height: 94px;
-  border-color: rgba(47, 133, 132, 0.2);
+  width: 180px;
+  height: 90px;
+  border-color: rgba(255, 225, 163, 0.12);
   transform: rotate(14deg);
 }
 
 .ob-hero-art .moonseed {
   z-index: 2;
-  transform: scale(1.32);
+  transform: scale(1.15);
 }
 
 .ob-hero-label {
   position: absolute;
   z-index: 3;
-  bottom: 18px;
+  bottom: 16px;
   left: 50%;
-  padding: 7px 12px;
-  color: var(--teal-700);
+  padding: 6px 14px;
+  color: var(--primary, #FFE1A3);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   white-space: nowrap;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(47, 133, 132, 0.12);
+  background: rgba(22, 19, 11, 0.9);
+  border: 1px solid rgba(238, 195, 94, 0.28);
   border-radius: 999px;
   transform: translateX(-50%);
-  backdrop-filter: blur(9px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
 }
 
 .onboarding-hero {
@@ -4780,7 +4782,7 @@ button.card:active {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 17px;
+  gap: 20px;
 }
 
 .onboarding-hero > div:nth-child(2) {
@@ -4792,39 +4794,53 @@ button.card:active {
 .ob-proof-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
+  gap: 4px;
+  background: var(--surface-container, #1F1B12);
+  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.14));
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 4px;
 }
 
 .ob-proof-row > span {
   min-width: 0;
-  padding: 11px 7px;
+  padding: 12px 6px;
   display: flex;
   flex-direction: column;
   gap: 3px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.54);
-  border: 1px solid rgba(82, 57, 65, 0.07);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 0;
+  border-right: 1px solid rgba(255, 225, 163, 0.08);
+  border-radius: 12px;
+}
+
+.ob-proof-row > span:last-child {
+  border-right: 0;
 }
 
 .ob-proof-row strong {
-  color: var(--ink-800);
-  font-size: 10px;
+  color: var(--primary, #FFE1A3);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .ob-proof-row small {
   overflow: hidden;
-  color: var(--ink-500);
-  font-size: 8px;
+  color: var(--on-surface-variant, #D8C5B2);
+  font-size: 9px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .ob-legal {
-  margin-top: -5px;
-  color: var(--ink-500);
-  font-size: 9px;
-  line-height: 1.4;
+  margin: 0;
+  color: var(--outline, #9E9080);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  line-height: 1.45;
   text-align: center;
 }
 
@@ -7490,72 +7506,78 @@ button.card:active {
 .page.onboarding .onboarding-hero {
   min-height: 100%;
   justify-content: flex-start;
-  gap: 17px;
+  gap: 20px;
 }
 
 .page.onboarding .ob-hero-art {
   position: relative;
-  min-height: 205px;
+  min-height: 220px;
   display: grid;
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.92), transparent 31%),
-    linear-gradient(145deg, rgba(251, 232, 231, 0.9), rgba(229, 242, 238, 0.9));
-  border: 1px solid var(--line-soft);
-  border-radius: 32px 32px 64px 32px;
-  box-shadow: var(--shadow-card);
+    radial-gradient(circle at 50% 35%, rgba(238, 195, 94, 0.15), transparent 60%),
+    linear-gradient(180deg, #242018 0%, #1A160F 100%);
+  border: 1px solid rgba(255, 225, 163, 0.16);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 225, 163, 0.12);
 }
 
 .page.onboarding .ob-hero-art::before,
 .page.onboarding .ob-hero-art::after {
   content: '';
   position: absolute;
-  width: 208px;
-  height: 106px;
-  border: 1px solid rgba(214, 75, 104, 0.14);
+  width: 220px;
+  height: 110px;
+  border: 1px solid rgba(238, 195, 94, 0.2);
   border-radius: 50%;
   transform: rotate(-14deg);
 }
 
 .page.onboarding .ob-hero-art::after {
-  width: 172px;
-  height: 88px;
-  border-color: rgba(47, 133, 132, 0.14);
+  width: 180px;
+  height: 90px;
+  border-color: rgba(255, 225, 163, 0.12);
   border-style: dashed;
   transform: rotate(13deg);
 }
 
 .page.onboarding .ob-hero-art .moonseed {
   z-index: 2;
-  transform: scale(1.16);
+  transform: scale(1.15);
+}
+
+.page.onboarding .moonseed-star {
+  color: var(--primary, #FFE1A3);
 }
 
 .page.onboarding .ob-hero-label {
   position: absolute;
   z-index: 3;
-  right: 16px;
-  bottom: 15px;
-  left: auto;
-  padding: 7px 10px;
-  color: var(--teal-700);
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  right: auto;
+  bottom: 16px;
+  left: 50%;
+  padding: 6px 14px;
+  color: var(--primary, #FFE1A3);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   white-space: nowrap;
   text-transform: uppercase;
-  background: rgba(255, 253, 249, 0.78);
-  border: 1px solid rgba(47, 133, 132, 0.12);
-  border-radius: var(--radius-chip);
-  transform: none;
-  backdrop-filter: blur(10px);
+  background: rgba(22, 19, 11, 0.9);
+  border: 1px solid rgba(238, 195, 94, 0.28);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
 }
 
 .page.onboarding .onboarding-hero > div:nth-child(2) {
-  padding: 0 4px;
+  padding: 0 2px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
 }
 
 .page.onboarding .ob-proof-row {
@@ -7563,23 +7585,23 @@ button.card:active {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 4px;
-  background: rgba(255, 253, 249, 0.72);
-  border: 1px solid var(--line-soft);
-  border-radius: 19px;
-  box-shadow: 0 8px 22px rgba(75, 45, 50, 0.035);
+  background: var(--surface-container, #1F1B12);
+  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.14));
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .page.onboarding .ob-proof-row > span {
   min-width: 0;
-  padding: 10px 4px;
+  padding: 12px 6px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   text-align: center;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.02);
   border: 0;
-  border-right: 1px solid var(--line-soft);
-  border-radius: 0;
+  border-right: 1px solid rgba(255, 225, 163, 0.08);
+  border-radius: 12px;
 }
 
 .page.onboarding .ob-proof-row > span:last-child {
@@ -7587,19 +7609,25 @@ button.card:active {
 }
 
 .page.onboarding .ob-proof-row strong {
-  color: var(--ink-800);
+  color: var(--primary, #FFE1A3);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.page.onboarding .ob-proof-row small {
+  color: var(--on-surface-variant, #D8C5B2);
   font-size: 9px;
-}
-
-.page.onboarding .ob-proof-row small,
-.page.onboarding .ob-legal {
-  color: var(--ink-500);
-  font-size: 8px;
+  letter-spacing: 0.01em;
 }
 
 .page.onboarding .ob-legal {
-  margin: -2px 0 0;
-  padding: 0 5px;
+  margin: 0;
+  padding: 0 4px;
+  color: var(--outline, #9E9080);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
   line-height: 1.45;
   text-align: center;
 }
