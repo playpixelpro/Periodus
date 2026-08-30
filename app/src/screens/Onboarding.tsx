@@ -1480,24 +1480,36 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           body="Core tracking and calculations work without AI. You bring your own credential; Periodus never ships a shared key."
         />
         <div className="ai-provider-grid">
-          <OptionCard
-            option={{ id: 'anthropic', icon: '✳', label: 'Anthropic', detail: 'An API key, or a token from `claude setup-token` to use your Claude subscription.' }}
-            selected={provider === 'anthropic'}
+          <button
+            type="button"
+            className={`ai-provider-tab ${provider === 'anthropic' ? 'selected' : ''}`}
             onClick={() => chooseProvider('anthropic')}
-          />
-          <OptionCard
-            option={{ id: 'openai', icon: '✦', label: 'OpenAI', detail: 'Bring your own project key. Stored in Keychain or Keystore on native.' }}
-            selected={provider === 'openai'}
+          >
+            <span className="ai-provider-icon">✳</span>
+            <span className="ai-provider-name">Anthropic</span>
+          </button>
+          <button
+            type="button"
+            className={`ai-provider-tab ${provider === 'openai' ? 'selected' : ''}`}
             onClick={() => chooseProvider('openai')}
-          />
-          <OptionCard
-            option={{ id: 'custom', icon: '⚙', label: 'Custom / Other', detail: 'Connect OpenRouter, DeepSeek, Groq, Mistral, Ollama, or any OpenAI-compatible API.' }}
-            selected={provider === 'custom'}
+          >
+            <span className="ai-provider-icon">✦</span>
+            <span className="ai-provider-name">OpenAI</span>
+          </button>
+          <button
+            type="button"
+            className={`ai-provider-tab ${provider === 'custom' ? 'selected' : ''}`}
             onClick={() => chooseProvider('custom')}
-          />
+          >
+            <span className="ai-provider-icon">⚙</span>
+            <span className="ai-provider-name">Custom / Other</span>
+          </button>
         </div>
         {provider === 'anthropic' ? (
           <div className="card ai-setup-card">
+            <p className="ai-provider-desc">
+              An API key, or a token from <code>claude setup-token</code> to use your Claude subscription.
+            </p>
             <div className="field">
               <label htmlFor="anthropic-key">Anthropic API key or CLI token</label>
               <input
@@ -1532,6 +1544,9 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           </div>
         ) : provider === 'openai' ? (
           <div className="card ai-setup-card">
+            <p className="ai-provider-desc">
+              Bring your own OpenAI project key. Stored in Keychain or Keystore on native.
+            </p>
             <div className="field">
               <label htmlFor="openai-key">OpenAI project key</label>
               <input
@@ -1554,6 +1569,9 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           </div>
         ) : (
           <div className="card ai-setup-card">
+            <p className="ai-provider-desc">
+              Connect OpenRouter, DeepSeek, Groq, Mistral, Ollama, or any OpenAI-compatible API.
+            </p>
             <div className="field">
               <label htmlFor="custom-endpoint">API endpoint / Base URL</label>
               <input
