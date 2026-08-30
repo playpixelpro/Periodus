@@ -6,6 +6,9 @@
  * or direct file download — without triggering the browser's print dialog.
  */
 
+import { Capacitor } from '@capacitor/core'
+import { Directory, Filesystem } from '@capacitor/filesystem'
+import { Share } from '@capacitor/share'
 import { jsPDF } from 'jspdf'
 import type { CycleReport } from '../engine/patterns'
 import type { CompletedCycle, CycleWindowStatistics } from '../engine/stats'
@@ -17,8 +20,68 @@ import { formatShort, localToday } from './dates'
 // ---------------------------------------------------------------------------
 
 export async function shareOrDownloadPdf(filename: string, pdfBlob: Blob): Promise<void> {
-  const file = new File([pdfBlob], filename, { type: 'application/pdf' })
+  // 1. Native Capacitor (Android & iOS)
+  if (Capacitor.isNativePlatform()) {
+    try {
+      const reader = new FileReader()
+      const base64Promise = new Promise<string>((resolve, reject) => {
+        reader.onloadend = () => {
+          const res = reader.result as string
+          const base64 = res.split(',')[1] ?? res
+          resolve(base64)
+        }
+        reader.onerror = reject
+      })
+      reader.readAsDataURL(pdfBlob)
+      const base64Data = await base64Promise
 
+      const fileResult = await Filesystem.writeFile({
+        path: filename,
+        data: base64Data,
+        directory: Directory.Cache,
+      })
+
+      await Share.share({
+        title: filename,
+        url: fileResult.uri,
+        dialogTitle: 'Save or Share PDF Report',
+      })
+      return
+    } catch (e) {
+      console.warn('Native PDF share failed, falling back:', e)
+    }
+  }
+
+  // 2. Desktop / Modern Browser File System Access API (Save As dialog)
+  if (typeof window !== 'undefined' && 'showSaveFilePicker' in window) {
+    try {
+      const handle = await (window as unknown as {
+        showSaveFilePicker: (opts: unknown) => Promise<{
+          createWritable: () => Promise<{
+            write: (data: unknown) => Promise<void>
+            close: () => Promise<void>
+          }>
+        }>
+      }).showSaveFilePicker({
+        suggestedName: filename,
+        types: [
+          {
+            description: 'PDF Document (*.pdf)',
+            accept: { 'application/pdf': ['.pdf'] },
+          },
+        ],
+      })
+      const writable = await handle.createWritable()
+      await writable.write(pdfBlob)
+      await writable.close()
+      return
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return
+    }
+  }
+
+  // 3. Web Share API fallback
+  const file = new File([pdfBlob], filename, { type: 'application/pdf' })
   if (typeof navigator !== 'undefined' && navigator.canShare?.({ files: [file] })) {
     try {
       await navigator.share({
@@ -31,7 +94,7 @@ export async function shareOrDownloadPdf(filename: string, pdfBlob: Blob): Promi
     }
   }
 
-  // Fallback: trigger direct file download
+  // 4. Fallback: trigger direct file download
   const url = URL.createObjectURL(pdfBlob)
   const anchor = document.createElement('a')
   anchor.href = url

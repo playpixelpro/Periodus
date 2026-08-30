@@ -1,3 +1,6 @@
+import { Capacitor } from '@capacitor/core'
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem'
+import { Share } from '@capacitor/share'
 import { decryptJSON, encryptJSON, type Envelope } from '../crypto/vault'
 import { db, SK, type ContentBookmark, type DailyLog, type Setting } from './schema'
 
@@ -49,22 +52,84 @@ export async function decryptImport(env: Envelope, passphrase: string): Promise<
   return applyImport(await decryptJSON<ExportPayload>(env, passphrase))
 }
 
-/** Share-sheet first (iOS → Save to Files → iCloud Drive), download fallback. */
+/**
+ * Saves or shares a file with full platform support:
+ * - Native Android / iOS: writes to Cache and opens the OS Share Sheet / Intent Chooser (Save to Drive, Files, etc.)
+ * - Desktop / Modern Web: opens the OS File Picker dialog via File System Access API (Save As...)
+ * - Fallback: standard blob download anchor
+ */
 export async function shareOrDownload(filename: string, contents: string): Promise<void> {
+  // 1. Native Capacitor (Android & iOS)
+  if (Capacitor.isNativePlatform()) {
+    try {
+      const fileResult = await Filesystem.writeFile({
+        path: filename,
+        data: contents,
+        directory: Directory.Cache,
+        encoding: Encoding.UTF8,
+      })
+      await Share.share({
+        title: filename,
+        text: 'Periodus Encrypted Backup Vault',
+        url: fileResult.uri,
+        dialogTitle: 'Save or Share Backup File',
+      })
+      return
+    } catch (e) {
+      console.warn('Native share failed, falling back:', e)
+    }
+  }
+
+  // 2. Desktop / Modern Browser File System Access API (Save As dialog)
+  if (typeof window !== 'undefined' && 'showSaveFilePicker' in window) {
+    try {
+      const isVault = filename.endsWith('.vault')
+      const ext = isVault ? '.vault' : '.json'
+      const mime = isVault ? 'application/octet-stream' : 'application/json'
+      const handle = await (window as unknown as {
+        showSaveFilePicker: (opts: unknown) => Promise<{
+          createWritable: () => Promise<{
+            write: (data: unknown) => Promise<void>
+            close: () => Promise<void>
+          }>
+        }>
+      }).showSaveFilePicker({
+        suggestedName: filename,
+        types: [
+          {
+            description: isVault ? 'Periodus Encrypted Vault (*.vault)' : 'Periodus Backup (*.json)',
+            accept: { [mime]: [ext] },
+          },
+        ],
+      })
+      const writable = await handle.createWritable()
+      await writable.write(contents)
+      await writable.close()
+      return
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return
+    }
+  }
+
+  // 3. Web Share API fallback
   const blob = new Blob([contents], { type: 'application/json' })
   const file = new File([blob], filename, { type: 'application/json' })
   if (navigator.canShare?.({ files: [file] })) {
     try {
       await navigator.share({ files: [file], title: filename })
       return
-    } catch {
-      // fall through to download (user cancel or share failure)
+    } catch (e) {
+      if (e instanceof Error && e.name === 'AbortError') return
     }
   }
+
+  // 4. Traditional Download Fallback
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
   a.download = filename
+  document.body.appendChild(a)
   a.click()
-  URL.revokeObjectURL(url)
+  document.body.removeChild(a)
+  setTimeout(() => URL.revokeObjectURL(url), 2000)
 }
