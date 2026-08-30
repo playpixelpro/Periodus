@@ -9,7 +9,7 @@ import {
 
 describe('googleDrive integration', () => {
   it('has default Google Client ID configured', () => {
-    expect(DEFAULT_GOOGLE_CLIENT_ID).toContain('89692632506-mvcois31c319752cdt7ais8dkl65i8cu')
+    expect(DEFAULT_GOOGLE_CLIENT_ID).toContain('89692632506-v65jg191jms7ouohtf7j88i2ffju4uob')
   })
 
   it('fetches user info with proper authorization bearer header', async () => {

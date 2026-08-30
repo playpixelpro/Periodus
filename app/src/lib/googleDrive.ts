@@ -5,7 +5,7 @@ import { getSetting, removeSetting, setSetting, SK } from '../db/schema'
 import { applyImport, collectExport, type ExportPayload } from '../db/transfer'
 
 export const DEFAULT_GOOGLE_CLIENT_ID =
-  '89692632506-mvcois31c319752cdt7ais8dkl65i8cu.apps.googleusercontent.com'
+  '89692632506-v65jg191jms7ouohtf7j88i2ffju4uob.apps.googleusercontent.com'
 
 const GOOGLE_DRIVE_APPDATA_SCOPE =
   'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email'
