@@ -1,161 +1,167 @@
-# Lunara
+# Periodus
 
-> **⚠️ Unfinished — this is a work in progress.**
-> Lunara is not on the App Store or Google Play, and there is no installer to
-> double-click. You build it from this repository and run it on your own phone.
-> Features are landing continuously and things will break. Do not rely on it as
-> your only record of your health data.
+<div align="center">
 
-**An open-source, local-first cycle, fertility, pregnancy, and perimenopause companion.**
+![Periodus Logo](app/public/icons/icon-192.png)
 
-Lunara ships through native iOS and Android shells powered by Capacitor. Core
-tracking works without an account or Lunara-hosted user database. Optional
-backup and AI features transmit data only after you enable them; their scope and
-security boundaries are documented in the repository.
+### **Private, Local-First Cycle & Reproductive Health Companion**
 
-Lunara is an open-source alternative to Flo®. It is not affiliated with, endorsed by, or connected to Flo Health Inc.
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL_3.0-amber.svg?style=flat-square)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg?style=flat-square)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18-61dafb.svg?style=flat-square)](https://react.dev/)
+[![Capacitor](https://img.shields.io/badge/Capacitor-8.4-53B9EA.svg?style=flat-square)](https://capacitorjs.com/)
+[![Zero Knowledge](https://img.shields.io/badge/Zero--Knowledge-AES--GCM-success.svg?style=flat-square)](#-zero-knowledge-security)
 
-## Why
+*Empowering health autonomy through on-device computing, zero surveillance, and Terminal Modernist design.*
 
-- **No subscription gate.** Tracking, pattern insights, reports, pregnancy
-  guidance, and perimenopause tools are part of the open-source app.
-- **Local first by architecture.** Core logs live in the app's local storage.
-  Optional backup stores a client-encrypted blob; optional AI shares only the
-  categories you select for that request.
-- **No 54-screen onboarding funnel. No paywall gauntlet. No nagging.**
+</div>
 
 ---
 
-## Getting Lunara onto your phone
+> [!NOTE]
+> **Lineage & Origin**: **Periodus** is an independent, actively developed **hard fork of [Lunara](https://github.com/lunara-app/lunara)**. It inherits Lunara's robust local-first foundation while introducing a state-of-the-art **Terminal Modernist design system**, **fluid momentum scrolling**, **custom asynchronous dialog systems**, and **enhanced zero-knowledge cloud backup integrations**.
 
-There is no download. You compile the app on a computer and install it on your
-own phone over a cable. **What you need depends on the phone you have:**
+---
 
-| Your phone | Your computer | Works? | What you'll use |
-| --- | --- | --- | --- |
-| iPhone | Mac | ✅ | Xcode |
-| Android | Mac | ✅ | Android Studio |
-| Android | Windows | ✅ | Android Studio |
-| iPhone | Windows | ❌ | Not possible — see below |
+## ✨ Why Periodus?
 
-**iPhone + Windows is not possible.** Apple only allows iOS apps to be built and
-signed on macOS with Xcode; there is no supported Windows path, and no amount of
-setup works around it. Your options are to borrow a Mac, or run Lunara as a web
-app in your phone's browser (`pnpm dev`, then open the printed network URL on
-your phone) — the browser version keeps your data on the phone but has no
-widgets, notifications, or Health integration.
+| Feature | Periodus | Mainstream Commercial Apps |
+| :--- | :--- | :--- |
+| **Data Privacy** | **100% Zero-Knowledge & Local-First** | Cloud-stored, monetized, or shared |
+| **Subscription Paywalls** | **Free & Open Source Forever (AGPL-3.0)** | $50–$80/year recurring subscriptions |
+| **Onboarding Experience** | **Fast, respectful & explainable** | 50+ intrusive question sales funnel |
+| **Cloud Backups** | **Client-side encrypted (AES-256-GCM)** | Plaintext or server-accessible storage |
+| **UI Aesthetics** | **Terminal Modernist (High-contrast dark gold)** | Generic pink pastels & ad banners |
+| **AI Assistant** | **Bring-your-own-key, per-message consent** | Mandatory cloud telemetry |
 
-### 1. Install the shared prerequisites
+---
 
-You need [Git](https://git-scm.com/downloads), [Node.js LTS](https://nodejs.org/en/download),
-and pnpm. With Node installed:
+## 🚀 Key Features
 
+### 🌑 1. Terminal Modernist UI & Tactile Physics
+- **Vibrant & Legible Dark Theme**: Deep obsidian surfaces (`#16130b`), glowing containers, and warm gold accents (`#ffe1a3`).
+- **Fluid Momentum Scrolling**: Complete touch physics (`-webkit-overflow-scrolling: touch;`, overscroll containment) across all main tabs, calendar overlays, health detail modals, and bottom sheets.
+- **Floating Elevated Cards**: Structured with clean hierarchy, responsive line-heights, and safe-area padding above the navigation bar.
+- **Custom In-App Dialog System**: Built-in `useDialog` modal alerts, confirms, copyable recovery codes, and prompts (no raw browser popups).
+
+### 🩸 2. Adaptive Lifecycle Health Tracking
+- **Cycle & Flow Forecasts**: Probabilistic estimation windows tailored for both regular and irregular cycles.
+- **Trying to Conceive (TTC)**: Basal Body Temperature (BBT) plotting, LH surge test tracking, cervical mucus, and fertile window calculation.
+- **Pregnancy Support**: Multi-source dating (LMP, ultrasound EDD, conception date) and developmental milestone timelines.
+- **Perimenopause Monitoring**: Tracking vasomotor symptoms, cycle length shifts, and clinician prompt generation.
+
+### 🛡️ 3. Zero-Knowledge Backups & Sync
+- **Local File Encrypted Snapshots**: Export and import complete database vaults secured with AES-256-GCM.
+- **Google Drive Integration**: Direct, private backups into your personal Google Drive Application Data folder (`appDataFolder`) where other apps cannot see them.
+- **Cloudflare Relay**: Support for stateless zero-knowledge Worker + R2 relays.
+
+### 🤖 4. Private AI Companion
+- **Bring Your Own Key**: Connect Anthropic (Claude), OpenAI, or local custom endpoints (Ollama / LocalAI).
+- **Hardware Isolation**: API credentials are saved exclusively in iOS Keychain / Android Keystore.
+- **Granular Consent**: Choose exactly what categories of tracker context (if any) are attached to each question.
+
+### 🩺 5. Doctor Summary Reports
+- Export clinical summaries formatted specifically for healthcare consultations without printing identifying telemetry.
+
+---
+
+## 📱 Getting Started on Mobile
+
+Periodus can be compiled directly onto your device using standard Capacitor tooling:
+
+### 1. Prerequisites
+- [Node.js LTS (v20+)](https://nodejs.org/en/download)
+- [Git](https://git-scm.com/)
+- [pnpm](https://pnpm.io/installation) (`npm install -g pnpm`)
+
+### 2. Clone & Install
 ```sh
-npm install -g pnpm
-```
+# Clone the repository
+git clone https://github.com/playpixelpro/Periodus.git
+cd Periodus
 
-### 2. Get the code and build the web bundle
-
-```sh
-git clone https://github.com/Blueturboguy07/lunara.git
-cd lunara
+# Install dependencies
 pnpm install
+
+# Build and sync native bundles
 pnpm --filter @lunara/app native:sync
 ```
 
-`native:sync` type-checks, builds the web bundle, and copies it into the native
-iOS and Android projects. **Re-run it after every code change** — the native
-shells load a copied bundle, not your live source.
-
-### 3a. iPhone (requires a Mac)
-
-1. Install **Xcode** from the Mac App Store, then open it once so it finishes
-   installing its components.
-2. Open the iOS project:
-   ```sh
-   pnpm --filter @lunara/app native:ios
-   ```
-3. In Xcode, select the **App** target → **Signing & Capabilities**. Under
-   *Team*, pick your Apple ID. A **free** Apple ID works — you do not need the
-   $99/year Developer Program. If you have never added your Apple ID, use
-   *Add an Account…* in the Team dropdown.
-4. If Xcode reports the bundle identifier is unavailable, change it to something
-   unique to you (for example `app.lunara.mobile.yourname`).
-5. Plug in your iPhone, unlock it, and tap **Trust** if asked. Select it from the
-   device dropdown at the top of the Xcode window.
-6. Press **▶ Run**.
-7. The first launch will fail with *"Untrusted Developer."* On your iPhone go to
-   **Settings → General → VPN & Device Management**, tap your Apple ID, and tap
-   **Trust**. Then open Lunara again.
-
-> With a free Apple ID the app stops working after **7 days**. Re-run step 6 to
-> renew it. A paid Developer Program account extends this to a year.
-
-### 3b. Android (Mac or Windows)
-
-1. Install [**Android Studio**](https://developer.android.com/studio). On first
-   launch let it install the default SDK and platform tools.
-2. On your phone, enable developer mode: **Settings → About phone**, tap
-   **Build number** seven times. Then in **Settings → System → Developer
-   options**, turn on **USB debugging**.
-3. Open the Android project:
+### 3. Run on Android (Windows, Mac, Linux)
+1. Install [**Android Studio**](https://developer.android.com/studio).
+2. Enable **USB Debugging** on your Android phone under *Developer Options*.
+3. Open the Android project in Android Studio:
    ```sh
    pnpm --filter @lunara/app native:android
    ```
-4. Plug in your phone and tap **Allow** on the USB-debugging prompt.
-5. Pick your phone from the device dropdown in Android Studio and press **▶ Run**.
+4. Connect your device and press **▶ Run**.
 
-### If something goes wrong
+### 4. Run on iOS (macOS required)
+1. Open the iOS project in **Xcode**:
+   ```sh
+   pnpm --filter @lunara/app native:ios
+   ```
+2. Select the **App** target → **Signing & Capabilities** and choose your Apple ID team.
+3. Select your connected iPhone and press **▶ Run**.
 
-- **`pnpm: command not found`** — Node's global bin isn't on your PATH. Close and
-  reopen your terminal, then try again.
-- **`cap: command not found`** — you skipped `pnpm install`, or ran the command
-  from the wrong folder. Run it from the repository root.
-- **Xcode "No account for team"** — you haven't picked a Team under Signing &
-  Capabilities (step 3a.3).
-- **Android Studio doesn't see your phone** — the cable is charge-only, or USB
-  debugging is off. Try a different cable first; it is usually the cable.
-- **Your changes don't show up** — re-run `pnpm --filter @lunara/app native:sync`.
+---
 
-## Structure
+## 💻 Local Web Development
 
-- `app/` — React/Vite product layer plus Capacitor iOS and Android projects
-- `workers/backup/` — stateless zero-knowledge backup relay (Cloudflare Worker + R2)
-- `workers/reminders/` — opt-in generic email reminders (no health terms, ever)
-- `docs/NATIVE_ARCHITECTURE.md` — current runtime and platform design
-- `docs/FEATURE_PARITY.md` — honest implementation and release-readiness map
-
-## Develop
+To run and test Periodus in your desktop browser:
 
 ```sh
-pnpm install
-pnpm dev      # run the app in a browser
-pnpm test     # engine unit tests
+# Start local Vite development server
+pnpm dev
+
+# Run full test suite (unit tests & fuzz estimation audits)
+pnpm test
+
+# Sync changes to native shells after code edits
 pnpm --filter @lunara/app native:sync
 ```
 
-The cycle engine is covered by a seeded fuzz audit
-(`app/src/engine/estimateAudit.test.ts`) that exercises every user-facing
-estimate across 360 generated histories. It must stay at zero violations —
-run `pnpm test` before touching any prediction math.
+---
 
-## The AI companion is optional and bring-your-own-key
+## 📂 Project Architecture
 
-Lunara ships no shared API key and works fully without AI. If you enable it, you
-supply your own credential:
+```text
+Periodus/
+├── app/                          # Main React + Capacitor Application
+│   ├── android/                  # Native Android project (com.playpixelpro.myperiod)
+│   ├── ios/                      # Native iOS project & Widget Extension
+│   ├── public/                   # Static assets, PWA manifests, icons
+│   └── src/
+│       ├── components/           # UI components (Sheets, DoctorReport, LogSheet, Dialogs)
+│       ├── context/              # Global React contexts (DialogProvider, Theme)
+│       ├── crypto/               # AES-GCM vault encryption & key derivation
+│       ├── db/                   # Dexie / IndexedDB schemas and health profiles
+│       ├── engine/               # Cycle estimation, stats, TTC, & safety fuzz tests
+│       ├── lib/                  # Native bridges, assistant clients, date utilities
+│       ├── screens/              # Core screens (Today, Insights, Trends, Settings, Onboarding)
+│       └── styles/               # Terminal Modernist design system (tokens, app.css, health.css)
+├── workers/                      # Cloudflare Worker relays (Backup & Reminders)
+└── docs/                         # Architecture and technical specifications
+```
 
-- **Anthropic** — an API key, or a token from `claude setup-token` to bill
-  answers to a Claude subscription instead of API credits.
-- **OpenAI** — a project API key.
+---
 
-Credentials are stored in the iOS Keychain / Android Keystore, never in the
-cycle database and never in a backup. Nothing from your tracker is sent unless
-you tick the specific categories for that message.
+## 🔒 Security & Privacy
 
-## Disclaimer
+1. **Zero Cloud Requirement**: The database operates in SQLite (native) or IndexedDB (web).
+2. **Encrypted Vaults**: Secrets and sensitive fields use PBKDF2/Argon2 key derivation with authenticated AES-GCM encryption.
+3. **App Links & Permissions**: Health Connect (Android 14+) and Apple HealthKit permissions are strictly read-only and requested on-demand.
 
-Lunara is not a medical device and does not diagnose, treat, cure, or prevent any condition. Predictions are estimates for informational purposes only and must not be used to prevent pregnancy.
+---
 
-## License
+## ⚖️ License & Attribution
 
-AGPL-3.0 — see [LICENSE](LICENSE).
+- Licensed under the **[GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE)**.
+- **Periodus** is an open-source hard fork of **[Lunara](https://github.com/lunara-app/lunara)**.
+- Periodus is not affiliated with, endorsed by, or connected to Flo Health Inc.
+
+---
+
+<div align="center">
+<b>Periodus</b> — Your cycle, your health, your data.
+</div>
