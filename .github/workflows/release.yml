@@ -65,7 +65,7 @@ jobs:
       # -----------------------------------------------------------------------
       - name: Sync Capacitor
         working-directory: app
-        run: npx cap sync android --no-build
+        run: pnpm exec cap sync android
 
       # -----------------------------------------------------------------------
       # 5. Decode signing keystore from GitHub secret (if configured)
