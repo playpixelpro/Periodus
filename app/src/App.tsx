@@ -59,7 +59,7 @@ export default function App() {
     // Persist legacy/fresh-install profile state outside Dexie's read-only
     // liveQuery context. getHealthProfile remains safe to call reactively.
     void ensureHealthProfile().catch((error: unknown) => {
-      console.error('[Lunara startup] Could not persist the health profile migration.', error)
+      console.error('[Periodus startup] Could not persist the health profile migration.', error)
     })
   }, [])
 

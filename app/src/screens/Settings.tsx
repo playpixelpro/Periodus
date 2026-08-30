@@ -961,6 +961,86 @@ export function Settings() {
         ))}
       </Section>
 
+      <Section title="Cycle baseline &amp; duration">
+        <button
+          className="setting-row"
+          onClick={async () => {
+            const current = s.profile.cycle.typicalCycleLength ?? 28
+            const val = await dialog.prompt({
+              title: 'Typical cycle length',
+              message: 'How many days are usually between the first day of one period and the first day of the next?',
+              confirmText: 'Save',
+              input: {
+                type: 'number',
+                defaultValue: String(current),
+                placeholder: 'e.g. 28',
+              },
+            })
+            if (val && !isNaN(Number(val)) && Number(val) >= 15 && Number(val) <= 120) {
+              await putHealthProfile({
+                cycle: { typicalCycleLength: Math.round(Number(val)) },
+              })
+              await setSetting(SK.cycleLength, String(Math.round(Number(val))))
+              setStatus(`Typical cycle length updated to ${Math.round(Number(val))} days.`)
+            }
+          }}
+        >
+          <span>Typical cycle length</span>
+          <span className="muted">
+            {s.profile.cycle.typicalCycleLength ? `${s.profile.cycle.typicalCycleLength} days ›` : '28 days ›'}
+          </span>
+        </button>
+
+        <button
+          className="setting-row"
+          onClick={async () => {
+            const current = s.profile.cycle.typicalPeriodLength ?? 5
+            const val = await dialog.prompt({
+              title: 'Typical period duration',
+              message: 'How many days does your menstrual bleeding usually last?',
+              confirmText: 'Save',
+              input: {
+                type: 'number',
+                defaultValue: String(current),
+                placeholder: 'e.g. 5',
+              },
+            })
+            if (val && !isNaN(Number(val)) && Number(val) >= 1 && Number(val) <= 20) {
+              await putHealthProfile({
+                cycle: { typicalPeriodLength: Math.round(Number(val)) },
+              })
+              setStatus(`Typical period length updated to ${Math.round(Number(val))} days.`)
+            }
+          }}
+        >
+          <span>Typical period duration</span>
+          <span className="muted">
+            {s.profile.cycle.typicalPeriodLength ? `${s.profile.cycle.typicalPeriodLength} days ›` : '5 days ›'}
+          </span>
+        </button>
+
+        <button
+          className="setting-row"
+          onClick={async () => {
+            const current = s.profile.cycle.regularity ?? 'regular'
+            const next = current === 'regular' ? 'irregular' : current === 'irregular' ? 'unsure' : 'regular'
+            await putHealthProfile({
+              cycle: { regularity: next },
+            })
+            setStatus(`Cycle regularity updated to ${next}.`)
+          }}
+        >
+          <span>Cycle regularity</span>
+          <span className="muted">
+            {s.profile.cycle.regularity === 'irregular'
+              ? 'Irregular ›'
+              : s.profile.cycle.regularity === 'unsure'
+                ? 'Unsure ›'
+                : 'Regular ›'}
+          </span>
+        </button>
+      </Section>
+
       <Section title="Personalize">
         <button className="setting-row" onClick={() => setTrackerCustomizeOpen(true)}>
           <span>Customize daily trackers</span>
