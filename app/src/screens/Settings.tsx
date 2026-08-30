@@ -151,6 +151,7 @@ export function Settings() {
     setPerimenopauseOpen,
     setTtcDetailOpen,
     setTrackerCustomizeOpen,
+    setAboutOpen,
   } = useApp()
   const dialog = useDialog()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -1612,6 +1613,13 @@ export function Settings() {
           </Section>
         )
       })()}
+
+      <Section title="About Periodus">
+        <button className="setting-row" onClick={() => setAboutOpen(true)}>
+          <span>About &amp; Support</span>
+          <span className="muted">v{APP_VERSION} · 💖 Sponsor ›</span>
+        </button>
+      </Section>
 
       <Section title="Danger zone">
         <button className="setting-row" onClick={wipe} style={{ color: 'var(--red-500)' }}>

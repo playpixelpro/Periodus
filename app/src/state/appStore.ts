@@ -32,6 +32,8 @@ interface AppState {
   setLocked: (locked: boolean) => void
   articleSlug: string | null
   setArticleSlug: (slug: string | null) => void
+  aboutOpen: boolean
+  setAboutOpen: (open: boolean) => void
 }
 
 export const useApp = create<AppState>((set) => ({
@@ -61,4 +63,6 @@ export const useApp = create<AppState>((set) => ({
   setLocked: (locked) => set({ locked }),
   articleSlug: null,
   setArticleSlug: (articleSlug) => set({ articleSlug }),
+  aboutOpen: false,
+  setAboutOpen: (aboutOpen) => set({ aboutOpen }),
 }))

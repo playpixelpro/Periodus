@@ -11,6 +11,7 @@ import { TabBar } from './components/TabBar'
 import { ensureHealthProfile, getHealthProfile, getSetting, SK } from './db/schema'
 import { resolvePregnancyDating } from './engine/pregnancyDating'
 import { ArticleScreen } from './screens/ArticleScreen'
+import { AboutScreen } from './screens/AboutScreen'
 import { Graphs } from './screens/Graphs'
 import { Insights } from './screens/Insights'
 import { Onboarding } from './screens/Onboarding'
@@ -50,6 +51,8 @@ export default function App() {
     setLocked,
     articleSlug,
     setArticleSlug,
+    aboutOpen,
+    setAboutOpen,
   } = useApp()
 
   const [ready, setReady] = useState(false)
@@ -143,6 +146,7 @@ export default function App() {
         <TrackerCustomizeScreen onBack={() => setTrackerCustomizeOpen(false)} />
       )}
       {articleSlug && <ArticleScreen slug={articleSlug} onClose={() => setArticleSlug(null)} />}
+      {aboutOpen && <AboutScreen onBack={() => setAboutOpen(false)} />}
     </>
   )
 }
