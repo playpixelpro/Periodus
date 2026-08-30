@@ -1,10 +1,16 @@
 name: Android Release
 
-# Triggered by a version tag push, e.g.: git tag v1.1.0 && git push origin v1.1.0
+# Triggered by a version tag push (e.g. v1.1.0) or manual workflow dispatch
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag for release (e.g. v1.0.0). If empty, uses git tag or commit short-sha.'
+        required: false
+        type: string
 
 permissions:
   contents: write  # needed to create the GitHub Release
@@ -62,7 +68,7 @@ jobs:
       # 3. Build web assets
       # -----------------------------------------------------------------------
       - name: Build web (native mode)
-        run: pnpm --filter @lunara/app build:native
+        run: pnpm --filter @periodus/app build:native
 
       # -----------------------------------------------------------------------
       # 4. Sync Capacitor into the Android project
@@ -73,7 +79,6 @@ jobs:
 
       # -----------------------------------------------------------------------
       # 5. Decode signing keystore from GitHub secret
-      #    Store your base64-encoded keystore as the secret ANDROID_KEYSTORE_BASE64
       # -----------------------------------------------------------------------
       - name: Decode keystore
         working-directory: app/android/app
@@ -105,10 +110,19 @@ jobs:
         run: |
           APK=$(find app/android/app/build/outputs/apk/release -name '*.apk' | head -1)
           echo "path=$APK" >> $GITHUB_OUTPUT
-          # Rename to a clean, version-tagged filename
-          VERSION="${GITHUB_REF_NAME}"
-          DEST="Periodus-${VERSION}.apk"
+          
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF_NAME}"
+          elif [[ -n "${{ inputs.version }}" ]]; then
+            TAG="${{ inputs.version }}"
+          else
+            SHORT_SHA="${GITHUB_SHA::7}"
+            TAG="v0.0.0-${SHORT_SHA}"
+          fi
+          
+          DEST="Periodus-${TAG}.apk"
           cp "$APK" "$DEST"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "dest=$DEST" >> $GITHUB_OUTPUT
 
       # -----------------------------------------------------------------------
@@ -124,18 +138,19 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Periodus ${{ github.ref_name }}"
+          tag_name: ${{ steps.apk.outputs.tag }}
+          name: "Periodus ${{ steps.apk.outputs.tag }}"
           body: |
-            ## What's new in ${{ github.ref_name }}
+            ## What's new in ${{ steps.apk.outputs.tag }}
 
-            See the [commit history](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) for a full list of changes.
+            See the commit history for a full list of changes.
 
             ### Installing the update
             1. Tap **Download** below to download `${{ steps.apk.outputs.dest }}`
             2. Open the downloaded file — Android will prompt you to install it
             3. If prompted, enable "Install unknown apps" for your file manager or browser, then retry
 
-            > **Privacy note**: This APK is signed with the same key as all previous releases.
+            > **Privacy note**: This APK is signed and verified on-device. Core data never leaves your phone.
           files: ${{ steps.apk.outputs.dest }}
           draft: false
           prerelease: false
