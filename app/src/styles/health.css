@@ -570,14 +570,15 @@
 
 .health-action {
   min-height: 52px;
-  padding: 13px 18px;
-  border-radius: 17px;
+  padding: 14px 20px;
+  border-radius: 18px;
   border: none;
-  background: var(--primary, #FFE1A3);
-  color: #1a1408;
+  background: var(--primary, #FFE1A3) !important;
+  color: #1a1408 !important;
   font-family: var(--font-sans, inherit);
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
   transition: all 0.18s ease;
@@ -585,10 +586,12 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 4px;
+  margin-bottom: 24px;
 }
 
 .health-action:hover {
-  background: var(--primary-container, #eed79e);
+  background: #f8d78f !important;
 }
 
 .health-action:active {
