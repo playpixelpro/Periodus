@@ -10,7 +10,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg?style=flat-square)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb.svg?style=flat-square)](https://react.dev/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-8.4-53B9EA.svg?style=flat-square)](https://capacitorjs.com/)
-[![Zero Knowledge](https://img.shields.io/badge/Zero--Knowledge-AES--GCM-success.svg?style=flat-square)](#-zero-knowledge-security)
+[![Zero Knowledge](https://img.shields.io/badge/Zero--Knowledge-AES--GCM-success.svg?style=flat-square)](#-security--privacy)
+[![Sponsor](https://img.shields.io/badge/Sponsor-💖-ea4aaa.svg?style=flat-square)](#-support--sponsorship)
 
 *Empowering health autonomy through on-device computing, zero surveillance, and Terminal Modernist design.*
 
@@ -55,10 +56,11 @@
 - **Google Drive Integration**: Direct, private backups into your personal Google Drive Application Data folder (`appDataFolder`) where other apps cannot see them.
 - **Cloudflare Relay**: Support for stateless zero-knowledge Worker + R2 relays.
 
-### 🤖 4. Private AI Companion
+### 🤖 4. Private AI Companion & Curated Insights
 - **Bring Your Own Key**: Connect Anthropic (Claude), OpenAI, or local custom endpoints (Ollama / LocalAI).
 - **Hardware Isolation**: API credentials are saved exclusively in iOS Keychain / Android Keystore.
 - **Granular Consent**: Choose exactly what categories of tracker context (if any) are attached to each question.
+- **AI-Curated Women's Health Articles**: Generate evidence-based articles dynamically saved directly into your local database.
 
 ### 🩺 5. Doctor Summary Reports
 - Export clinical summaries formatted specifically for healthcare consultations without printing identifying telemetry.
@@ -155,6 +157,21 @@ Periodus/
 1. **Zero Cloud Requirement**: The database operates in SQLite (native) or IndexedDB (web).
 2. **Encrypted Vaults**: Secrets and sensitive fields use PBKDF2/Argon2 key derivation with authenticated AES-GCM encryption.
 3. **App Links & Permissions**: Health Connect (Android 14+) and Apple HealthKit permissions are strictly read-only and requested on-demand.
+
+---
+
+## 💖 Support & Sponsorship
+
+Periodus is completely free, open source, and built without advertisements, investor tracking, or user data monetization. If Periodus brings value to your health autonomy, consider supporting independent development:
+
+<div align="center">
+
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub_Sponsors-playpixelpro-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/playpixelpro)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-playpixelpro-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/playpixelpro)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-playpixelpro-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/playpixelpro)
+[![Patreon](https://img.shields.io/badge/Patreon-playpixelpro-FF424D?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/playpixelpro)
+
+</div>
 
 ---
 
