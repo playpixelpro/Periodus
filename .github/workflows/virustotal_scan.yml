@@ -1,0 +1,124 @@
+name: VirusTotal Scan
+
+on:
+  # Runs after the release build workflow completes (not on a `release` event).
+  # The ghaction-virustotal v5 action scans LOCAL files when the triggering
+  # event is NOT `release`; waiting for the build to finish also guarantees the
+  # release assets are already uploaded, avoiding the publish/upload race.
+  workflow_run:
+    workflows: ['Build Signed Release APK (Mobile Only)']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to scan'
+        required: true
+
+jobs:
+  virustotal_scan:
+    # Only act on successful, tag-triggered release builds (or manual dispatch).
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'v')) }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    env:
+      HAS_VT_KEY: ${{ secrets.VIRUS_TOTAL_API_KEY != '' }}
+
+    steps:
+      - name: Set tag variable
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TAG_NAME=${{ github.event.inputs.release_tag }}" >> $GITHUB_ENV
+          else
+            echo "TAG_NAME=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set report marker variable
+        run: |
+          echo -e "MARKER=\t\t\t" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Download Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p release_assets
+          for i in {1..12}; do
+            gh release download "$TAG_NAME" --dir release_assets --pattern "*.apk"
+            if ls release_assets/*.apk 1>/dev/null 2>&1; then
+              echo "Downloaded APKs successfully"
+              exit 0
+            fi
+            echo "Attempt $i: APKs not found yet, waiting 10s..."
+            sleep 10
+          done
+          echo "ERROR: APKs not found after 120s"
+          exit 1
+
+      - name: VirusTotal Scan
+        if: ${{ env.HAS_VT_KEY == 'true' }}
+        id: vt
+        uses: crazy-max/ghaction-virustotal@936d8c5c00afe97d3d9a1af26d017cfdf26800a2 # v5.0.0
+        with:
+          vt_api_key: ${{ secrets.VIRUS_TOTAL_API_KEY }}
+          files: |
+            release_assets/*.apk
+          request_rate: 4
+
+      - name: Verify scan produced results
+        if: ${{ env.HAS_VT_KEY == 'true' }}
+        run: |
+          if [ -z "${{ steps.vt.outputs.analysis }}" ]; then
+            echo "VirusTotal scan produced no results (no APKs were analyzed)."
+            exit 1
+          fi
+          echo "VirusTotal scan completed: ${{ steps.vt.outputs.analysis }}"
+
+      - name: Generate Custom Badge Report
+        if: steps.vt.outcome == 'success'
+        run: |
+          echo "Waiting 150s for VirusTotal engines to report..."
+          sleep 150
+
+          echo -e "$MARKER\n## 🛡️ VirusTotal Analysis" > vt_report.txt
+          echo "" >> vt_report.txt
+
+          echo "| Build Variant | VirusTotal Status | Detailed Report |" >> vt_report.txt
+          echo "| :--- | :--- | :--- |" >> vt_report.txt
+          
+          for file in release_assets/*.apk; do
+            [ -e "$file" ] || continue
+            filename=$(basename "$file")
+            sha256=$(sha256sum "$file" | awk '{print $1}')
+
+            vt_link="https://www.virustotal.com/gui/file/$sha256/detection"
+            badge_url="https://badges.cssnr.com/vt/id/$sha256?start=green&end=red&n=8"
+
+            echo "Purging badge cache for $filename..."
+            curl -s -X POST $badge_url
+            
+            asset_link="https://github.com/${{ github.repository }}/releases/download/${{ env.TAG_NAME }}/$filename"
+            
+            echo "| [$filename]($asset_link) | [![]($badge_url&v=$(date +%s))]($vt_link) | [View Report]($vt_link) |" >> vt_report.txt
+          done
+
+      - name: Update Release Notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view "$TAG_NAME" --json body -q .body > current_notes.txt || echo "" > current_notes.txt
+
+          # If the header exists, delete from that line to the end
+          if grep -q "$MARKER" current_notes.txt; then
+            echo "Previous report found. Cleaning up..."
+            sed -i "/$MARKER/,\$d" current_notes.txt
+          fi
+          
+          {
+            cat current_notes.txt
+            cat vt_report.txt
+          } > final_notes.txt
+          
+          gh release edit "$TAG_NAME" --notes-file final_notes.txt

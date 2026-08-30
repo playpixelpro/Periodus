@@ -40,6 +40,10 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    // ML Kit GenAI — on-device Gemini Nano inference via AICore.
+    // Gracefully unavailable on unsupported devices; no APK size increase on devices
+    // where AICore is not present — the model lives in AICore, not the APK.
+    implementation "com.google.mlkit:genai:1.0.0-beta3"
 }
 
 apply from: 'capacitor.build.gradle'

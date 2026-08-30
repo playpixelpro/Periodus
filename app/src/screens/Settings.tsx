@@ -81,6 +81,13 @@ import {
 } from '../native/secureVault'
 import { getWidgetStatus, type WidgetStatus } from '../native/widgets'
 import { useApp } from '../state/appStore'
+import {
+  geminiNanoStatus,
+  geminiNanoDownload,
+  geminiNanoInfer,
+  type GeminiNanoStatus,
+} from '../native/geminiNano'
+import { buildCycleAnalysisPrompt } from '../lib/cycleAnalysisPrompt'
 
 const DEVICE_TIME_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
 
@@ -162,6 +169,9 @@ export function Settings() {
     useState<PregnancyDatingMethod>('lmp')
   const [updateResult, setUpdateResult] = useState<UpdateResult | null>(null)
   const [updateBusy, setUpdateBusy] = useState(false)
+  const [nanoStatus, setNanoStatus] = useState<GeminiNanoStatus | null>(null)
+  const [nanoAnalysis, setNanoAnalysis] = useState<string | null>(null)
+  const [nanoBusy, setNanoBusy] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -173,8 +183,9 @@ export function Settings() {
       getBiometricStatus(),
       getHealthPlatformStatus(),
       getWidgetStatus(),
+      geminiNanoStatus(),
     ])
-      .then(([openAiKey, anthropicKey, customKey, vault, biometricStatus, healthStatus, widgetStatus]) => {
+      .then(([openAiKey, anthropicKey, customKey, vault, biometricStatus, healthStatus, widgetStatus, nanoSt]) => {
         if (!alive) return
         setHasOpenAiKey(Boolean(openAiKey))
         setHasAnthropicKey(Boolean(anthropicKey))
@@ -187,6 +198,7 @@ export function Settings() {
         setBiometrics(biometricStatus)
         setHealth(healthStatus)
         setWidget(widgetStatus)
+        setNanoStatus(nanoSt)
       })
       .catch((reason: unknown) => {
         if (alive) setStatus(reason instanceof Error ? reason.message : 'Could not inspect native services.')
@@ -882,6 +894,56 @@ export function Settings() {
     }
   }
 
+  async function triggerNanoDownload() {
+    setNanoBusy(true)
+    try {
+      await geminiNanoDownload()
+      // Refresh status so UI updates from 'downloadable' → 'downloading'
+      const updated = await geminiNanoStatus()
+      setNanoStatus(updated)
+    } catch (e) {
+      setStatus(e instanceof Error ? e.message : 'Could not start Gemini Nano download.')
+    } finally {
+      setNanoBusy(false)
+    }
+  }
+
+  async function runNanoAnalysis() {
+    if (!s) return
+    setNanoBusy(true)
+    setNanoAnalysis(null)
+    try {
+      // Import the stats & pattern engines lazily so they don't bloat initial bundle
+      const [{ cycleWindowStatistics, completedCycles }, { buildCycleReport }] = await Promise.all([
+        import('../engine/stats'),
+        import('../engine/patterns'),
+      ])
+      const { db } = await import('../db/schema')
+      const days = await db.days.toArray()
+      const periodStarts = days
+        .filter((d) => d.flow === 'heavy' || d.flow === 'medium' || d.flow === 'light' || d.flow === 'spotting')
+        .map((d) => d.date)
+        .sort()
+      const cycles = completedCycles(periodStarts)
+      const stats6 = cycleWindowStatistics(cycles, 6)
+      const stats12 = cycleWindowStatistics(cycles, 12)
+      const report = buildCycleReport(days, periodStarts, [])
+      const prompt = buildCycleAnalysisPrompt({
+        stats6,
+        stats12,
+        prediction: null,
+        patterns: report.patternInsights,
+        goal: s.goal ?? 'cycle',
+      })
+      const text = await geminiNanoInfer(prompt)
+      setNanoAnalysis(text)
+    } catch (e) {
+      setStatus(e instanceof Error ? e.message : 'On-device analysis failed.')
+    } finally {
+      setNanoBusy(false)
+    }
+  }
+
   return (
     <div className="page">
       <h1>Settings</h1>
@@ -1375,12 +1437,89 @@ export function Settings() {
         </Section>
       )}
 
+      {(isNative && nativePlatform === 'android') && (() => {
+        const nano = nanoStatus
+        const isReady = nano?.status === 'available'
+        const isDownloading = nano?.status === 'downloading'
+        const isDownloadable = nano?.status === 'downloadable'
+        const isUnsupported = !nano || nano.status === 'not-supported' || nano.status === 'web'
+        return (
+          <Section title="On-device AI · Private">
+            <div className="setting-row static-row">
+              <span>Gemini Nano</span>
+              <span
+                className="muted"
+                style={{
+                  color: isReady ? 'var(--rose-500)' : isDownloading ? '#d97706' : undefined,
+                  fontWeight: isReady ? 600 : undefined,
+                }}
+              >
+                {isReady
+                  ? 'Ready · 100% private'
+                  : isDownloading
+                    ? 'Downloading…'
+                    : isDownloadable
+                      ? 'Available — needs download'
+                      : nano === null
+                        ? 'Checking…'
+                        : 'Not supported on this device'}
+              </span>
+            </div>
+            {isDownloadable && (
+              <button className="setting-row" disabled={nanoBusy} onClick={triggerNanoDownload}>
+                <span>Download Gemini Nano model</span>
+                <span className="muted">~1 GB · Wi-Fi recommended ›</span>
+              </button>
+            )}
+            {isDownloading && (
+              <div className="setting-row static-row">
+                <span className="muted" style={{ fontSize: 13 }}>
+                  Model downloading in the background. Check back in a few minutes.
+                </span>
+              </div>
+            )}
+            {isReady && (
+              <>
+                <button className="setting-row" disabled={nanoBusy} onClick={runNanoAnalysis}>
+                  <span>{nanoBusy ? 'Analysing…' : 'Analyse my cycle data'}</span>
+                  <span className="muted">runs on-device ›</span>
+                </button>
+                {nanoAnalysis && (
+                  <div
+                    className="setting-row static-row"
+                    style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}
+                  >
+                    <span style={{ fontWeight: 600, fontSize: 13 }}>On-device analysis</span>
+                    <span className="muted" style={{ fontSize: 13, lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                      {nanoAnalysis}
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+            {isUnsupported && (
+              <div className="setting-row static-row">
+                <span className="muted" style={{ fontSize: 12 }}>
+                  Requires a Pixel 8+, Galaxy S24+, or similar device with Android 9+.
+                </span>
+              </div>
+            )}
+            <div className="setting-row static-row">
+              <span className="muted" style={{ fontSize: 12, lineHeight: 1.5 }}>
+                When available, your data is analysed entirely on this device — nothing is sent to any server.
+              </span>
+            </div>
+          </Section>
+        )
+      })()}
+
       <Section title="Danger zone">
         <button className="setting-row" onClick={wipe} style={{ color: 'var(--red-500)' }}>
           <span>Delete all data</span>
           <span>›</span>
         </button>
       </Section>
+
 
       <p className="muted" style={{ textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
         Periodus is open source (AGPL-3.0) and not affiliated with Flo Health Inc. Not a medical
