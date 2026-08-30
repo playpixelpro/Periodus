@@ -139,8 +139,8 @@ export function DoctorReport() {
       const cycleReport = buildCycleReport(allLogs, allPeriodStarts, today)
       const blob = generateCycleReportPdf({
         report: cycleReport,
-        cycles: data.cycleLengths,
-        userDisplayName: data.displayName,
+        cycles: completedCycles(allPeriodStarts),
+        userDisplayName: data.profile.displayName,
       })
       await shareOrDownloadPdf(`periodus-doctor-report-${today}.pdf`, blob)
     } catch {

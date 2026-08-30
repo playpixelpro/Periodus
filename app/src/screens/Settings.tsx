@@ -914,25 +914,24 @@ export function Settings() {
     setNanoAnalysis(null)
     try {
       // Import the stats & pattern engines lazily so they don't bloat initial bundle
-      const [{ cycleWindowStatistics, completedCycles }, { buildCycleReport }] = await Promise.all([
+      const [{ cycleWindowStatistics }, { buildCycleReport }] = await Promise.all([
         import('../engine/stats'),
         import('../engine/patterns'),
       ])
-      const { db } = await import('../db/schema')
-      const days = await db.days.toArray()
-      const periodStarts = days
-        .filter((d) => d.flow === 'heavy' || d.flow === 'medium' || d.flow === 'light' || d.flow === 'spotting')
-        .map((d) => d.date)
-        .sort()
-      const cycles = completedCycles(periodStarts)
-      const stats6 = cycleWindowStatistics(cycles, 6)
-      const stats12 = cycleWindowStatistics(cycles, 12)
-      const report = buildCycleReport(days, periodStarts, [])
+      const { db, getPeriodStarts } = await import('../db/schema')
+      const { localToday } = await import('../lib/dates')
+      const [days, periodStarts] = await Promise.all([
+        db.dailyLogs.toArray(),
+        getPeriodStarts(),
+      ])
+      const stats6 = cycleWindowStatistics(periodStarts, 6)
+      const stats12 = cycleWindowStatistics(periodStarts, 12)
+      const report = buildCycleReport(days, periodStarts, localToday())
       const prompt = buildCycleAnalysisPrompt({
         stats6,
         stats12,
         prediction: null,
-        patterns: report.patternInsights,
+        patterns: report.patterns,
         goal: s.goal ?? 'cycle',
       })
       const text = await geminiNanoInfer(prompt)

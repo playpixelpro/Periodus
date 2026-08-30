@@ -8,7 +8,7 @@
 
 import { jsPDF } from 'jspdf'
 import type { CycleReport } from '../engine/patterns'
-import type { CycleWindowStatistics } from '../engine/stats'
+import type { CompletedCycle, CycleWindowStatistics } from '../engine/stats'
 import { formatShort, localToday } from './dates'
 
 // ---------------------------------------------------------------------------
@@ -26,7 +26,6 @@ export async function shareOrDownloadPdf(filename: string, pdfBlob: Blob): Promi
       })
       return
     } catch (e) {
-      // User cancelled share or share failed; fall back to download
       if (e instanceof Error && e.name === 'AbortError') return
     }
   }
@@ -48,7 +47,7 @@ export async function shareOrDownloadPdf(filename: string, pdfBlob: Blob): Promi
 
 export interface CycleReportPdfInput {
   report: CycleReport
-  cycles: number[]
+  cycles: (CompletedCycle | number)[]
   stats6?: CycleWindowStatistics | null
   stats12?: CycleWindowStatistics | null
   userDisplayName?: string
@@ -68,11 +67,11 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
   let y = margin
 
   // Color palette (Warm dark gold & obsidian medical styling)
-  const primaryColor = [217, 168, 65] // #D9A841 Warm Gold
-  const textColor = [35, 30, 24] // Deep dark obsidian
-  const mutedColor = [115, 105, 90] // Muted grey-tan
-  const borderColor = [225, 215, 195] // Light separator line
-  const bgLight = [250, 247, 240] // Light warm background for cards
+  const primaryColor = [217, 168, 65]
+  const textColor = [35, 30, 24]
+  const mutedColor = [115, 105, 90]
+  const borderColor = [225, 215, 195]
+  const bgLight = [250, 247, 240]
 
   function checkPageBreak(neededHeight: number) {
     if (y + neededHeight > pageHeight - margin) {
@@ -126,15 +125,20 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
   doc.text('Recent average length:', margin + 4, y + 12)
   doc.text('Cycle variation / range:', margin + 4, y + 18)
 
+  const cycleLengths = input.cycles.map((c) => (typeof c === 'number' ? c : c.length))
+
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(textColor[0], textColor[1], textColor[2])
-  doc.text(`${input.cycles.length} cycles`, margin + 55, y + 6)
+  doc.text(`${cycleLengths.length} cycles`, margin + 55, y + 6)
 
-  const avg = input.stats6?.averageDays ?? (input.cycles.length > 0 ? Math.round(input.cycles.reduce((a, b) => a + b, 0) / input.cycles.length) : null)
+  const avg =
+    input.report.averageCycleDays ??
+    input.stats6?.averageDays ??
+    (cycleLengths.length > 0 ? Math.round(cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length) : null)
   doc.text(avg != null ? `${avg} days` : 'Insufficient data', margin + 55, y + 12)
 
-  const shortest = input.stats6?.shortestDays ?? (input.cycles.length > 0 ? Math.min(...input.cycles) : null)
-  const longest = input.stats6?.longestDays ?? (input.cycles.length > 0 ? Math.max(...input.cycles) : null)
+  const shortest = input.report.shortestCycleDays ?? input.stats6?.shortestDays ?? (cycleLengths.length > 0 ? Math.min(...cycleLengths) : null)
+  const longest = input.report.longestCycleDays ?? input.stats6?.longestDays ?? (cycleLengths.length > 0 ? Math.max(...cycleLengths) : null)
   doc.text(shortest && longest ? `${shortest} – ${longest} days` : 'Insufficient data', margin + 55, y + 18)
 
   y += 28
@@ -147,8 +151,9 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
   doc.text('Most Frequently Logged Symptoms', margin, y)
   y += 6
 
-  if (input.report.topSymptoms.length > 0) {
-    input.report.topSymptoms.slice(0, 8).forEach((item) => {
+  const topSignals = input.report.topSignals ?? []
+  if (topSignals.length > 0) {
+    topSignals.slice(0, 8).forEach((item) => {
       checkPageBreak(8)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(9.5)
@@ -176,8 +181,9 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
   doc.text('Fertility Observations', margin, y)
   y += 6
 
-  const bbtCount = input.report.fertilitySignals.filter((p) => p.bbtCelsius != null).length
-  const opkPositiveCount = input.report.fertilitySignals.filter((p) => p.opk === 'positive').length
+  const fertilitySignals = input.report.fertilitySignals ?? []
+  const bbtCount = fertilitySignals.filter((p) => p.bbtCelsius != null).length
+  const opkPositiveCount = fertilitySignals.filter((p) => p.opk === 'positive').length
 
   doc.setFillColor(bgLight[0], bgLight[1], bgLight[2])
   doc.roundedRect(margin, y, contentWidth, 16, 2, 2, 'F')
@@ -196,7 +202,8 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
   y += 22
 
   // --- Section: Pattern Insights ---
-  if (input.report.patternInsights.length > 0) {
+  const patterns = input.report.patterns ?? []
+  if (patterns.length > 0) {
     checkPageBreak(30)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(13)
@@ -204,7 +211,7 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
     doc.text('Observed Patterns & Associations', margin, y)
     y += 6
 
-    input.report.patternInsights.forEach((p) => {
+    patterns.forEach((p) => {
       checkPageBreak(18)
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(10)

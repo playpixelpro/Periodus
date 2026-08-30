@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState, type CSSProperties } from 'react'
-import { db, getPeriodStarts } from '../db/schema'
+import { db, getHealthProfile, getPeriodStarts } from '../db/schema'
 import { buildCycleReport } from '../engine/patterns'
 import { completedCycles } from '../engine/stats'
 import { formatShort, localToday } from '../lib/dates'
@@ -34,7 +34,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
     setExportError(null)
     setExportBusy(true)
     try {
-      const profile = await db.healthProfile.get('main')
+      const profile = await getHealthProfile()
       const blob = generateCycleReportPdf({
         report: data.report,
         cycles: data.cycles,
