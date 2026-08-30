@@ -21,7 +21,14 @@ import type { Envelope } from '../crypto/vault'
 import { applyImport, collectExport, decryptImport, encryptedExport, shareOrDownload } from '../db/transfer'
 import { useDialog } from '../context/DialogContext'
 import { pushBackup, restoreBackup } from '../lib/backup'
-import { localToday } from '../lib/dates'
+import {
+  disconnectGoogleDrive,
+  listGoogleDriveBackups,
+  pushGoogleDriveBackup,
+  requestGoogleDriveAuth,
+  restoreGoogleDriveBackup,
+} from '../lib/googleDrive'
+import { formatShort, localToday } from '../lib/dates'
 import { addDays } from '../engine/cycle'
 import {
   parseReminderPreferences,
@@ -194,6 +201,9 @@ export function Settings() {
       code,
       time,
       reminderSettings,
+      googleEmail,
+      googleToken,
+      googleLastBackup,
       profile,
     ] =
       await Promise.all([
@@ -205,6 +215,9 @@ export function Settings() {
         getSetting('recoveryCode'),
         getSetting(SK.reminderTime),
         getSetting(REMINDER_SETTINGS_KEY),
+        getSetting(SK.googleAccountEmail),
+        getSetting(SK.googleDriveToken),
+        getSetting(SK.googleLastBackup),
         getHealthProfile(),
       ])
     const pregnancyLmp = profile.reproductive.pregnancyLmp ?? legacyPregnancyLmp
@@ -227,6 +240,9 @@ export function Settings() {
       recoveryCode: code ?? '',
       legacyReminderTime: time,
       reminderSettings,
+      googleAccountEmail: googleEmail ?? '',
+      googleDriveToken: googleToken ?? '',
+      googleLastBackup: googleLastBackup ?? '',
     }
   }, [])
 
@@ -547,6 +563,125 @@ export function Settings() {
           ? 'Custom AI credential removed from secure storage.'
           : 'OpenAI key removed from secure storage.',
     )
+  }
+
+  async function backupToGoogleDrive() {
+    if (!s) return
+    let token = s.googleDriveToken
+    if (!token) {
+      try {
+        const auth = await requestGoogleDriveAuth()
+        token = auth.token
+      } catch (e) {
+        setStatus(e instanceof Error ? e.message : 'Google sign-in required.')
+        return
+      }
+    }
+
+    let code = s.recoveryCode
+    if (!code) {
+      code = generateRecoveryCode()
+      await setSetting('recoveryCode', code)
+      await dialog.alert({
+        title: 'Zero-Knowledge Passphrase',
+        message:
+          'Write down this recovery passphrase. Your Google Drive backup is encrypted with it and cannot be decrypted without it:',
+        copyableText: code,
+        confirmText: 'I have saved it',
+      })
+    }
+
+    setCapabilityBusy(true)
+    setStatus('Encrypting and uploading to Google Drive…')
+    try {
+      const res = await pushGoogleDriveBackup(code, token)
+      setStatus(
+        `Backed up to Google Drive (Zero-knowledge AES-GCM · ${formatShort(res.modifiedTime.split('T')[0])}).`,
+      )
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Google Drive backup failed.'
+      if (msg.includes('expired') || msg.includes('sign in')) {
+        await disconnectGoogleDrive()
+      }
+      setStatus(msg)
+    } finally {
+      setCapabilityBusy(false)
+    }
+  }
+
+  async function restoreFromGoogleDrive() {
+    if (!s) return
+    let token = s.googleDriveToken
+    if (!token) {
+      try {
+        const auth = await requestGoogleDriveAuth()
+        token = auth.token
+      } catch (e) {
+        setStatus(e instanceof Error ? e.message : 'Google sign-in required.')
+        return
+      }
+    }
+
+    setCapabilityBusy(true)
+    setStatus('Checking Google Drive backups…')
+    let files
+    try {
+      files = await listGoogleDriveBackups(token)
+    } catch (e) {
+      setCapabilityBusy(false)
+      const msg = e instanceof Error ? e.message : 'Could not check Google Drive backups.'
+      if (msg.includes('expired') || msg.includes('sign in')) {
+        await disconnectGoogleDrive()
+      }
+      setStatus(msg)
+      return
+    }
+    setCapabilityBusy(false)
+
+    if (files.length === 0) {
+      await dialog.alert({
+        title: 'No Backups Found',
+        message: 'No encrypted Periodus backups were found in your Google Drive AppData folder.',
+      })
+      return
+    }
+
+    const latest = files[0]
+    const pass = await dialog.prompt({
+      title: 'Restore from Google Drive',
+      message: `Found backup from ${formatShort(latest.modifiedTime.split('T')[0])}.\nEnter your zero-knowledge recovery code / passphrase to decrypt:`,
+      confirmText: 'Decrypt & Restore',
+      input: {
+        defaultValue: s.recoveryCode || '',
+        placeholder: 'e.g. word1-word2-word3-word4',
+      },
+    })
+    if (!pass) return
+
+    setCapabilityBusy(true)
+    setStatus('Downloading and decrypting backup…')
+    try {
+      const count = await restoreGoogleDriveBackup(latest.id, normalizeRecoveryCode(pass), token)
+      await setSetting('recoveryCode', normalizeRecoveryCode(pass))
+      setStatus(`Successfully restored ${count} records from Google Drive.`)
+    } catch (e) {
+      setStatus(e instanceof Error ? e.message : 'Restore failed.')
+    } finally {
+      setCapabilityBusy(false)
+    }
+  }
+
+  async function disconnectGoogle() {
+    const confirmed = await dialog.confirm({
+      title: 'Disconnect Google Drive?',
+      message:
+        'This will unlink Google Drive on this device. Existing backups in your Google Drive will not be deleted.',
+      confirmText: 'Disconnect',
+      cancelText: 'Keep Connected',
+    })
+    if (!confirmed) return
+    await disconnectGoogleDrive()
+    setStatus('Google Drive disconnected.')
   }
 
   async function enableBackup() {
@@ -924,12 +1059,32 @@ export function Settings() {
           <span>Import from file</span>
           <span className="muted">›</span>
         </button>
+        <button className="setting-row" onClick={backupToGoogleDrive}>
+          <span>Google Drive backup</span>
+          <span className="muted">
+            {s.googleAccountEmail
+              ? `${s.googleAccountEmail.split('@')[0]} · ${s.googleLastBackup ? formatShort(s.googleLastBackup.split('T')[0]) : 'ready'} ›`
+              : 'connect & back up ›'}
+          </span>
+        </button>
+        {s.googleDriveToken && (
+          <>
+            <button className="setting-row" onClick={restoreFromGoogleDrive}>
+              <span>Restore from Google Drive</span>
+              <span className="muted">›</span>
+            </button>
+            <button className="setting-row" onClick={disconnectGoogle}>
+              <span>Disconnect Google Drive</span>
+              <span className="muted" style={{ color: 'var(--red-400)' }}>unlink ›</span>
+            </button>
+          </>
+        )}
         <button className="setting-row" onClick={enableBackup}>
-          <span>Encrypted cloud backup</span>
+          <span>Encrypted relay backup</span>
           <span className="muted">zero-knowledge ›</span>
         </button>
         <button className="setting-row" onClick={restore}>
-          <span>Restore from backup</span>
+          <span>Restore from relay</span>
           <span className="muted">›</span>
         </button>
         <input

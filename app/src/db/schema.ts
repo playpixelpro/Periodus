@@ -675,4 +675,8 @@ export const SK = {
   backupEndpoint: 'backupEndpoint',
   reminderEmail: 'reminderEmail',
   reminderTime: 'reminderTime',
+  googleClientId: 'googleClientId',
+  googleAccountEmail: 'googleAccountEmail',
+  googleLastBackup: 'googleLastBackup',
+  googleDriveToken: 'googleDriveToken',
 } as const
