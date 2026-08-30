@@ -1,11 +1,17 @@
+import { App } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Capacitor } from '@capacitor/core'
 import { decryptJSON, encryptJSON, type Envelope } from '../crypto/vault'
 import { getSetting, removeSetting, setSetting, SK } from '../db/schema'
 import { applyImport, collectExport, type ExportPayload } from '../db/transfer'
 
-export const DEFAULT_GOOGLE_CLIENT_ID =
+export const DEFAULT_GOOGLE_WEB_CLIENT_ID =
   '89692632506-v65jg191jms7ouohtf7j88i2ffju4uob.apps.googleusercontent.com'
+
+export const DEFAULT_GOOGLE_ANDROID_CLIENT_ID =
+  '89692632506-diefi2b4hvc9l95mgrkneb1jvl73j4il.apps.googleusercontent.com'
+
+export const DEFAULT_GOOGLE_CLIENT_ID = DEFAULT_GOOGLE_WEB_CLIENT_ID
 
 const GOOGLE_DRIVE_APPDATA_SCOPE =
   'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email'
@@ -26,11 +32,15 @@ export interface GoogleUserInfo {
 }
 
 /**
- * Retrieves the active Google Client ID (from settings, or default).
+ * Retrieves the active Google Client ID (from settings, or platform default).
  */
 export async function getGoogleClientId(): Promise<string> {
   const configured = await getSetting(SK.googleClientId)
-  return configured?.trim() || DEFAULT_GOOGLE_CLIENT_ID
+  if (configured?.trim()) return configured.trim()
+  if (Capacitor.getPlatform() === 'android') {
+    return DEFAULT_GOOGLE_ANDROID_CLIENT_ID
+  }
+  return DEFAULT_GOOGLE_WEB_CLIENT_ID
 }
 
 /**
@@ -54,10 +64,12 @@ export async function requestGoogleDriveAuth(customClientId?: string): Promise<{
   const clientId = customClientId?.trim() || (await getGoogleClientId())
   if (!clientId) throw new Error('Google Client ID is required.')
 
-  const redirectUri = window.location.origin
+  const redirectUri = Capacitor.isNativePlatform()
+    ? 'com.playpixelpro.myperiod:/oauth2redirect'
+    : window.location.origin
 
   return new Promise((resolve, reject) => {
-    // 1. Check if Google Identity Services is available in window
+    // 1. Check if Google Identity Services is available in window (Web)
     const gWindow = window as unknown as {
       google?: {
         accounts?: {
@@ -73,7 +85,7 @@ export async function requestGoogleDriveAuth(customClientId?: string): Promise<{
       }
     }
 
-    if (gWindow.google?.accounts?.oauth2) {
+    if (gWindow.google?.accounts?.oauth2 && !Capacitor.isNativePlatform()) {
       const client = gWindow.google.accounts.oauth2.initTokenClient({
         client_id: clientId,
         scope: GOOGLE_DRIVE_APPDATA_SCOPE,
@@ -97,7 +109,7 @@ export async function requestGoogleDriveAuth(customClientId?: string): Promise<{
       return
     }
 
-    // 2. Standard OAuth 2.0 Implicit / Popup flow fallback
+    // 2. Standard OAuth 2.0 Implicit / Redirect / Popup flow
     const authUrl =
       `https://accounts.google.com/o/oauth2/v2/auth?` +
       `client_id=${encodeURIComponent(clientId)}&` +
@@ -108,13 +120,43 @@ export async function requestGoogleDriveAuth(customClientId?: string): Promise<{
       `prompt=select_account`
 
     if (Capacitor.isNativePlatform()) {
-      // Native mobile handling
-      Browser.open({ url: authUrl })
-      reject(
-        new Error(
-          'Please complete Google sign-in in your browser window.',
-        ),
-      )
+      let listenerHandle: { remove: () => void } | null = null
+
+      const cleanup = () => {
+        if (listenerHandle) {
+          listenerHandle.remove()
+          listenerHandle = null
+        }
+        void Browser.close().catch(() => {})
+      }
+
+      App.addListener('appUrlOpen', async (event) => {
+        if (event.url && (event.url.includes('access_token=') || event.url.includes('#access_token='))) {
+          cleanup()
+          const hash = event.url.includes('#') ? event.url.split('#')[1] : event.url.split('?')[1] || ''
+          const params = new URLSearchParams(hash)
+          const token = params.get('access_token')
+          if (!token) {
+            reject(new Error('Failed to retrieve access token from Google redirect.'))
+            return
+          }
+          try {
+            const userInfo = await fetchGoogleUserInfo(token)
+            await setSetting(SK.googleDriveToken, token)
+            await setSetting(SK.googleAccountEmail, userInfo.email)
+            resolve({ token, email: userInfo.email })
+          } catch (err) {
+            reject(err)
+          }
+        }
+      }).then((handle) => {
+        listenerHandle = handle
+      })
+
+      Browser.open({ url: authUrl, windowName: '_blank' }).catch((err) => {
+        cleanup()
+        reject(err)
+      })
     } else {
       // Desktop / Web popup
       const width = 500
