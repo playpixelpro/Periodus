@@ -17,7 +17,7 @@ export class StartupErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('[Lunara startup] React failed to render.', error, info.componentStack)
+    console.error('[Periodus startup] React failed to render.', error, info.componentStack)
   }
 
   render() {
@@ -32,13 +32,13 @@ export class StartupErrorBoundary extends Component<Props, State> {
               <LunaraMark decorative size={34} />
             </span>
             <p className="page-kicker">Startup interrupted</p>
-            <h1>Lunara couldn’t open.</h1>
+            <h1>Periodus couldn’t open.</h1>
             <p className="muted">
               Your local health data has not been deleted. Reload the app and,
               if this keeps happening, share the technical detail below.
             </p>
             <button className="cta" type="button" onClick={() => window.location.reload()}>
-              Reload Lunara
+              Reload Periodus
             </button>
             <details className="startup-failure-details">
               <summary>Technical detail</summary>

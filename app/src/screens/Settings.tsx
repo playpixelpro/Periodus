@@ -352,7 +352,7 @@ export function Settings() {
 
   async function exportPlain() {
     const payload = await collectExport()
-    await shareOrDownload(`lunara-backup-${localToday()}.json`, JSON.stringify(payload, null, 2))
+    await shareOrDownload(`periodus-backup-${localToday()}.json`, JSON.stringify(payload, null, 2))
     setStatus('Exported. Save it somewhere safe.')
   }
 
@@ -368,7 +368,7 @@ export function Settings() {
     })
     if (!pass) return
     const env = await encryptedExport(pass)
-    await shareOrDownload(`lunara-encrypted-${localToday()}.json`, JSON.stringify(env))
+    await shareOrDownload(`periodus-encrypted-${localToday()}.json`, JSON.stringify(env))
     setStatus('Encrypted export saved.')
   }
 
