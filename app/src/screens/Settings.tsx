@@ -221,6 +221,7 @@ export function Settings() {
       googleEmail,
       googleToken,
       googleLastBackup,
+      autoAiInsights,
       profile,
     ] =
       await Promise.all([
@@ -235,6 +236,7 @@ export function Settings() {
         getSetting(SK.googleAccountEmail),
         getSetting(SK.googleDriveToken),
         getSetting(SK.googleLastBackup),
+        getSetting(SK.autoAiInsights),
         getHealthProfile(),
       ])
     const pregnancyLmp = profile.reproductive.pregnancyLmp ?? legacyPregnancyLmp
@@ -260,6 +262,7 @@ export function Settings() {
       googleAccountEmail: googleEmail ?? '',
       googleDriveToken: googleToken ?? '',
       googleLastBackup: googleLastBackup ?? '',
+      autoAiInsights: autoAiInsights ?? '0',
     }
   }, [])
 
@@ -1452,6 +1455,24 @@ export function Settings() {
                   : 'add OpenAI key ›'}
           </span>
         </button>
+        <label className="setting-row">
+          <span>Auto-generate women’s health insights</span>
+          <span className="reminder-switch">
+            <input
+              type="checkbox"
+              checked={s.autoAiInsights === '1'}
+              onChange={async (e) => {
+                const val = e.target.checked ? '1' : '0'
+                await setSetting(SK.autoAiInsights, val)
+                setStatus(`AI auto-insights ${e.target.checked ? 'enabled' : 'disabled'}.`)
+              }}
+            />
+            <span aria-hidden="true" />
+          </span>
+        </label>
+        <p className="muted" style={{ padding: '4px 16px 8px', fontSize: 12, lineHeight: 1.4 }}>
+          Periodus can periodically research and draft fresh educational articles on nutrition, hormones, and wellness trends tailored to your focus stage.
+        </p>
         {(s.provider === 'anthropic' ? hasAnthropicKey : s.provider === 'custom' ? hasCustomKey : hasOpenAiKey) && (
           <button className="setting-row" onClick={removeAiKey}>
             <span>Remove saved credential</span>

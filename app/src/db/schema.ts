@@ -359,6 +359,17 @@ export interface ContentBookmark {
   savedAt: string
 }
 
+export interface GeneratedArticle {
+  slug: string
+  title: string
+  category: string
+  minutes: number
+  body: string[]
+  source: 'ai'
+  promptTopic?: string
+  createdAt: string
+}
+
 export class LunaraDB extends Dexie {
   dailyLogs!: Table<DailyLog, string>
   cycles!: Table<Cycle, string>
@@ -376,6 +387,10 @@ export class LunaraDB extends Dexie {
    * queries stay cheap and survive log edits.
    */
   missedDoseEvents!: Table<MissedDoseEvent, string>
+  /**
+   * AI-generated educational articles saved with user consent.
+   */
+  generatedArticles!: Table<GeneratedArticle, string>
 
   constructor() {
     super('lunara')
@@ -410,6 +425,17 @@ export class LunaraDB extends Dexie {
       healthProfiles: 'id',
       regimenRecords: 'id, method, startDate, [method+startDate]',
       missedDoseEvents: 'id, regimenId, date, [regimenId+date]',
+    })
+    // v4: generated articles.
+    this.version(4).stores({
+      dailyLogs: 'date',
+      cycles: 'startDate',
+      settings: 'key',
+      contentBookmarks: 'slug',
+      healthProfiles: 'id',
+      regimenRecords: 'id, method, startDate, [method+startDate]',
+      missedDoseEvents: 'id, regimenId, date, [regimenId+date]',
+      generatedArticles: 'slug, category, createdAt',
     })
   }
 }
@@ -672,6 +698,7 @@ export const SK = {
   aiConsent: 'aiConsent',
   /** 'strict' (zero data retention) or 'standard' (no-training only). */
   aiPrivacyTier: 'aiPrivacyTier',
+  autoAiInsights: 'autoAiInsights',
   backupEndpoint: 'backupEndpoint',
   reminderEmail: 'reminderEmail',
   reminderTime: 'reminderTime',
