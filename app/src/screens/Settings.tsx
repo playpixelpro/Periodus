@@ -21,13 +21,6 @@ import type { Envelope } from '../crypto/vault'
 import { applyImport, collectExport, decryptImport, encryptedExport, shareOrDownload } from '../db/transfer'
 import { useDialog } from '../context/DialogContext'
 import { pushBackup, restoreBackup } from '../lib/backup'
-import {
-  disconnectGoogleDrive,
-  listGoogleDriveBackups,
-  pushGoogleDriveBackup,
-  requestGoogleDriveAuth,
-  restoreGoogleDriveBackup,
-} from '../lib/googleDrive'
 import { formatShort, localToday } from '../lib/dates'
 import { addDays } from '../engine/cycle'
 import {
@@ -219,10 +212,8 @@ export function Settings() {
       code,
       time,
       reminderSettings,
-      googleEmail,
-      googleToken,
-      googleLastBackup,
       autoAiInsights,
+      lastCloudBackup,
       profile,
     ] =
       await Promise.all([
@@ -234,10 +225,8 @@ export function Settings() {
         getSetting('recoveryCode'),
         getSetting(SK.reminderTime),
         getSetting(REMINDER_SETTINGS_KEY),
-        getSetting(SK.googleAccountEmail),
-        getSetting(SK.googleDriveToken),
-        getSetting(SK.googleLastBackup),
         getSetting(SK.autoAiInsights),
+        getSetting('lastCloudBackup'),
         getHealthProfile(),
       ])
     const pregnancyLmp = profile.reproductive.pregnancyLmp ?? legacyPregnancyLmp
@@ -260,10 +249,8 @@ export function Settings() {
       recoveryCode: code ?? '',
       legacyReminderTime: time,
       reminderSettings,
-      googleAccountEmail: googleEmail ?? '',
-      googleDriveToken: googleToken ?? '',
-      googleLastBackup: googleLastBackup ?? '',
       autoAiInsights: autoAiInsights ?? '0',
+      lastCloudBackup: lastCloudBackup ?? '',
     }
   }, [])
 
@@ -357,48 +344,77 @@ export function Settings() {
   async function exportPlain() {
     const payload = await collectExport()
     await shareOrDownload(`periodus-backup-${localToday()}.json`, JSON.stringify(payload, null, 2))
-    setStatus('Exported. Save it somewhere safe.')
+    setStatus('Plaintext JSON exported. Save it somewhere safe.')
   }
 
-  async function exportEncrypted() {
-    const pass = await dialog.prompt({
-      title: 'Encrypt export file',
-      message: 'Choose a passphrase to encrypt this export. You will need this passphrase whenever you import this backup.',
-      confirmText: 'Encrypt & Export',
-      input: {
-        type: 'password',
-        placeholder: 'Enter secure passphrase',
-      },
+  async function backupToCloudFolder() {
+    let code = s?.recoveryCode
+    if (!code) {
+      code = generateRecoveryCode()
+      await setSetting('recoveryCode', code)
+      await dialog.alert({
+        title: 'Zero-Knowledge Passphrase',
+        message:
+          'Write down this recovery passphrase. Your backup is encrypted with it and cannot be decrypted without it:',
+        copyableText: code,
+        confirmText: 'I have saved my passphrase',
+      })
+    }
+
+    setCapabilityBusy(true)
+    setStatus('Encrypting database vault…')
+    try {
+      const today = localToday()
+      const env = await encryptedExport(code)
+      await shareOrDownload(`periodus-backup-${today}.vault`, JSON.stringify(env, null, 2))
+      await setSetting('lastCloudBackup', new Date().toISOString())
+      setStatus('Encrypted backup created. Choose Google Drive, iCloud, OneDrive, or a local folder to save.')
+    } catch (e) {
+      setStatus(e instanceof Error ? e.message : 'Backup creation failed.')
+    } finally {
+      setCapabilityBusy(false)
+    }
+  }
+
+  async function viewRecoveryCode() {
+    let code = s?.recoveryCode
+    if (!code) {
+      code = generateRecoveryCode()
+      await setSetting('recoveryCode', code)
+    }
+    await dialog.alert({
+      title: 'Your Recovery Passphrase',
+      message:
+        'This zero-knowledge passphrase is used to encrypt and restore your private backups. Keep it safe:',
+      copyableText: code,
+      confirmText: 'Done',
     })
-    if (!pass) return
-    const env = await encryptedExport(pass)
-    await shareOrDownload(`periodus-encrypted-${localToday()}.json`, JSON.stringify(env))
-    setStatus('Encrypted export saved.')
   }
 
   async function onImportFile(file: File) {
-    const text = await file.text()
-    const parsed = JSON.parse(text)
     try {
+      const text = await file.text()
+      const parsed = JSON.parse(text)
       if (parsed.kdf && parsed.data) {
         const pass = await dialog.prompt({
-          title: 'Unlock encrypted backup',
-          message: 'This file is encrypted. Enter the passphrase you used when creating it:',
-          confirmText: 'Decrypt & Import',
+          title: 'Unlock Encrypted Backup',
+          message: 'This backup file is encrypted with AES-256-GCM. Enter your recovery code / passphrase to decrypt:',
+          confirmText: 'Decrypt & Restore',
           input: {
-            type: 'password',
-            placeholder: 'Enter passphrase',
+            defaultValue: s?.recoveryCode ?? '',
+            placeholder: 'Enter recovery passphrase',
           },
         })
         if (!pass) return
-        const n = await decryptImport(parsed as Envelope, pass)
-        setStatus(`Imported ${n} days from encrypted file.`)
+        const n = await decryptImport(parsed as Envelope, normalizeRecoveryCode(pass))
+        await setSetting('recoveryCode', normalizeRecoveryCode(pass))
+        setStatus(`Successfully restored ${n} days from encrypted backup.`)
       } else {
         const n = await applyImport(parsed)
-        setStatus(`Imported ${n} days.`)
+        setStatus(`Successfully imported ${n} days.`)
       }
     } catch (e) {
-      setStatus(e instanceof Error ? e.message : 'Import failed.')
+      setStatus(e instanceof Error ? e.message : 'Import failed. Ensure the file is a valid Periodus backup.')
     }
   }
 
@@ -584,125 +600,6 @@ export function Settings() {
           ? 'Custom AI credential removed from secure storage.'
           : 'OpenAI key removed from secure storage.',
     )
-  }
-
-  async function backupToGoogleDrive() {
-    if (!s) return
-    let token = s.googleDriveToken
-    if (!token) {
-      try {
-        const auth = await requestGoogleDriveAuth()
-        token = auth.token
-      } catch (e) {
-        setStatus(e instanceof Error ? e.message : 'Google sign-in required.')
-        return
-      }
-    }
-
-    let code = s.recoveryCode
-    if (!code) {
-      code = generateRecoveryCode()
-      await setSetting('recoveryCode', code)
-      await dialog.alert({
-        title: 'Zero-Knowledge Passphrase',
-        message:
-          'Write down this recovery passphrase. Your Google Drive backup is encrypted with it and cannot be decrypted without it:',
-        copyableText: code,
-        confirmText: 'I have saved it',
-      })
-    }
-
-    setCapabilityBusy(true)
-    setStatus('Encrypting and uploading to Google Drive…')
-    try {
-      const res = await pushGoogleDriveBackup(code, token)
-      setStatus(
-        `Backed up to Google Drive (Zero-knowledge AES-GCM · ${formatShort(res.modifiedTime.split('T')[0])}).`,
-      )
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Google Drive backup failed.'
-      if (msg.includes('expired') || msg.includes('sign in')) {
-        await disconnectGoogleDrive()
-      }
-      setStatus(msg)
-    } finally {
-      setCapabilityBusy(false)
-    }
-  }
-
-  async function restoreFromGoogleDrive() {
-    if (!s) return
-    let token = s.googleDriveToken
-    if (!token) {
-      try {
-        const auth = await requestGoogleDriveAuth()
-        token = auth.token
-      } catch (e) {
-        setStatus(e instanceof Error ? e.message : 'Google sign-in required.')
-        return
-      }
-    }
-
-    setCapabilityBusy(true)
-    setStatus('Checking Google Drive backups…')
-    let files
-    try {
-      files = await listGoogleDriveBackups(token)
-    } catch (e) {
-      setCapabilityBusy(false)
-      const msg = e instanceof Error ? e.message : 'Could not check Google Drive backups.'
-      if (msg.includes('expired') || msg.includes('sign in')) {
-        await disconnectGoogleDrive()
-      }
-      setStatus(msg)
-      return
-    }
-    setCapabilityBusy(false)
-
-    if (files.length === 0) {
-      await dialog.alert({
-        title: 'No Backups Found',
-        message: 'No encrypted Periodus backups were found in your Google Drive AppData folder.',
-      })
-      return
-    }
-
-    const latest = files[0]
-    const pass = await dialog.prompt({
-      title: 'Restore from Google Drive',
-      message: `Found backup from ${formatShort(latest.modifiedTime.split('T')[0])}.\nEnter your zero-knowledge recovery code / passphrase to decrypt:`,
-      confirmText: 'Decrypt & Restore',
-      input: {
-        defaultValue: s.recoveryCode || '',
-        placeholder: 'e.g. word1-word2-word3-word4',
-      },
-    })
-    if (!pass) return
-
-    setCapabilityBusy(true)
-    setStatus('Downloading and decrypting backup…')
-    try {
-      const count = await restoreGoogleDriveBackup(latest.id, normalizeRecoveryCode(pass), token)
-      await setSetting('recoveryCode', normalizeRecoveryCode(pass))
-      setStatus(`Successfully restored ${count} records from Google Drive.`)
-    } catch (e) {
-      setStatus(e instanceof Error ? e.message : 'Restore failed.')
-    } finally {
-      setCapabilityBusy(false)
-    }
-  }
-
-  async function disconnectGoogle() {
-    const confirmed = await dialog.confirm({
-      title: 'Disconnect Google Drive?',
-      message:
-        'This will unlink Google Drive on this device. Existing backups in your Google Drive will not be deleted.',
-      confirmText: 'Disconnect',
-      cancelText: 'Keep Connected',
-    })
-    if (!confirmed) return
-    await disconnectGoogleDrive()
-    setStatus('Google Drive disconnected.')
   }
 
   async function enableBackup() {
@@ -1216,46 +1113,37 @@ export function Settings() {
       )}
 
       <Section title="Your data &amp; encrypted backup">
-        <button className="setting-row" onClick={exportPlain}>
-          <span>Export a backup file</span>
-          <span className="muted">›</span>
-        </button>
-        <button className="setting-row" onClick={exportEncrypted}>
-          <span>Export encrypted</span>
-          <span className="muted">›</span>
-        </button>
-        <button className="setting-row" onClick={() => fileInput.current?.click()}>
-          <span>Import from file</span>
-          <span className="muted">›</span>
-        </button>
-        <button className="setting-row" onClick={backupToGoogleDrive}>
-          <span>Google Drive backup</span>
+        <button className="setting-row" onClick={backupToCloudFolder}>
+          <span>Save encrypted backup to Cloud / Drive</span>
           <span className="muted">
-            {s.googleAccountEmail
-              ? `${s.googleAccountEmail.split('@')[0]} · ${s.googleLastBackup ? formatShort(s.googleLastBackup.split('T')[0]) : 'ready'} ›`
-              : 'connect & back up ›'}
+            {s.lastCloudBackup ? `${formatShort(s.lastCloudBackup.split('T')[0])} · AES-GCM ›` : 'Save to Drive/Files ›'}
           </span>
         </button>
-        {s.googleDriveToken && (
-          <>
-            <button className="setting-row" onClick={restoreFromGoogleDrive}>
-              <span>Restore from Google Drive</span>
-              <span className="muted">›</span>
-            </button>
-            <button className="setting-row" onClick={disconnectGoogle}>
-              <span>Disconnect Google Drive</span>
-              <span className="muted" style={{ color: 'var(--red-400)' }}>unlink ›</span>
-            </button>
-          </>
-        )}
+        <button className="setting-row" onClick={() => fileInput.current?.click()}>
+          <span>Restore from Cloud / Drive file</span>
+          <span className="muted">.vault or .json ›</span>
+        </button>
+        <button className="setting-row" onClick={viewRecoveryCode}>
+          <span>Zero-knowledge recovery passphrase</span>
+          <span className="muted">{s.recoveryCode ? 'view code ›' : 'generate ›'}</span>
+        </button>
+        <button className="setting-row" onClick={exportPlain}>
+          <span>Export unencrypted JSON</span>
+          <span className="muted">plaintext ›</span>
+        </button>
         <button className="setting-row" onClick={enableBackup}>
-          <span>Encrypted relay backup</span>
-          <span className="muted">zero-knowledge ›</span>
+          <span>Custom Worker relay backup</span>
+          <span className="muted">{s.endpoint ? 'connected ›' : 'optional ›'}</span>
         </button>
-        <button className="setting-row" onClick={restore}>
-          <span>Restore from relay</span>
-          <span className="muted">›</span>
-        </button>
+        {s.endpoint && (
+          <button className="setting-row" onClick={restore}>
+            <span>Restore from custom relay</span>
+            <span className="muted">›</span>
+          </button>
+        )}
+        <p className="muted" style={{ padding: '8px 0', fontSize: 12, lineHeight: 1.45 }}>
+          Backups are encrypted on-device with AES-256-GCM using your recovery passphrase. You can save the encrypted file directly to Google Drive, iCloud Drive, OneDrive, or local storage via your device's native file picker with zero verification hassle.
+        </p>
         <input
           ref={fileInput}
           type="file"
