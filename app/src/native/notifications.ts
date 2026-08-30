@@ -13,9 +13,9 @@ import {
 import { isNative } from './runtime'
 
 const DAILY_REMINDER_ID = 10_001
-const CHANNEL_ID = 'lunara-gentle-reminders'
-const REMINDER_ACTION_TYPE = 'lunara-local-reminder'
-const REMINDER_ENGINE_MARKER = 'lunara-reminder-engine-v1'
+const CHANNEL_ID = 'periodus-gentle-reminders'
+const REMINDER_ACTION_TYPE = 'periodus-local-reminder'
+const REMINDER_ENGINE_MARKER = 'periodus-reminder-engine-v1'
 const IOS_PENDING_REQUEST_LIMIT = 64
 
 async function ensureChannel(): Promise<void> {
@@ -65,6 +65,8 @@ export async function scheduleDailyReminder(time: string): Promise<void> {
     title: 'Periodus',
     body: 'A gentle moment to check in with yourself.',
     channelId: CHANNEL_ID,
+    smallIcon: 'ic_stat_periodus',
+    iconColor: '#D9A841',
     schedule: {
       on: { hour, minute },
       repeats: true,
@@ -113,6 +115,8 @@ function nativeNotification(request: MaterializedReminderRequest): LocalNotifica
     body: request.body,
     channelId: CHANNEL_ID,
     actionTypeId: REMINDER_ACTION_TYPE,
+    smallIcon: 'ic_stat_periodus',
+    iconColor: '#D9A841',
     schedule: {
       at: new Date(request.fireAt),
       allowWhileIdle: true,

@@ -113,7 +113,7 @@ export default function App() {
   }, [setLocked])
 
 
-  if (!ready) return <div className="page page-loading" role="status" aria-label="Loading Lunara" />
+  if (!ready) return <div className="page page-loading" role="status" aria-label="Loading Periodus" />
   if (!onboarded) return <Onboarding onDone={() => setOnboarded(true)} />
   if (locked) return <PinLock />
 

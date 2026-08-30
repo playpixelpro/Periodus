@@ -55,7 +55,7 @@ final class WidgetSnapshotStore {
         }
 
         static Snapshot empty() {
-            return new Snapshot("Lunara", "Open to view your cycle");
+            return new Snapshot("Periodus", "Open to view your cycle");
         }
     }
 }

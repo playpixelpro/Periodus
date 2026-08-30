@@ -128,7 +128,7 @@ public class LunaraNativePlugin extends Plugin {
 
                 String requestedName = call.getString("jobName");
                 String jobName = requestedName == null || requestedName.trim().isEmpty()
-                    ? "Lunara cycle report"
+                    ? "Periodus cycle report"
                     : requestedName;
 
                 try {
@@ -347,7 +347,7 @@ public class LunaraNativePlugin extends Plugin {
         final AtomicBoolean completed = new AtomicBoolean(false);
         final java.util.concurrent.Executor executor = ContextCompat.getMainExecutor(getContext());
         BiometricPrompt.Builder builder = new BiometricPrompt.Builder(getActivity())
-            .setTitle("Unlock Lunara")
+            .setTitle("Unlock Periodus")
             .setDescription(reason)
             .setNegativeButton("Cancel", executor, (dialog, which) -> {
                 if (completed.compareAndSet(false, true)) {

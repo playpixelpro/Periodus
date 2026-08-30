@@ -31,8 +31,8 @@ const config: CapacitorConfig = {
       overlaysWebView: true,
     },
     LocalNotifications: {
-      smallIcon: 'ic_stat_lunara',
-      iconColor: '#f35f7f',
+      smallIcon: 'ic_stat_periodus',
+      iconColor: '#D9A841',
     },
   },
 }

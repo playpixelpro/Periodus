@@ -14,7 +14,7 @@
         android:layout_height="18dp"
         android:layout_marginBottom="6dp"
         android:contentDescription="@null"
-        android:src="@drawable/ic_stat_lunara"
+        android:src="@drawable/ic_stat_periodus"
         android:tint="#9A4761" />
 
     <TextView
@@ -35,7 +35,7 @@
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="2"
-        android:text="Open Lunara"
+        android:text="Open Periodus"
         android:textColor="#3C2430"
         android:textSize="23sp" />
 
