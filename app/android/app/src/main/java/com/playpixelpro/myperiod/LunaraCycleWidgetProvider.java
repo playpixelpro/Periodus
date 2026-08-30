@@ -57,7 +57,7 @@ public final class LunaraCycleWidgetProvider extends AppWidgetProvider {
                 launch,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
-            views.setOnClickPendingIntent(R.id.widget_container, pending);
+            views.setOnClickPendingIntent(R.id.widget_root, pending);
             manager.updateAppWidget(id, views);
         }
     }
