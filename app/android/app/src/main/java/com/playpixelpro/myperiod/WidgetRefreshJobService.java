@@ -1,4 +1,4 @@
-package app.lunara.mobile;
+package com.playpixelpro.myperiod;
 
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;

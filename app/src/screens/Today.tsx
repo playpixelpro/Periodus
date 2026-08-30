@@ -78,7 +78,7 @@ function phaseFor(
       tone: 'empty',
       eyebrow: 'Your cycle',
       title: 'Let’s pick this back up',
-      body: 'It has been a while since a period was logged, so Lunara paused its estimates. Add your most recent period to restart them.',
+      body: 'It has been a while since a period was logged, so Periodus paused its estimates. Add your most recent period to restart them.',
     }
   }
   if (cycleDay && cycleDay <= 5) {
@@ -336,7 +336,7 @@ export function Today() {
           }
         : {
             generatedAt: new Date().toISOString(),
-            headline: 'Open Lunara',
+            headline: 'Open Periodus',
             detail: 'Review your pregnancy timeline.',
             phase: 'pregnancy',
             accent: 'apricot',
@@ -357,7 +357,7 @@ export function Today() {
             ? 'Ovulation may be today'
             : cycleDay
               ? `Cycle day ${cycleDay}`
-              : 'Open Lunara',
+              : 'Open Periodus',
         detail: ovulationToday
           ? `Calendar estimate · about ±${data.prediction.uncertaintyDays} days`
           : nextPeriodDate
@@ -967,7 +967,7 @@ function Header({
 function Disclaimer() {
   return (
     <p className="disclaimer">
-      Lunara is not a medical device. Predictions are estimates and are not contraception.
+      Periodus is not a medical device. Predictions are estimates and are not contraception.
     </p>
   )
 }

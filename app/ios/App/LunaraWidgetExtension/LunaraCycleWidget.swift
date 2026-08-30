@@ -1,7 +1,7 @@
 import SwiftUI
 import WidgetKit
 
-private let widgetSuite = "group.app.lunara.mobile"
+private let widgetSuite = "group.com.playpixelpro.myperiod"
 private let widgetSnapshotKey = "cycle-widget-snapshot-v1"
 
 private struct CycleSnapshot: Decodable {

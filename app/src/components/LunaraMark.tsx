@@ -19,22 +19,28 @@ interface LunaraMarkProps {
 export function LunaraMark({
   className = '',
   decorative = false,
-  label = 'Lunara',
+  label = 'Periodus',
   size = 32,
 }: LunaraMarkProps) {
   return (
-    <svg
-      className={`lunara-crescent${className ? ` ${className}` : ''}`}
+    <img
+      src="/icons/icon-192.png"
+      alt={decorative ? '' : label}
+      aria-hidden={decorative || undefined}
       width={size}
       height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      focusable="false"
-      role={decorative ? undefined : 'img'}
-      aria-hidden={decorative || undefined}
-      aria-label={decorative ? undefined : label}
-    >
-      <path d={LUNARA_CRESCENT_PATH} fill="currentColor" />
-    </svg>
+      className={`lunara-crescent brand-icon-img${className ? ` ${className}` : ''}`}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size > 40 ? '22%' : '6px',
+        objectFit: 'contain',
+        display: 'block',
+      }}
+      onError={(e) => {
+        // Fallback to SVG if image fails
+        e.currentTarget.style.display = 'none'
+      }}
+    />
   )
 }

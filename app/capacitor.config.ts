@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
-  appId: 'app.lunara.mobile',
-  appName: 'Lunara',
+  appId: 'com.playpixelpro.myperiod',
+  appName: 'Periodus',
   webDir: 'dist',
   backgroundColor: '#fff8fa',
   ios: {

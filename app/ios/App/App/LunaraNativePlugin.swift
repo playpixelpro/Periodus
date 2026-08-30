@@ -27,8 +27,8 @@ public final class LunaraNativePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "printReport", returnType: CAPPluginReturnPromise)
     ]
 
-    private let keychainService = "app.lunara.mobile.vault"
-    private let widgetSuite = "group.app.lunara.mobile"
+    private let keychainService = "com.playpixelpro.myperiod.vault"
+    private let widgetSuite = "group.com.playpixelpro.myperiod"
     private let widgetSnapshotKey = "cycle-widget-snapshot-v1"
     private let healthStore = HKHealthStore()
     private let healthRequestedKey = "health-authorization-requested-v1"

@@ -687,6 +687,7 @@ export function LogSheet({
             min="20"
             max="350"
             step="0.1"
+            placeholder="e.g. 60.5"
             value={draft.weightKg ?? ''}
             onChange={(e) =>
               setDraft({
@@ -704,6 +705,7 @@ export function LogSheet({
             inputMode="numeric"
             min="0"
             step="50"
+            placeholder="e.g. 1500"
             value={draft.waterMl ?? ''}
             onChange={(e) =>
               setDraft({ ...draft, waterMl: e.target.value ? Number(e.target.value) : undefined })
@@ -718,6 +720,7 @@ export function LogSheet({
             inputMode="numeric"
             min="0"
             max="1440"
+            placeholder="e.g. 480"
             value={draft.sleepMinutes ?? ''}
             onChange={(e) =>
               setDraft({
@@ -734,6 +737,7 @@ export function LogSheet({
             type="number"
             inputMode="numeric"
             min="0"
+            placeholder="e.g. 8000"
             value={draft.steps ?? ''}
             onChange={(e) =>
               setDraft({

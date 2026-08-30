@@ -5,6 +5,7 @@ import {
   askAssistant,
   DEFAULT_ANTHROPIC_MODEL,
   DEFAULT_OPENAI_MODEL,
+  resolveChatCompletionsUrl,
   type ChatMessage,
 } from './assistant'
 
@@ -211,5 +212,89 @@ describe('assistant transport', () => {
         fetchMock,
       ),
     ).rejects.toThrow('Assistant request failed (500). Check the provider and model settings.')
+  })
+
+  it('resolves custom chat completion URLs cleanly', () => {
+    expect(resolveChatCompletionsUrl('https://api.deepseek.com')).toBe(
+      'https://api.deepseek.com/v1/chat/completions',
+    )
+    expect(resolveChatCompletionsUrl('https://openrouter.ai/api/v1')).toBe(
+      'https://openrouter.ai/api/v1/chat/completions',
+    )
+    expect(resolveChatCompletionsUrl('http://localhost:11434/v1/chat/completions')).toBe(
+      'http://localhost:11434/v1/chat/completions',
+    )
+  })
+
+  it('supports custom OpenAI-compatible providers with custom endpoints', async () => {
+    let capturedUrl: RequestInfo | URL | undefined
+    let capturedInit: RequestInit | undefined
+    const fetchMock = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      capturedUrl = url
+      capturedInit = init
+      return new Response(
+        JSON.stringify({
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content: 'Custom provider response text.',
+              },
+            },
+          ],
+        }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      )
+    })
+
+    const result = await askAssistant(
+      {
+        provider: 'custom',
+        apiKey: 'custom-secret-key',
+        baseUrl: 'https://openrouter.ai/api/v1',
+        model: 'deepseek/deepseek-chat',
+      },
+      history,
+      { symptoms: { cramps: 'mild' } },
+      fetchMock,
+    )
+
+    expect(result).toBe('Custom provider response text.')
+    expect(capturedUrl).toBe('https://openrouter.ai/api/v1/chat/completions')
+    expect((capturedInit?.headers as Record<string, string>).authorization).toBe(
+      'Bearer custom-secret-key',
+    )
+    const body = JSON.parse(String(capturedInit?.body))
+    expect(body.model).toBe('deepseek/deepseek-chat')
+    expect(body.messages[0].role).toBe('system')
+    expect(body.messages[0].content).toContain('"symptoms":{"cramps":"mild"}')
+    expect(body.messages[1]).toEqual(history[0])
+  })
+
+  it('allows local custom providers without an API key', async () => {
+    let capturedInit: RequestInit | undefined
+    const fetchMock = vi.fn(async (_url: RequestInfo | URL, init?: RequestInit) => {
+      capturedInit = init
+      return new Response(
+        JSON.stringify({
+          choices: [{ message: { content: 'Local model response' } }],
+        }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      )
+    })
+
+    const result = await askAssistant(
+      {
+        provider: 'custom',
+        baseUrl: 'http://localhost:11434/v1',
+        model: 'llama3.2',
+      },
+      history,
+      undefined,
+      fetchMock,
+    )
+
+    expect(result).toBe('Local model response')
+    expect((capturedInit?.headers as Record<string, string>).authorization).toBeUndefined()
   })
 })

@@ -1,4 +1,4 @@
-package app.lunara.mobile;
+package com.playpixelpro.myperiod;
 
 /**
  * Keeps platform enum integers out of the shared TypeScript health contract.

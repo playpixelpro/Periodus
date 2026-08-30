@@ -40,7 +40,7 @@ export function TtcDetailScreen({ onBack }: TtcDetailScreenProps) {
       </header>
 
       <div className="health-scroll">
-        <main className="health-canvas">
+        <div className="health-canvas">
           {!data ? (
             <div className="health-empty">
               <strong>Reading your cycle</strong>
@@ -226,7 +226,7 @@ export function TtcDetailScreen({ onBack }: TtcDetailScreenProps) {
               </p>
             </>
           )}
-        </main>
+        </div>
       </div>
     </div>
   )

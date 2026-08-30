@@ -133,7 +133,7 @@ export function DoctorReport() {
   async function exportReport() {
     setExportError(null)
     try {
-      await exportCurrentReport('Lunara doctor report')
+      await exportCurrentReport('Periodus doctor report')
     } catch {
       setExportError('The report export sheet could not open. Please try again.')
     }

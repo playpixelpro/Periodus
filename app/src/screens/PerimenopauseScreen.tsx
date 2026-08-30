@@ -84,7 +84,7 @@ export function PerimenopauseScreen({ onBack }: PerimenopauseScreenProps) {
       </header>
 
       <div className="health-scroll">
-        <main className="health-canvas">
+        <div className="health-canvas">
           {!data ? (
             <div className="health-empty">
               <strong>Reading your private log</strong>
@@ -326,7 +326,7 @@ export function PerimenopauseScreen({ onBack }: PerimenopauseScreenProps) {
               <p className="health-note">{data.summary.methodology}</p>
             </>
           )}
-        </main>
+        </div>
       </div>
     </div>
   )

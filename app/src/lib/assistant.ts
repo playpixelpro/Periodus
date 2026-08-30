@@ -23,7 +23,7 @@ export interface ChatMessage {
   content: string
 }
 
-export type AssistantProvider = 'anthropic' | 'openai'
+export type AssistantProvider = 'anthropic' | 'openai' | 'custom'
 
 /**
  * How an Anthropic credential authenticates.
@@ -54,6 +54,7 @@ export type ApprovedAssistantContext = Record<string, unknown>
 
 export const DEFAULT_ANTHROPIC_MODEL = 'claude-opus-5'
 export const DEFAULT_OPENAI_MODEL = 'gpt-5.6-terra'
+export const DEFAULT_CUSTOM_MODEL = 'gpt-4o'
 
 export const ANTHROPIC_MODELS = [
   { id: 'claude-opus-5', label: 'Claude Opus 5 · most capable' },
@@ -71,8 +72,16 @@ export function anthropicCredentialKind(key: string): AnthropicCredentialKind | 
   return null
 }
 
-function cleanBaseUrl(url: string): string {
+export function cleanBaseUrl(url: string): string {
   return url.trim().replace(/\/+$/, '')
+}
+
+export function resolveChatCompletionsUrl(baseUrl: string): string {
+  const cleaned = cleanBaseUrl(baseUrl)
+  if (!cleaned) return 'https://api.openai.com/v1/chat/completions'
+  if (cleaned.endsWith('/chat/completions')) return cleaned
+  if (cleaned.endsWith('/v1')) return `${cleaned}/chat/completions`
+  return `${cleaned}/v1/chat/completions`
 }
 
 function contextInstructions(approvedContext?: ApprovedAssistantContext): string {
@@ -88,13 +97,18 @@ ${JSON.stringify(approvedContext)}`
 
 function apiError(provider: AssistantProvider, status: number): Error {
   if (status === 401 || status === 403) {
-    return new Error(
-      provider === 'openai'
-        ? 'OpenAI rejected that key. Add a fresh project key in AI settings.'
-        : 'Anthropic rejected that credential. A CLI token from `claude setup-token` expires — generate a new one, or paste a console API key.',
-    )
+    if (provider === 'openai') {
+      return new Error('OpenAI rejected that key. Add a fresh project key in AI settings.')
+    }
+    if (provider === 'anthropic') {
+      return new Error(
+        'Anthropic rejected that credential. A CLI token from `claude setup-token` expires — generate a new one, or paste a console API key.',
+      )
+    }
+    return new Error('The AI provider rejected your API key or credentials.')
   }
   if (status === 402) return new Error('That account has no available credits.')
+  if (status === 404) return new Error('Endpoint or model not found (404). Check your API endpoint and model name.')
   if (status === 429) return new Error('The provider is rate-limiting requests. Try again shortly.')
   return new Error(`Assistant request failed (${status}). Check the provider and model settings.`)
 }
@@ -129,8 +143,8 @@ async function askAnthropic(
   // header is a 401, so the kind decides the client shape.
   const client = new Anthropic({
     ...(kind === 'cli-token'
-      ? { authToken: credential, defaultHeaders: { 'anthropic-beta': ANTHROPIC_OAUTH_BETA } }
-      : { apiKey: credential }),
+      ? { authToken: credential, apiKey: null, defaultHeaders: { 'anthropic-beta': ANTHROPIC_OAUTH_BETA } }
+      : { apiKey: credential, authToken: null }),
     fetch: fetchImpl,
     // The credential is the user's own, entered on their device, and is never
     // sent anywhere but Anthropic. There is no server to proxy through in a
@@ -188,6 +202,39 @@ function extractOpenAIText(payload: unknown): string {
     .trim()
 }
 
+export function extractChatCompletionText(payload: unknown): string {
+  if (!payload || typeof payload !== 'object') return ''
+  const data = payload as {
+    choices?: Array<{
+      message?: {
+        content?: unknown
+      }
+      text?: unknown
+    }>
+    output_text?: unknown
+    output?: Array<{ type?: string; content?: Array<{ type?: string; text?: unknown }> }>
+  }
+
+  if (Array.isArray(data.choices) && data.choices.length > 0) {
+    const firstChoice = data.choices[0]
+    if (typeof firstChoice?.message?.content === 'string') {
+      return firstChoice.message.content.trim()
+    }
+    if (Array.isArray(firstChoice?.message?.content)) {
+      return (firstChoice.message.content as Array<{ type?: string; text?: unknown }>)
+        .filter((part) => part.type === 'text' && typeof part.text === 'string')
+        .map((part) => part.text as string)
+        .join('')
+        .trim()
+    }
+    if (typeof firstChoice?.text === 'string') {
+      return firstChoice.text.trim()
+    }
+  }
+
+  return extractOpenAIText(payload)
+}
+
 async function askOpenAI(
   config: AssistantConfig,
   history: ChatMessage[],
@@ -225,6 +272,50 @@ async function askOpenAI(
   return text
 }
 
+async function askCustomProvider(
+  config: AssistantConfig,
+  history: ChatMessage[],
+  approvedContext: ApprovedAssistantContext | undefined,
+  fetchImpl: FetchLike,
+): Promise<string> {
+  const endpointUrl = resolveChatCompletionsUrl(config.baseUrl || '')
+  const headers: Record<string, string> = {
+    'content-type': 'application/json',
+  }
+  const apiKey = config.apiKey?.trim()
+  if (apiKey) {
+    headers.authorization = `Bearer ${apiKey}`
+  }
+
+  const systemInstruction = contextInstructions(approvedContext)
+  const messages = [
+    { role: 'system', content: systemInstruction },
+    ...boundedHistory(history).map((message) => ({
+      role: message.role,
+      content: message.content,
+    })),
+  ]
+
+  const response = await fetchImpl(endpointUrl, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      model: config.model || DEFAULT_CUSTOM_MODEL,
+      messages,
+      max_tokens: 1200,
+    }),
+  })
+
+  if (!response.ok) {
+    await response.body?.cancel().catch(() => undefined)
+    throw apiError('custom', response.status)
+  }
+
+  const text = extractChatCompletionText(await response.json())
+  if (!text) throw new Error('AI provider returned no readable text.')
+  return text
+}
+
 export async function askAssistant(
   config: AssistantConfig,
   history: ChatMessage[],
@@ -234,6 +325,9 @@ export async function askAssistant(
   if (history.length === 0) throw new Error('Write a message first.')
   if (config.provider === 'anthropic') {
     return askAnthropic(config, history, approvedContext, fetchImpl)
+  }
+  if (config.provider === 'custom') {
+    return askCustomProvider(config, history, approvedContext, fetchImpl)
   }
   return askOpenAI(config, history, approvedContext, fetchImpl)
 }

@@ -18,18 +18,18 @@ body {
 }
 
 html {
-  background: var(--paper-150);
+  background: var(--surface);
   text-size-adjust: 100%;
 }
 
 body {
   position: relative;
   font-family: var(--font-sans);
-  color: var(--ink-900);
+  color: var(--on-surface);
   background:
-    radial-gradient(circle at 14% -5%, rgba(242, 139, 117, 0.15), transparent 31%),
-    radial-gradient(circle at 96% 18%, rgba(69, 162, 159, 0.11), transparent 30%),
-    var(--paper-100);
+    radial-gradient(circle at 14% -5%, var(--accent-dim), transparent 35%),
+    radial-gradient(circle at 96% 18%, rgba(157, 205, 255, 0.05), transparent 30%),
+    var(--surface);
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -42,16 +42,16 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.26;
+  opacity: 0.18;
   background-image:
     repeating-linear-gradient(
       112deg,
-      rgba(74, 47, 54, 0.018) 0,
-      rgba(74, 47, 54, 0.018) 1px,
+      rgba(236, 234, 229, 0.03) 0,
+      rgba(236, 234, 229, 0.03) 1px,
       transparent 1px,
       transparent 6px
     );
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
 }
 
 #root {
@@ -64,7 +64,7 @@ body::before {
   isolation: isolate;
 }
 
-main {
+#root > main {
   position: relative;
   flex: 1;
   min-height: 0;
@@ -77,7 +77,7 @@ main {
   scrollbar-width: none;
 }
 
-main::-webkit-scrollbar {
+#root > main::-webkit-scrollbar {
   display: none;
 }
 
@@ -113,6 +113,38 @@ textarea,
   user-select: text;
   touch-action: auto;
   font-size: 16px;
+  color: var(--on-surface);
+  caret-color: var(--primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--outline);
+  opacity: 0.8;
+}
+
+/* Ensure black/dark text on explicit white/light backgrounds */
+[style*="background: #fff"],
+[style*="background: #FFF"],
+[style*="background: white"],
+[style*="background: rgb(255, 255, 255)"],
+.bg-white,
+.theme-light {
+  color: #16130b !important;
+}
+
+/* Ensure bright contrast text on transparent backgrounds */
+button,
+a,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: inherit;
 }
 
 button {
@@ -139,8 +171,8 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 3px solid rgba(47, 133, 132, 0.42);
-  outline-offset: 3px;
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 a {
@@ -148,8 +180,8 @@ a {
 }
 
 ::selection {
-  color: var(--ink-950);
-  background: var(--rose-200);
+  color: var(--on-primary);
+  background: var(--primary);
 }
 
 @media (prefers-reduced-motion: reduce) {

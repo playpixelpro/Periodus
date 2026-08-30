@@ -26,6 +26,7 @@ export interface SecureVaultStatus {
 export const SECURE_SECRET_KEYS = {
   openAiApiKey: 'openai-api-key',
   anthropicApiKey: 'anthropic-api-key',
+  customAiApiKey: 'custom-ai-api-key',
 } as const
 
 const LunaraNative = getLunaraNativeBridge<LunaraNativeVaultPlugin>()

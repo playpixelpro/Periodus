@@ -1,11 +1,11 @@
-package app.lunara.mobile;
+package com.playpixelpro.myperiod;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import org.json.JSONObject;
 
 final class WidgetSnapshotStore {
-    static final String REFRESH_ACTION = "app.lunara.mobile.WIDGET_REFRESH";
+    static final String REFRESH_ACTION = "com.playpixelpro.myperiod.WIDGET_REFRESH";
     private static final String PREFERENCES = "lunara.widget.v1";
     private static final String SNAPSHOT_KEY = "cycle-widget-snapshot-v1";
 
@@ -55,7 +55,7 @@ final class WidgetSnapshotStore {
         }
 
         static Snapshot empty() {
-            return new Snapshot("Open Lunara", "Log today to see your cycle at a glance.");
+            return new Snapshot("Lunara", "Open to view your cycle");
         }
     }
 }

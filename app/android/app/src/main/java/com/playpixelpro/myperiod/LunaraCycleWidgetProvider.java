@@ -1,4 +1,4 @@
-package app.lunara.mobile;
+package com.playpixelpro.myperiod;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -38,26 +38,26 @@ public final class LunaraCycleWidgetProvider extends AppWidgetProvider {
         render(context, manager, ids);
     }
 
-    private static void render(Context context, AppWidgetManager manager, int[] ids) {
+    private static void render(Context context, AppWidgetManager manager, int[] appWidgetIds) {
+        if (appWidgetIds == null || appWidgetIds.length == 0) return;
         WidgetSnapshotStore.Snapshot snapshot = WidgetSnapshotStore.read(context);
-        Intent openIntent = new Intent(context, MainActivity.class)
-            .setAction(Intent.ACTION_MAIN)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent openApp = PendingIntent.getActivity(
-            context,
-            0,
-            openIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        for (int id : ids) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.lunara_cycle_widget);
-            views.setTextViewText(R.id.widget_headline, snapshot.headline);
-            views.setTextViewText(
-                R.id.widget_detail,
-                snapshot.detail.isEmpty() ? "Tap to check in" : snapshot.detail
+        for (int id : appWidgetIds) {
+            RemoteViews views = new RemoteViews(
+                context.getPackageName(),
+                R.layout.lunara_cycle_widget
             );
-            views.setOnClickPendingIntent(R.id.widget_root, openApp);
+            views.setTextViewText(R.id.widget_headline, snapshot.headline);
+            views.setTextViewText(R.id.widget_detail, snapshot.detail);
+
+            Intent launch = new Intent(context, MainActivity.class);
+            launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pending = PendingIntent.getActivity(
+                context,
+                0,
+                launch,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            views.setOnClickPendingIntent(R.id.widget_container, pending);
             manager.updateAppWidget(id, views);
         }
     }

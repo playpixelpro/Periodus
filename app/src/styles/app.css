@@ -9,7 +9,7 @@
   max-width: var(--content-width);
   min-height: 100%;
   margin: 0 auto;
-  padding: 18px var(--page-gutter) 38px;
+  padding: 18px var(--page-gutter) calc(var(--tabbar-height, 60px) + var(--safe-bottom) + 48px);
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -132,23 +132,31 @@
   overflow: hidden;
   color: var(--ink-900);
   text-align: left;
-  background: var(--surface-raised);
+  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 button.card {
   width: 100%;
   transition:
-    transform 220ms var(--ease-out),
+    transform 220ms var(--ease-spring),
     border-color 220ms ease,
     box-shadow 220ms ease;
 }
 
+button.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-medium);
+  box-shadow: var(--shadow-float);
+}
+
 button.card:active {
   transform: scale(0.985);
-  box-shadow: 0 5px 16px rgba(75, 45, 50, 0.08);
+  box-shadow: var(--shadow-card);
 }
 
 .cta {
@@ -161,14 +169,13 @@ button.card:active {
   justify-content: center;
   gap: 12px;
   overflow: hidden;
-  color: #fffaf7;
+  color: var(--on-primary);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
   background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.13), transparent 38%),
-    var(--rose-600);
-  border: 1px solid rgba(142, 39, 62, 0.18);
+    linear-gradient(180deg, var(--primary) 0%, var(--primary-container) 100%);
+  border: 1px solid rgba(255, 225, 163, 0.6);
   border-radius: var(--radius-cta);
   box-shadow: var(--shadow-rose);
   transition:
@@ -182,37 +189,37 @@ button.card:active {
   position: absolute;
   inset: 1px;
   pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: calc(var(--radius-cta) - 2px);
 }
 
 .cta:hover {
-  filter: saturate(1.05);
-  box-shadow: 0 17px 34px rgba(213, 72, 99, 0.27);
+  filter: brightness(1.05);
+  box-shadow: 0 12px 30px rgba(238, 195, 94, 0.4);
 }
 
 .cta:active {
   transform: scale(0.98);
-  box-shadow: 0 8px 18px rgba(213, 72, 99, 0.2);
+  box-shadow: 0 6px 16px rgba(238, 195, 94, 0.28);
 }
 
 .cta.secondary {
-  color: var(--rose-700);
-  background: var(--rose-100);
-  border-color: var(--rose-200);
-  box-shadow: none;
+  color: var(--on-surface);
+  background: var(--surface-container);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
 }
 
 .cta.yellow {
-  color: var(--ink-900);
-  background: var(--yellow-500);
-  border-color: rgba(135, 89, 18, 0.15);
-  box-shadow: 0 14px 28px rgba(212, 154, 45, 0.19);
+  color: var(--on-primary);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-container) 100%);
+  border-color: rgba(255, 225, 163, 0.5);
+  box-shadow: var(--shadow-rose);
 }
 
 .cta:disabled {
-  color: rgba(56, 41, 47, 0.42);
-  background: var(--paper-200);
+  color: var(--ink-300);
+  background: var(--surface-container-low);
   border-color: transparent;
   box-shadow: none;
 }
@@ -237,9 +244,9 @@ button.card:active {
 }
 
 .muted {
-  color: var(--ink-500);
-  font-size: 13px;
-  line-height: 1.55;
+  color: var(--on-surface-variant);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .row {
@@ -258,7 +265,7 @@ button.card:active {
 .section-overline,
 .page-kicker,
 .eyebrow {
-  color: var(--ink-500);
+  color: var(--outline);
   font-size: 10px;
   font-weight: 800;
   line-height: 1.2;
@@ -320,13 +327,13 @@ button.card:active {
 .chip {
   min-height: 39px;
   padding: 8px 14px;
-  color: var(--ink-800);
+  color: var(--on-surface);
   font-size: 13px;
   font-weight: 650;
-  background: rgba(255, 253, 249, 0.78);
-  border: 1px solid var(--line-medium);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-chip);
-  box-shadow: 0 2px 8px rgba(75, 45, 50, 0.035);
+  box-shadow: var(--shadow-card);
   transition:
     transform 180ms var(--ease-spring),
     color 180ms ease,
@@ -339,27 +346,25 @@ button.card:active {
 }
 
 .chip[aria-pressed='true'] {
-  color: var(--rose-700);
-  background: var(--rose-100);
-  border-color: var(--rose-400);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(238, 195, 94, 0.35);
   transform: translateY(-1px);
 }
 
 .chip.teal[aria-pressed='true'] {
-  color: var(--teal-700);
-  background: var(--teal-100);
-  border-color: var(--teal-500);
+  color: var(--on-tertiary);
+  background: var(--tertiary-container);
+  border-color: var(--tertiary);
 }
 
 .log-group {
   position: relative;
-  padding: 17px;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 104% -4%, rgba(234, 96, 121, 0.1), transparent 35%),
-    var(--surface-raised);
-  border: 1px solid var(--line-soft);
-  border-radius: 21px;
+  padding: 16px;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
 }
 
@@ -373,24 +378,24 @@ button.card:active {
   width: 9px;
   height: 9px;
   flex: 0 0 auto;
-  background: var(--rose-500);
+  background: var(--primary-container);
   border-radius: 50%;
-  box-shadow: 0 0 0 5px var(--rose-100);
+  box-shadow: 0 0 8px rgba(238, 195, 94, 0.4);
 }
 
 .log-group-dot.teal {
-  background: var(--teal-600);
-  box-shadow: 0 0 0 5px var(--teal-100);
+  background: var(--tertiary-container);
+  box-shadow: 0 0 8px rgba(157, 205, 255, 0.4);
 }
 
 .log-group-dot.sun {
-  background: var(--yellow-500);
-  box-shadow: 0 0 0 5px var(--yellow-100);
+  background: var(--primary);
+  box-shadow: 0 0 8px rgba(255, 225, 163, 0.4);
 }
 
 .log-group-dot.violet {
-  background: var(--purple-500);
-  box-shadow: 0 0 0 5px rgba(133, 111, 157, 0.13);
+  background: var(--accent-amber);
+  box-shadow: 0 0 8px rgba(238, 195, 94, 0.4);
 }
 
 .measurement-grid {
@@ -410,8 +415,9 @@ button.card:active {
   width: 100%;
   height: 100%;
   padding: 0;
-  background: rgba(43, 32, 36, 0.42);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   animation: fade-in 220ms ease-out both;
 }
 
@@ -428,10 +434,8 @@ button.card:active {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 90% 0, rgba(242, 139, 117, 0.1), transparent 28%),
-    var(--paper-100);
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   border-bottom: 0;
   border-radius: 30px 30px 0 0;
   box-shadow: var(--shadow-float);
@@ -443,7 +447,7 @@ button.card:active {
   height: 4px;
   margin: 10px auto 0;
   flex: 0 0 auto;
-  background: var(--paper-300);
+  background: var(--surface-container-high);
   border-radius: 99px;
 }
 
@@ -460,10 +464,10 @@ button.card:active {
 }
 
 .sheet-title {
-  color: var(--ink-950);
+  color: var(--on-surface);
   font-family: var(--font-display);
   font-size: 21px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.02em;
   text-align: center;
 }
@@ -473,10 +477,16 @@ button.card:active {
   height: 36px;
   display: grid;
   place-items: center;
-  color: var(--ink-650);
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid var(--line-soft);
+  color: var(--primary-container);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
   border-radius: 50%;
+  box-shadow: var(--shadow-card);
+  transition: transform 160ms var(--ease-spring), border-color 160ms ease;
+}
+
+.sheet-close:active {
+  transform: scale(0.92);
 }
 
 .sheet-close svg {
@@ -488,13 +498,26 @@ button.card:active {
 }
 
 .sheet-body {
-  padding: 10px 20px 22px;
+  padding: 10px 20px calc(var(--safe-bottom) + 38px);
   display: flex;
   flex-direction: column;
   gap: 18px;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(238, 195, 94, 0.4) transparent;
+}
+
+.sheet-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sheet-body::-webkit-scrollbar-thumb {
+  background: rgba(238, 195, 94, 0.4);
+  border-radius: 99px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -562,16 +585,18 @@ button.card:active {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  color: var(--ink-950);
+  color: var(--on-surface);
+  background: transparent;
 }
 
 .calendar-title-button h2 {
   font-size: 21px;
+  color: var(--on-surface);
 }
 
 .calendar-title-button > span {
   margin-top: 2px;
-  color: var(--rose-600);
+  color: var(--primary-container);
   font-size: 15px;
 }
 
@@ -581,35 +606,39 @@ button.card:active {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid var(--line-soft);
-  border-radius: 15px;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .calendar-toolbar button {
   min-height: 37px;
   padding: 0 13px;
-  color: var(--ink-650);
+  color: var(--on-surface);
   font-size: 12px;
   font-weight: 750;
-  border-radius: 11px;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  transition: all 160ms ease;
 }
 
 .calendar-toolbar button.active {
-  color: var(--rose-700);
-  background: var(--rose-100);
-  box-shadow: 0 3px 10px rgba(75, 45, 50, 0.06);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(238, 195, 94, 0.35);
 }
 
 .calendar-edit-note {
   margin-bottom: 15px;
   padding: 11px 13px;
-  color: var(--rose-800);
+  color: var(--on-surface);
   font-size: 12px;
   line-height: 1.45;
-  background: var(--rose-100);
-  border: 1px solid var(--rose-200);
-  border-radius: 14px;
+  background: rgba(238, 195, 94, 0.15);
+  border: 1px solid rgba(238, 195, 94, 0.25);
+  border-radius: var(--radius-sm);
 }
 
 .year-grid {
@@ -621,18 +650,18 @@ button.card:active {
 .mini-month {
   min-width: 0;
   padding: 13px 10px 11px;
-  color: var(--ink-800);
+  color: var(--on-surface);
   text-align: left;
-  background: rgba(255, 253, 249, 0.75);
-  border: 1px solid var(--line-soft);
-  border-radius: 17px;
-  box-shadow: 0 4px 14px rgba(75, 45, 50, 0.04);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .mini-month > strong {
   display: block;
   margin: 0 2px 8px;
-  color: var(--ink-900);
+  color: var(--on-surface);
   font-family: var(--font-display);
   font-size: 15px;
   font-weight: 550;
@@ -753,10 +782,11 @@ button.card:active {
   height: 42px;
   display: grid;
   place-items: center;
-  color: var(--ink-800);
-  background: rgba(255, 253, 249, 0.65);
-  border: 1px solid var(--line-soft);
-  border-radius: 15px;
+  color: var(--on-surface);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .icon-button svg {
@@ -775,10 +805,10 @@ button.card:active {
 
 .date-panel {
   padding: 8px 8px 7px;
-  background: rgba(255, 253, 249, 0.58);
-  border: 1px solid var(--line-soft);
-  border-radius: 22px;
-  box-shadow: 0 7px 22px rgba(75, 45, 50, 0.035);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .date-strip {
@@ -823,36 +853,36 @@ button.card:active {
 }
 
 .date-cell.sel .num {
-  color: #fffaf7;
-  background: var(--ink-900);
-  box-shadow: 0 7px 15px rgba(43, 32, 36, 0.2);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  box-shadow: 0 0 14px rgba(238, 195, 94, 0.45);
 }
 
 .date-cell.logged .num {
-  color: var(--rose-700);
-  background: var(--rose-100);
+  color: var(--primary-container);
+  background: rgba(238, 195, 94, 0.15);
 }
 
 .date-cell.logged.sel .num {
-  color: #fff;
-  background: var(--rose-600);
-  box-shadow: 0 7px 15px rgba(192, 58, 87, 0.24);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  box-shadow: 0 0 14px rgba(238, 195, 94, 0.45);
 }
 
 .date-cell.fertile:not(.logged, .sel) .num {
-  color: var(--teal-700);
-  background: var(--teal-100);
+  color: var(--tertiary-container);
+  background: rgba(157, 205, 255, 0.15);
 }
 
 .date-cell.predicted-ovulation .num {
-  outline: 1px dashed var(--teal-600);
+  outline: 1px dashed var(--tertiary);
   outline-offset: 2px;
 }
 
 .date-cell.predicted-ovulation.sel .num {
-  color: #fff;
-  background: var(--teal-700);
-  box-shadow: 0 7px 15px rgba(31, 121, 124, 0.24);
+  color: var(--on-tertiary);
+  background: var(--tertiary-container);
+  box-shadow: 0 0 14px rgba(157, 205, 255, 0.45);
 }
 
 .date-cell-dot {
@@ -863,15 +893,15 @@ button.card:active {
 }
 
 .date-cell.logged .date-cell-dot {
-  background: var(--rose-500);
+  background: var(--primary);
 }
 
 /* Reference-informed daily state */
 
 .phase-hero {
-  --phase-ink: var(--ink-950);
-  --phase-accent: var(--rose-600);
-  --phase-soft: rgba(255, 255, 255, 0.55);
+  --phase-ink: #FFFFFF;
+  --phase-accent: var(--primary-container);
+  --phase-soft: var(--on-surface-variant);
   position: relative;
   min-height: 318px;
   padding: 30px 22px 18px;
@@ -883,11 +913,12 @@ button.card:active {
   color: var(--phase-ink);
   text-align: center;
   background:
-    radial-gradient(circle at 22% 9%, rgba(255, 255, 255, 0.58), transparent 31%),
-    linear-gradient(155deg, #ffd7df 0%, #f887a3 64%, #ef688a 100%);
-  border: 1px solid rgba(167, 50, 77, 0.1);
+    radial-gradient(circle at 80% 20%, rgba(238, 195, 94, 0.12), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(184, 62, 88, 0.2), transparent 50%),
+    linear-gradient(155deg, #381b25 0%, #29141c 64%, #1e0e14 100%);
+  border: 1px solid var(--border-subtle);
   border-radius: 32px 32px 64px 64px / 32px 32px 42px 42px;
-  box-shadow: 0 19px 44px rgba(179, 66, 91, 0.15);
+  box-shadow: 0 19px 44px rgba(0, 0, 0, 0.6);
   isolation: isolate;
 }
 
@@ -898,50 +929,52 @@ button.card:active {
   bottom: -37%;
   left: -18%;
   height: 50%;
-  background: rgba(255, 252, 248, 0.18);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 50% 50% 0 0;
   pointer-events: none;
 }
 
 .phase-ovulation,
 .phase-fertile {
-  --phase-accent: var(--teal-700);
+  --phase-accent: var(--tertiary-container);
   background:
-    radial-gradient(circle at 26% 12%, rgba(255, 255, 255, 0.64), transparent 33%),
-    linear-gradient(155deg, #d4f3ef 0%, #77cfce 58%, #48aeb5 100%);
-  border-color: rgba(31, 121, 124, 0.11);
-  box-shadow: 0 19px 44px rgba(30, 120, 122, 0.14);
+    radial-gradient(circle at 80% 20%, rgba(157, 205, 255, 0.15), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(33, 123, 112, 0.2), transparent 50%),
+    linear-gradient(155deg, #102d2c 0%, #0d2121 58%, #081616 100%);
+  border-color: rgba(157, 205, 255, 0.2);
+  box-shadow: 0 19px 44px rgba(0, 0, 0, 0.6);
 }
 
 .phase-cycle,
 .phase-empty {
-  --phase-accent: var(--rose-700);
+  --phase-accent: var(--primary-container);
   background:
-    radial-gradient(circle at 74% 18%, rgba(255, 255, 255, 0.75), transparent 27%),
-    linear-gradient(150deg, #fff1ec, #f5c6c1 62%, #eca19f);
+    radial-gradient(circle at 80% 20%, rgba(238, 195, 94, 0.15), transparent 50%),
+    linear-gradient(150deg, #2d2319, #231b14 62%, #19130d);
+  border-color: rgba(238, 195, 94, 0.2);
 }
 
 .phase-peri {
   --phase-ink: #fff9fc;
-  --phase-accent: #fff;
-  --phase-soft: rgba(255, 255, 255, 0.18);
+  --phase-accent: #EEC35E;
+  --phase-soft: rgba(255, 255, 255, 0.7);
   background:
-    radial-gradient(circle at 16% 11%, rgba(242, 183, 212, 0.3), transparent 31%),
-    radial-gradient(circle at 88% 78%, rgba(215, 169, 91, 0.28), transparent 34%),
-    linear-gradient(155deg, #65356f, #4f1f60 66%, #391440);
-  border-color: rgba(67, 20, 76, 0.18);
-  box-shadow: 0 19px 44px rgba(67, 20, 76, 0.18);
+    radial-gradient(circle at 16% 11%, rgba(242, 183, 212, 0.15), transparent 31%),
+    radial-gradient(circle at 88% 78%, rgba(215, 169, 91, 0.18), transparent 34%),
+    linear-gradient(155deg, #3d1b46, #2d1036 66%, #1e0924);
+  border-color: rgba(157, 205, 255, 0.18);
+  box-shadow: 0 19px 44px rgba(0, 0, 0, 0.6);
 }
 
 .phase-pregnancy {
-  --phase-accent: #a24b29;
+  --phase-accent: #EEC35E;
   min-height: 422px;
   padding-top: 18px;
   background:
-    radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.72), transparent 30%),
-    linear-gradient(155deg, #ffe6d4 0%, #f8c59f 65%, #eca978 100%);
-  border-color: rgba(162, 75, 41, 0.11);
-  box-shadow: 0 19px 44px rgba(162, 75, 41, 0.14);
+    radial-gradient(circle at 50% 25%, rgba(238, 195, 94, 0.15), transparent 30%),
+    linear-gradient(155deg, #38281a 0%, #2b1e13 65%, #1c130b 100%);
+  border-color: rgba(238, 195, 94, 0.2);
+  box-shadow: 0 19px 44px rgba(0, 0, 0, 0.6);
 }
 
 .phase-geometry {
@@ -1320,12 +1353,13 @@ button.card:active {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--ink-650);
+  color: var(--on-surface-variant);
   font-size: 10.5px;
   font-weight: 650;
-  background: rgba(255, 253, 249, 0.76);
-  border: 1px solid var(--line-soft);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
   border-radius: 99px;
+  box-shadow: var(--shadow-card);
   backdrop-filter: blur(6px);
 }
 
@@ -1334,7 +1368,7 @@ button.card:active {
 }
 
 .estimate-arrow {
-  color: var(--rose-600);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-size: 17px;
   line-height: 0.8;
@@ -1344,18 +1378,18 @@ button.card:active {
   width: 6px;
   height: 6px;
   flex: 0 0 auto;
-  background: var(--rose-500);
+  background: var(--primary-container);
   border-radius: 50%;
-  box-shadow: 0 0 0 4px var(--rose-100);
+  box-shadow: 0 0 0 4px rgba(238, 195, 94, 0.2);
 }
 
 .goal-ttc .cycle-stage::before {
-  background: radial-gradient(ellipse, rgba(69, 162, 159, 0.16), transparent 67%);
+  background: radial-gradient(ellipse, rgba(157, 205, 255, 0.16), transparent 67%);
 }
 
-.goal-ttc .cycle-ring-progress { stroke: var(--teal-500); }
-.goal-ttc .estimate-dot { background: var(--teal-500); box-shadow: 0 0 0 4px var(--teal-100); }
-.goal-ttc .cycle-ring-day { color: var(--teal-700); background: var(--teal-100); }
+.goal-ttc .cycle-ring-progress { stroke: var(--tertiary-container); }
+.goal-ttc .estimate-dot { background: var(--tertiary-container); box-shadow: 0 0 0 4px rgba(157, 205, 255, 0.2); }
+.goal-ttc .cycle-ring-day { color: var(--on-tertiary); background: var(--tertiary-container); }
 
 .signal-card {
   display: flex;
@@ -1370,25 +1404,31 @@ button.card:active {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: var(--ink-650);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-style: italic;
-  background: var(--paper-200);
+  background: rgba(238, 195, 94, 0.15);
+  border: 1px solid rgba(238, 195, 94, 0.25);
   border-radius: 50%;
 }
 
 .signal-card strong {
   font-size: 14px;
+  color: var(--on-surface);
 }
 
 .signal-card p {
   margin-top: 4px;
-  color: var(--ink-500);
+  color: var(--on-surface-variant);
   font-size: 12px;
 }
 
 .late-card {
-  background: linear-gradient(135deg, rgba(241, 231, 220, 0.84), rgba(255, 253, 249, 0.92));
+  background:
+    radial-gradient(circle at 100% 0, rgba(238, 195, 94, 0.12), transparent 40%),
+    var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
 }
 
 .peri-score-card {
@@ -1463,12 +1503,14 @@ button.card:active {
   height: 31px;
   display: grid;
   place-items: center;
-  color: var(--ink-500);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-size: 15px;
-  background: rgba(255, 253, 249, 0.65);
-  border: 1px solid var(--line-soft);
+  font-weight: 600;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
   border-radius: 50%;
+  box-shadow: var(--shadow-card);
 }
 
 .stories {
@@ -2252,14 +2294,15 @@ button.card:active {
   display: flex;
   align-items: center;
   gap: 14px;
-  color: var(--ink-650);
-  background: rgba(247, 240, 232, 0.56);
-  border: 1px dashed var(--paper-300);
-  border-radius: 18px;
+  color: var(--on-surface-variant);
+  background: var(--surface-container);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .empty-chart strong {
-  color: var(--ink-800);
+  color: #FFFFFF;
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 600;
@@ -2268,7 +2311,8 @@ button.card:active {
 .empty-chart p {
   max-width: 31ch;
   margin-top: 4px;
-  font-size: 10.5px;
+  color: var(--on-surface-variant);
+  font-size: 11px;
   line-height: 1.45;
 }
 
@@ -2277,7 +2321,7 @@ button.card:active {
   width: 43px;
   height: 43px;
   flex: 0 0 auto;
-  border: 1px solid var(--rose-300);
+  border: 1px solid rgba(238, 195, 94, 0.3);
   border-radius: 50%;
 }
 
@@ -2285,7 +2329,7 @@ button.card:active {
   content: '';
   position: absolute;
   inset: 8px;
-  border: 1px dashed var(--rose-300);
+  border: 1px dashed rgba(238, 195, 94, 0.25);
   border-radius: 50%;
 }
 
@@ -2295,8 +2339,9 @@ button.card:active {
   left: 18px;
   width: 6px;
   height: 6px;
-  background: var(--rose-500);
+  background: var(--primary-container);
   border-radius: 50%;
+  box-shadow: 0 0 8px rgba(238, 195, 94, 0.6);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2314,15 +2359,21 @@ button.card:active {
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-  color: var(--paper-50);
+  color: #FFFFFF;
   text-align: left;
   background:
-    radial-gradient(circle at 73% 25%, rgba(155, 207, 202, 0.18), transparent 28%),
-    linear-gradient(145deg, #284e4d, #1e3939);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 31px;
-  box-shadow: 0 18px 43px rgba(31, 64, 63, 0.18);
-  transition: transform 240ms var(--ease-spring);
+    radial-gradient(circle at 73% 25%, rgba(157, 205, 255, 0.22), transparent 35%),
+    linear-gradient(145deg, #1b3838, #102525);
+  border: 1px solid rgba(157, 205, 255, 0.25);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: transform 240ms var(--ease-spring), border-color 200ms ease;
+}
+
+.assistant-feature:hover {
+  transform: translateY(-2px);
+  border-color: var(--tertiary);
+  box-shadow: var(--shadow-float);
 }
 
 .assistant-feature:active { transform: scale(0.985); }
@@ -2336,8 +2387,8 @@ button.card:active {
 }
 
 .assistant-feature-kicker {
-  color: var(--teal-300);
-  font-size: 9px;
+  color: var(--tertiary-container);
+  font-size: 9.5px;
   font-weight: 800;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -2345,17 +2396,18 @@ button.card:active {
 
 .assistant-feature-copy strong {
   margin-top: 8px;
+  color: #FFFFFF;
   font-family: var(--font-display);
   font-size: 27px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.035em;
 }
 
 .assistant-feature-copy small {
   margin-top: 9px;
-  color: rgba(255, 253, 249, 0.58);
-  font-size: 9px;
+  color: var(--on-surface-variant);
+  font-size: 10px;
 }
 
 .assistant-feature-arrow {
@@ -2367,9 +2419,10 @@ button.card:active {
   height: 39px;
   display: grid;
   place-items: center;
-  color: var(--ink-900);
-  background: var(--teal-300);
+  color: var(--on-tertiary);
+  background: var(--tertiary-container);
   border-radius: 50%;
+  box-shadow: 0 0 14px rgba(157, 205, 255, 0.4);
 }
 
 .assistant-feature-arrow svg {
@@ -2433,16 +2486,16 @@ button.card:active {
   grid-template-columns: 20px 1fr auto;
   align-items: center;
   gap: 9px;
-  background: rgba(255, 253, 249, 0.78);
-  border: 1px solid var(--line-soft);
-  border-radius: 17px;
-  box-shadow: 0 5px 18px rgba(75, 45, 50, 0.04);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .insights-search svg {
   width: 19px;
   fill: none;
-  stroke: var(--ink-500);
+  stroke: var(--primary-container);
   stroke-width: 1.7;
   stroke-linecap: round;
 }
@@ -2450,15 +2503,15 @@ button.card:active {
 .insights-search input {
   min-width: 0;
   padding: 12px 0;
-  color: var(--ink-900);
-  font-size: 16px;
+  color: var(--on-surface);
+  font-size: 15px;
   background: transparent;
   border: 0;
   outline: 0;
 }
 
 .insights-search input::placeholder {
-  color: var(--ink-400);
+  color: var(--outline);
 }
 
 .insights-search input::-webkit-search-cancel-button {
@@ -2468,9 +2521,10 @@ button.card:active {
 .insights-search button {
   width: 30px;
   height: 30px;
-  color: var(--ink-500);
+  color: var(--on-surface-variant);
   font-size: 20px;
-  background: var(--paper-200);
+  background: var(--surface-container-high);
+  border: 1px solid var(--border-subtle);
   border-radius: 50%;
 }
 
@@ -2493,21 +2547,29 @@ button.card:active {
 
 .category-ribbon a {
   min-height: 35px;
-  padding: 8px 13px;
+  padding: 8px 14px;
   flex: 0 0 auto;
-  color: var(--ink-650);
-  font-size: 10px;
+  color: var(--on-surface);
+  font-size: 11px;
   font-weight: 750;
   text-decoration: none;
-  background: rgba(255, 253, 249, 0.62);
-  border: 1px solid var(--line-soft);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
   border-radius: 99px;
+  box-shadow: var(--shadow-card);
+  transition: transform 160ms var(--ease-spring), border-color 160ms ease;
+}
+
+.category-ribbon a:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary);
 }
 
 .category-ribbon a:first-child {
-  color: var(--rose-700);
-  background: var(--rose-100);
-  border-color: var(--rose-200);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(238, 195, 94, 0.35);
 }
 
 .insight-sections {
@@ -2517,16 +2579,16 @@ button.card:active {
 }
 
 .insight-section {
-  --collection-accent: var(--rose-500);
-  --collection-soft: var(--rose-100);
+  --collection-accent: var(--primary-container);
+  --collection-soft: rgba(238, 195, 94, 0.15);
   scroll-margin-top: 18px;
 }
 
-.insight-section.tone-teal { --collection-accent: var(--teal-600); --collection-soft: var(--teal-100); }
-.insight-section.tone-clay { --collection-accent: var(--clay-500); --collection-soft: var(--clay-100); }
+.insight-section.tone-teal { --collection-accent: var(--tertiary-container); --collection-soft: rgba(157, 205, 255, 0.15); }
+.insight-section.tone-clay { --collection-accent: var(--accent-amber); --collection-soft: rgba(238, 195, 94, 0.15); }
 .insight-section.tone-sun,
-.insight-section.tone-yellow { --collection-accent: var(--yellow-600); --collection-soft: var(--yellow-100); }
-.insight-section.tone-mineral { --collection-accent: var(--ink-650); --collection-soft: var(--paper-200); }
+.insight-section.tone-yellow { --collection-accent: var(--primary); --collection-soft: rgba(255, 225, 163, 0.15); }
+.insight-section.tone-mineral { --collection-accent: var(--on-surface-variant); --collection-soft: var(--surface-container-high); }
 
 .insight-section-heading {
   margin-bottom: 13px;
@@ -2551,15 +2613,24 @@ button.card:active {
   align-items: stretch;
   gap: 14px;
   overflow: hidden;
-  color: var(--ink-900);
+  color: var(--on-surface);
   text-align: left;
-  background: var(--surface-raised);
-  border: 1px solid var(--line-soft);
-  border-radius: 23px;
-  box-shadow: 0 8px 26px rgba(75, 45, 50, 0.045);
+  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition:
     transform 220ms var(--ease-spring),
-    box-shadow 220ms ease;
+    box-shadow 220ms ease,
+    border-color 200ms ease;
+}
+
+.article-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-medium);
+  box-shadow: var(--shadow-float);
 }
 
 .article-card:active {
@@ -2637,8 +2708,8 @@ button.card:active {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--ink-500);
-  font-size: 8px;
+  color: var(--outline);
+  font-size: 8.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2653,17 +2724,18 @@ button.card:active {
 
 .article-copy > strong {
   margin-top: 8px;
+  color: #FFFFFF;
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.02em;
 }
 
 .article-open {
   margin-top: auto;
-  color: var(--ink-500);
-  font-size: 9px;
+  color: var(--primary-container);
+  font-size: 9.5px;
   font-weight: 700;
 }
 
@@ -2730,10 +2802,11 @@ button.card:active {
   z-index: 20;
   flex: 0 0 auto;
   padding: 7px 14px calc(var(--safe-bottom) + 7px);
-  background: rgba(251, 247, 240, 0.86);
-  border-top: 1px solid rgba(82, 57, 65, 0.07);
-  box-shadow: 0 -12px 35px rgba(75, 45, 50, 0.045);
+  background: rgba(22, 19, 11, 0.92);
+  border-top: 1px solid var(--border-subtle);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
 }
 
 .tabbar-inner {
@@ -2752,8 +2825,9 @@ button.card:active {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: var(--ink-500);
+  color: var(--on-surface-variant);
   background: none;
+  transition: color 180ms ease;
 }
 
 .tabbar-icon {
@@ -2762,6 +2836,7 @@ button.card:active {
   display: grid;
   place-items: center;
   border-radius: 13px;
+  color: var(--on-surface-variant);
   transition:
     color 220ms ease,
     background 220ms ease,
@@ -2773,7 +2848,7 @@ button.card:active {
   height: 22px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.55;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -2783,18 +2858,20 @@ button.card:active {
 }
 
 .tabbar-label {
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 750;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  color: currentColor;
 }
 
 .tabbar-item.is-active {
-  color: var(--rose-700);
+  color: var(--primary);
 }
 
 .tabbar-item.is-active .tabbar-icon {
-  color: var(--rose-700);
-  background: var(--rose-100);
+  color: var(--primary-container);
+  background: rgba(238, 195, 94, 0.15);
+  border: 1px solid rgba(238, 195, 94, 0.25);
   transform: translateY(-2px);
 }
 
@@ -2804,8 +2881,9 @@ button.card:active {
   bottom: 3px;
   width: 4px;
   height: 4px;
-  background: var(--rose-500);
+  background: var(--primary);
   border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 225, 163, 0.6);
 }
 
 .tabbar-item:active .tabbar-icon {
@@ -2849,11 +2927,24 @@ button.card:active {
   width: 100%;
   max-width: 580px;
   margin: 0 auto;
-  padding: 12px 20px calc(var(--safe-bottom) + 28px);
+  padding: 12px 20px calc(var(--safe-bottom) + 48px);
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(238, 195, 94, 0.4) transparent;
+}
+
+.overlay-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.overlay-body::-webkit-scrollbar-thumb {
+  background: rgba(238, 195, 94, 0.4);
+  border-radius: 99px;
 }
 
 .back-btn {
@@ -2862,13 +2953,19 @@ button.card:active {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: var(--ink-800);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-size: 24px;
   line-height: 1;
-  background: rgba(255, 253, 249, 0.72);
-  border: 1px solid var(--line-soft);
-  border-radius: 14px;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  transition: transform 160ms var(--ease-spring), border-color 160ms ease;
+}
+
+.back-btn:active {
+  transform: scale(0.94);
 }
 
 .field {
@@ -2933,16 +3030,20 @@ button.card:active {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: var(--ink-800);
+  color: var(--on-surface);
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 600;
   text-align: left;
   background: none;
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .setting-row:last-child {
   border-bottom: 0;
+}
+
+.setting-row .muted {
+  color: var(--on-surface-variant);
 }
 
 .setting-date-row {
@@ -2988,6 +3089,67 @@ button.card:active {
   clip-path: inset(50%);
 }
 
+.field label {
+  color: var(--outline);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea,
+.assistant-input {
+  width: 100%;
+  min-height: 49px;
+  padding: 12px 14px;
+  color: var(--on-surface);
+  caret-color: var(--primary);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.field textarea {
+  min-height: 88px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder,
+.assistant-input::placeholder {
+  color: var(--outline);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.assistant-input:focus {
+  background: var(--surface-container-high);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.field input:disabled,
+.field select:disabled,
+.field textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.field-hint {
+  color: var(--on-surface-variant);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
 .reminder-console {
   padding: 0;
   overflow: hidden;
@@ -3001,34 +3163,35 @@ button.card:active {
   justify-content: space-between;
   gap: 18px;
   background:
-    radial-gradient(circle at 88% 18%, rgba(234, 96, 121, 0.2), transparent 34%),
-    radial-gradient(circle at 18% 118%, rgba(69, 162, 159, 0.2), transparent 42%),
-    linear-gradient(145deg, #fff9f3, #f8eee6);
-  border-bottom: 1px solid var(--line-soft);
+    radial-gradient(circle at 88% 18%, rgba(238, 195, 94, 0.15), transparent 38%),
+    radial-gradient(circle at 18% 118%, rgba(157, 205, 255, 0.12), transparent 42%),
+    linear-gradient(145deg, #242018, #1a1711);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .reminder-kicker {
   display: block;
   margin-bottom: 7px;
-  color: var(--rose-700);
+  color: var(--primary-container);
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .reminder-console-heading h3 {
   margin: 0;
-  color: var(--ink-950);
+  color: #FFFFFF;
   font-family: var(--font-display);
   font-size: 26px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--tracking-tight);
 }
 
 .reminder-console-heading p {
   max-width: 31ch;
   margin: 7px 0 0;
-  color: var(--ink-650);
+  color: var(--on-surface-variant);
   font-size: 11px;
   line-height: 1.45;
 }
@@ -3036,22 +3199,22 @@ button.card:active {
 .reminder-status-pill {
   flex: none;
   min-width: 52px;
-  padding: 6px 9px;
-  color: var(--teal-700);
-  font-size: 9px;
+  padding: 6px 11px;
+  color: var(--tertiary-container);
+  font-size: 9.5px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-align: center;
   text-transform: uppercase;
-  background: rgba(229, 242, 238, 0.86);
-  border: 1px solid rgba(47, 133, 132, 0.16);
+  background: rgba(157, 205, 255, 0.15);
+  border: 1px solid rgba(157, 205, 255, 0.25);
   border-radius: var(--radius-chip);
 }
 
 .reminder-status-pill.is-blocked {
-  color: var(--red-500);
-  background: var(--rose-100);
-  border-color: var(--rose-200);
+  color: var(--error);
+  background: rgba(147, 0, 10, 0.2);
+  border-color: var(--error-container);
 }
 
 .reminder-privacy-controls {
@@ -3191,7 +3354,7 @@ button.card:active {
 }
 
 .reminder-plan-list {
-  border-top: 1px solid var(--line-soft);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .reminder-plan {
@@ -3201,7 +3364,8 @@ button.card:active {
   grid-template-columns: 39px minmax(0, 1fr) 78px 42px;
   align-items: center;
   gap: 10px;
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-container);
   transition:
     background 180ms ease,
     opacity 180ms ease;
@@ -3213,8 +3377,8 @@ button.card:active {
 
 .reminder-plan.is-enabled {
   background:
-    linear-gradient(90deg, rgba(251, 232, 231, 0.48), transparent 48%),
-    rgba(255, 253, 249, 0.34);
+    linear-gradient(90deg, rgba(238, 195, 94, 0.1), transparent 50%),
+    var(--surface-container);
 }
 
 .reminder-monogram {
@@ -3223,25 +3387,25 @@ button.card:active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--rose-700);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 700;
-  background: var(--rose-100);
-  border: 1px solid rgba(234, 96, 121, 0.12);
+  background: rgba(238, 195, 94, 0.15);
+  border: 1px solid rgba(238, 195, 94, 0.25);
   border-radius: 14px 14px 14px 6px;
 }
 
 .reminder-plan:nth-child(3n + 2) .reminder-monogram {
-  color: var(--teal-700);
-  background: var(--teal-100);
-  border-color: rgba(47, 133, 132, 0.12);
+  color: var(--tertiary-container);
+  background: rgba(157, 205, 255, 0.15);
+  border-color: rgba(157, 205, 255, 0.25);
 }
 
 .reminder-plan:nth-child(3n) .reminder-monogram {
-  color: #8d6220;
-  background: var(--yellow-100);
-  border-color: rgba(212, 154, 45, 0.13);
+  color: var(--accent-amber);
+  background: rgba(238, 195, 94, 0.15);
+  border-color: rgba(238, 195, 94, 0.25);
 }
 
 .reminder-plan-copy {
@@ -3252,17 +3416,17 @@ button.card:active {
 
 .reminder-plan-copy strong {
   overflow: hidden;
-  color: var(--ink-900);
-  font-size: 11px;
-  font-weight: 760;
+  color: var(--on-surface);
+  font-size: 13px;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .reminder-plan-copy small {
   overflow: hidden;
-  color: var(--ink-500);
-  font-size: 8.5px;
+  color: var(--on-surface-variant);
+  font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -3273,22 +3437,26 @@ button.card:active {
 
 .reminder-time-field input {
   width: 78px;
+  color: var(--on-surface);
+  background: var(--surface-container-high);
+  border: 1px solid var(--border-subtle);
 }
 
 .reminder-time-field input:disabled {
-  color: var(--ink-300);
-  background: var(--paper-100);
+  color: var(--outline);
+  background: var(--surface-container);
   border-color: transparent;
+  opacity: 0.45;
 }
 
 .reminder-footnote {
   margin: 0;
   padding: 15px 18px 17px;
-  color: var(--ink-500);
-  font-size: 9px;
+  color: var(--outline);
+  font-size: 9.5px;
   line-height: 1.45;
-  background: rgba(247, 240, 232, 0.66);
-  border-top: 1px solid var(--line-soft);
+  background: var(--surface-container);
+  border-top: 1px solid var(--border-subtle);
 }
 
 @media (max-width: 390px) {
@@ -3485,17 +3653,25 @@ button.card:active {
   grid-template-columns: 44px 1fr 22px;
   align-items: center;
   gap: 12px;
-  color: var(--ink-800);
+  color: var(--on-surface);
   text-align: left;
-  background: rgba(255, 253, 249, 0.76);
-  border: 1px solid var(--line-soft);
-  border-radius: 20px;
-  box-shadow: 0 7px 19px rgba(75, 45, 50, 0.035);
+  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition:
     transform 220ms var(--ease-spring),
     border-color 200ms ease,
     background 200ms ease,
     box-shadow 200ms ease;
+}
+
+.choice-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-medium);
+  box-shadow: var(--shadow-float);
 }
 
 .choice-card:active {
@@ -3504,10 +3680,13 @@ button.card:active {
 
 .choice-card.selected {
   background:
-    radial-gradient(circle at 102% -5%, rgba(242, 139, 117, 0.16), transparent 35%),
-    var(--rose-100);
-  border-color: var(--rose-400);
-  box-shadow: 0 11px 26px rgba(214, 75, 104, 0.1);
+    radial-gradient(circle at 102% -5%, rgba(238, 195, 94, 0.15), transparent 40%),
+    linear-gradient(180deg, rgba(56, 52, 43, 0.95) 0%, rgba(45, 42, 33, 0.98) 100%);
+  border-color: var(--primary-container);
+  box-shadow:
+    0 0 0 1px var(--primary-container),
+    0 14px 32px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(238, 195, 94, 0.12);
 }
 
 .choice-icon {
@@ -3515,16 +3694,18 @@ button.card:active {
   height: 42px;
   display: grid;
   place-items: center;
-  color: var(--rose-700);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-size: 20px;
-  background: var(--rose-100);
-  border-radius: 14px;
+  background: rgba(238, 195, 94, 0.12);
+  border: 1px solid rgba(238, 195, 94, 0.2);
+  border-radius: 12px;
 }
 
 .choice-card.selected .choice-icon {
-  color: #fffaf7;
-  background: var(--rose-600);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border-color: var(--primary);
 }
 
 .choice-card > span:nth-child(2) {
@@ -3539,9 +3720,13 @@ button.card:active {
 }
 
 .choice-card small {
-  color: var(--ink-500);
+  color: var(--on-surface-variant);
   font-size: 9.5px;
   line-height: 1.35;
+}
+
+.choice-card.selected small {
+  color: var(--primary);
 }
 
 .choice-radio {
@@ -3549,15 +3734,17 @@ button.card:active {
   height: 18px;
   display: grid;
   place-items: center;
-  color: var(--rose-600);
+  color: var(--primary-container);
   font-size: 10px;
-  border: 1px solid var(--line-medium);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 50%;
 }
 
 .choice-card.selected .choice-radio {
-  border-color: var(--rose-500);
-  box-shadow: inset 0 0 0 3px var(--rose-100);
+  border-color: var(--primary-container);
+  background: var(--primary-container);
+  color: var(--on-primary);
+  box-shadow: 0 0 8px rgba(238, 195, 94, 0.4);
 }
 
 .choice-card.compact {
@@ -3573,8 +3760,8 @@ button.card:active {
 
 .ai-provider-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
 }
 
 .ai-setup-card {
@@ -4711,10 +4898,11 @@ button.card:active {
   display: flex;
   align-items: flex-start;
   gap: 11px;
-  color: var(--ink-650);
-  background: rgba(229, 242, 238, 0.72);
-  border: 1px solid rgba(47, 133, 132, 0.13);
-  border-radius: 17px;
+  color: var(--on-surface-variant);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .ob-why > span,
@@ -4725,9 +4913,9 @@ button.card:active {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: var(--teal-700);
+  color: var(--tertiary-container);
   font-weight: 900;
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(157, 205, 255, 0.14);
   border-radius: 50%;
 }
 
@@ -4744,7 +4932,7 @@ button.card:active {
 .ob-data-boundary strong,
 .ob-prediction-gate strong,
 .ob-safety-note strong {
-  color: var(--ink-800);
+  color: var(--on-surface);
 }
 
 .ob-option-stack {
@@ -4762,14 +4950,16 @@ button.card:active {
   grid-template-columns: auto 1fr 23px;
   align-items: center;
   gap: 11px;
-  color: var(--ink-800);
+  color: var(--on-surface);
   text-align: left;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(82, 57, 65, 0.09);
-  border-radius: 18px;
-  box-shadow: 0 7px 18px rgba(75, 45, 50, 0.035);
+  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition:
-    transform 180ms var(--ease-out),
+    transform 180ms var(--ease-spring),
     min-height 220ms var(--ease-out),
     background 200ms ease,
     border-color 200ms ease,
@@ -4780,18 +4970,27 @@ button.card:active {
   grid-template-columns: 1fr 23px;
 }
 
+.ob-option:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-medium);
+  box-shadow: var(--shadow-float);
+}
+
 .ob-option:active {
   transform: scale(0.985);
 }
 
 .ob-option.selected {
   min-height: 76px;
-  color: #fffaf7;
+  color: var(--on-surface);
   background:
-    radial-gradient(circle at 100% 0, rgba(255, 255, 255, 0.18), transparent 34%),
-    linear-gradient(135deg, #d94d69, #e97178);
-  border-color: rgba(156, 42, 68, 0.24);
-  box-shadow: 0 13px 28px rgba(190, 59, 87, 0.17);
+    radial-gradient(circle at 100% 0, rgba(238, 195, 94, 0.15), transparent 40%),
+    linear-gradient(180deg, rgba(56, 52, 43, 0.95) 0%, rgba(45, 42, 33, 0.98) 100%);
+  border-color: var(--primary-container);
+  box-shadow:
+    0 0 0 1px var(--primary-container),
+    0 14px 32px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(238, 195, 94, 0.12);
 }
 
 .ob-option-icon {
@@ -4799,16 +4998,18 @@ button.card:active {
   height: 41px;
   display: grid;
   place-items: center;
-  color: #b83e58;
+  color: var(--primary-container);
   font-size: 18px;
   font-weight: 800;
-  background: #fbe8e7;
-  border-radius: 14px;
+  background: rgba(238, 195, 94, 0.12);
+  border: 1px solid rgba(238, 195, 94, 0.2);
+  border-radius: 12px;
 }
 
 .ob-option.selected .ob-option-icon {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.18);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border-color: var(--primary);
 }
 
 .ob-option-copy {
@@ -4824,9 +5025,13 @@ button.card:active {
 }
 
 .ob-option-copy small {
-  color: rgba(255, 250, 247, 0.82);
+  color: var(--on-surface-variant);
   font-size: 9.5px;
   line-height: 1.48;
+}
+
+.ob-option.selected .ob-option-copy small {
+  color: var(--primary);
 }
 
 .ob-check {
@@ -4834,17 +5039,17 @@ button.card:active {
   height: 21px;
   display: grid;
   place-items: center;
-  color: #c63f5c;
+  color: var(--primary-container);
   font-size: 11px;
   font-weight: 900;
-  border: 1.5px solid rgba(82, 57, 65, 0.2);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 50%;
 }
 
 .ob-option.selected .ob-check {
-  color: #d44864;
-  background: #fff;
-  border-color: #fff;
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border-color: var(--primary);
 }
 
 .ob-option-stack.compact .ob-option {
@@ -5447,7 +5652,7 @@ button.card:active {
 
 .onboarding-ai .ai-provider-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 8px;
 }
 
@@ -6777,12 +6982,24 @@ button.card:active {
   grid-template-columns: 39px 1fr 16px;
   align-items: center;
   gap: 11px;
-  color: var(--ink-800);
+  color: var(--on-surface);
   text-align: left;
-  background: rgba(255, 253, 249, 0.76);
-  border: 1px solid var(--line-soft);
-  border-radius: 19px;
-  box-shadow: 0 9px 24px rgba(75, 45, 50, 0.045);
+  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 180ms var(--ease-spring),
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.prediction-basis-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-medium);
+  box-shadow: var(--shadow-float);
 }
 
 .prediction-basis-glyph {
@@ -6790,11 +7007,12 @@ button.card:active {
   height: 39px;
   display: grid;
   place-items: center;
-  color: var(--teal-700);
+  color: var(--primary-container);
   font-family: var(--font-display);
   font-size: 18px;
-  background: var(--teal-100);
-  border-radius: 14px;
+  background: rgba(238, 195, 94, 0.15);
+  border: 1px solid rgba(238, 195, 94, 0.25);
+  border-radius: 12px;
 }
 
 .prediction-basis-card > span:nth-child(2) {
@@ -6805,23 +7023,24 @@ button.card:active {
 }
 
 .prediction-basis-card small {
-  color: var(--ink-500);
-  font-size: 8px;
-  font-weight: 900;
+  color: var(--primary);
+  font-size: 8.5px;
+  font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .prediction-basis-card strong {
-  color: var(--ink-900);
-  font-size: 11px;
+  color: var(--on-surface);
+  font-size: 12px;
+  font-weight: 600;
   line-height: 1.3;
 }
 
 .prediction-basis-card em {
   overflow: hidden;
-  color: var(--ink-500);
-  font-size: 8.5px;
+  color: var(--on-surface-variant);
+  font-size: 9.5px;
   font-style: normal;
   line-height: 1.35;
   white-space: nowrap;
@@ -6830,27 +7049,29 @@ button.card:active {
 
 .prediction-basis-window {
   margin-top: 3px;
-  color: var(--teal-700);
-  font-size: 8px;
-  font-weight: 750;
+  color: var(--tertiary-container);
+  font-size: 9px;
+  font-weight: 600;
   line-height: 1.35;
 }
 
 .prediction-basis-card > i {
-  color: var(--ink-300);
-  font-size: 24px;
+  color: var(--outline);
+  font-size: 20px;
   font-style: normal;
 }
 
 .prediction-basis-card.evidence-suppressed .prediction-basis-glyph {
-  color: var(--rose-700);
-  background: var(--rose-100);
+  color: var(--error);
+  background: rgba(147, 0, 10, 0.25);
+  border-color: var(--error-container);
 }
 
 .prediction-basis-card.evidence-insufficient .prediction-basis-glyph,
 .prediction-basis-card.evidence-baseline-calendar .prediction-basis-glyph {
-  color: #8c641f;
-  background: var(--yellow-100);
+  color: var(--primary-container);
+  background: rgba(238, 195, 94, 0.15);
+  border-color: rgba(238, 195, 94, 0.25);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -8044,7 +8265,7 @@ button.card:active {
 
 .page.onboarding-ai .ai-provider-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 8px;
   border: 0;
 }
@@ -8228,7 +8449,7 @@ button.card:active {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: var(--ink-650);
+  color: var(--on-surface);
   text-align: center;
   background: transparent;
 }
@@ -8239,15 +8460,14 @@ button.card:active {
   height: 76px;
   display: grid;
   place-items: center;
-  color: var(--ink-500);
-  background: rgba(255, 253, 249, 0.76);
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  color: var(--primary-container);
+  background: var(--surface-container);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 50%;
-  box-shadow:
-    0 11px 25px rgba(75, 45, 50, 0.07),
-    inset 0 0 0 1px rgba(75, 45, 50, 0.025);
+  box-shadow: var(--shadow-card);
   transition:
     transform 180ms var(--ease-spring),
+    border-color 180ms ease,
     background 180ms ease;
 }
 
@@ -8263,10 +8483,10 @@ button.card:active {
 }
 
 .quick-action-period {
-  color: #fff;
-  background: var(--rose-600);
-  border-color: rgba(255, 255, 255, 0.34);
-  box-shadow: 0 12px 26px rgba(201, 64, 94, 0.24);
+  color: var(--on-primary);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-container) 100%);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-rose);
 }
 
 .quick-action-period svg path:first-child {
@@ -8274,12 +8494,12 @@ button.card:active {
 }
 
 .quick-action-period svg path:last-child {
-  fill: rgba(255, 255, 255, 0.12);
+  fill: rgba(0, 0, 0, 0.15);
 }
 
 .quick-action strong {
   max-width: 10ch;
-  color: currentColor;
+  color: var(--on-surface);
   font-size: 12px;
   font-weight: 750;
   line-height: 1.15;
@@ -8290,8 +8510,9 @@ button.card:active {
 }
 
 .quick-action.is-recorded:not(:first-child) .quick-action-circle {
-  color: var(--teal-700);
-  background: var(--teal-100);
+  color: var(--tertiary-container);
+  background: rgba(157, 205, 255, 0.15);
+  border-color: var(--tertiary);
 }
 
 .quick-action.is-recorded .quick-action-circle::after {
@@ -8301,8 +8522,8 @@ button.card:active {
   bottom: 5px;
   width: 10px;
   height: 10px;
-  background: var(--teal-600);
-  border: 3px solid var(--paper-100);
+  background: var(--primary-container);
+  border: 2px solid var(--surface);
   border-radius: 50%;
 }
 
@@ -8326,12 +8547,15 @@ button.card:active {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  color: var(--ink-900);
+  color: var(--on-surface);
   text-align: left;
-  background: var(--rose-100);
-  border: 1.5px solid rgba(214, 75, 104, 0.36);
+  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 22px;
-  box-shadow: 0 9px 22px rgba(75, 45, 50, 0.055);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 180ms var(--ease-spring), border-color 180ms ease;
 }
 
 .daily-insight-tile::after {
@@ -8341,30 +8565,32 @@ button.card:active {
   right: -32px;
   width: 88px;
   height: 88px;
-  background: rgba(255, 255, 255, 0.29);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 50%;
 }
 
 .daily-insight-tile.insight-blue {
-  background: #e5eaff;
-  border-color: rgba(92, 112, 208, 0.3);
+  background: linear-gradient(180deg, rgba(24, 38, 55, 0.85) 0%, rgba(17, 27, 39, 0.98) 100%);
+  border-color: rgba(157, 205, 255, 0.3);
 }
 
 .daily-insight-tile.insight-teal {
-  background: var(--teal-100);
-  border-color: rgba(47, 133, 132, 0.3);
+  background: linear-gradient(180deg, rgba(20, 48, 46, 0.85) 0%, rgba(14, 33, 32, 0.98) 100%);
+  border-color: rgba(69, 162, 159, 0.3);
 }
 
-.daily-insight-tile.insight-rose {
-  background: var(--rose-100);
-  border-color: rgba(214, 75, 104, 0.3);
+.daily-insight-tile.insight-rose,
+.daily-insight-tile.insight-amber,
+.daily-insight-tile.insight-coral {
+  background: linear-gradient(180deg, rgba(48, 38, 22, 0.85) 0%, rgba(34, 27, 16, 0.98) 100%);
+  border-color: rgba(238, 195, 94, 0.3);
 }
 
 .daily-insight-tile > span {
   position: relative;
   z-index: 1;
   min-height: 22px;
-  color: var(--ink-650);
+  color: var(--outline);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 0.085em;
@@ -8376,9 +8602,10 @@ button.card:active {
   position: relative;
   z-index: 1;
   margin-top: 9px;
+  color: var(--on-surface);
   font-family: var(--font-display);
   font-size: clamp(17px, 5vw, 22px);
-  font-weight: 550;
+  font-weight: 600;
   line-height: 0.98;
   letter-spacing: -0.035em;
 }
@@ -8388,7 +8615,7 @@ button.card:active {
   z-index: 1;
   margin-top: auto;
   padding-top: 11px;
-  color: var(--ink-650);
+  color: var(--on-surface-variant);
   font-size: 9.25px;
   font-weight: 600;
   line-height: 1.35;
@@ -8402,11 +8629,11 @@ button.card:active {
   height: 17px;
   display: grid;
   place-items: center;
-  color: var(--ink-650);
+  color: var(--on-surface-variant);
   font-family: var(--font-display);
   font-size: 14px;
   font-style: normal;
-  background: rgba(255, 255, 255, 0.36);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 50%;
 }
 
@@ -8490,13 +8717,14 @@ button.card:active {
 }
 
 .date-cell.is-today .date-cell-caption {
-  color: var(--ink-900);
+  color: var(--primary);
+  font-weight: 800;
 }
 
 /* Future days read as an outline waiting to be filled in. */
 .date-cell.is-future .num {
-  color: var(--rose-600);
-  border: 1.5px dashed rgba(214, 75, 104, 0.5);
+  color: var(--primary-container);
+  border: 1.5px dashed rgba(238, 195, 94, 0.4);
 }
 
 .date-cell.is-future.sel .num {
@@ -8504,7 +8732,9 @@ button.card:active {
 }
 
 .today-page .date-cell.sel .num {
-  box-shadow: 0 0 0 4px rgba(255, 253, 249, 0.9);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  box-shadow: 0 0 0 3px rgba(238, 195, 94, 0.4), 0 0 16px rgba(238, 195, 94, 0.35);
 }
 
 /*
@@ -8517,7 +8747,7 @@ button.card:active {
   padding: 40px 24px 20px;
   border: 0;
   border-radius: 0 0 40px 40px;
-  box-shadow: 0 22px 40px -26px rgba(179, 66, 91, 0.5);
+  box-shadow: 0 22px 40px -26px rgba(0, 0, 0, 0.7);
 }
 
 .today-page .phase-hero .phase-copy {
@@ -8529,6 +8759,7 @@ button.card:active {
   font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
+  color: var(--primary);
 }
 
 .today-page .phase-copy h1 {
@@ -8537,11 +8768,13 @@ button.card:active {
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -0.035em;
+  color: #ffffff;
 }
 
 .today-page .phase-copy p {
   max-width: 30ch;
   margin-top: 10px;
+  color: var(--on-surface-variant);
 }
 
 /* The hero's call to action is a pill, not a footer strip. */
@@ -8551,10 +8784,15 @@ button.card:active {
   align-self: center;
   gap: 8px;
   border-top: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 650;
-  background: rgba(255, 253, 249, 0.42);
+  color: var(--primary);
+  background: rgba(35, 31, 23, 0.85);
+  border: 1px solid rgba(238, 195, 94, 0.25);
   border-radius: 999px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .today-page .phase-detail-link span {
@@ -8562,7 +8800,8 @@ button.card:active {
   height: 22px;
   display: grid;
   place-items: center;
-  background: rgba(255, 253, 249, 0.75);
+  color: var(--on-primary);
+  background: var(--primary-container);
   border-radius: 50%;
 }
 
@@ -8702,4 +8941,186 @@ button.card:active {
   .today-page .phase-hero.enter-previous {
     animation: none;
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Custom Modernist Dialog System                                              */
+/* -------------------------------------------------------------------------- */
+
+.custom-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fade-in 200ms ease-out both;
+}
+
+.custom-dialog-card {
+  width: min(100%, 420px);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.8),
+    0 0 24px rgba(238, 195, 94, 0.08);
+  animation: sheet-up 240ms var(--ease-spring) both;
+}
+
+.custom-dialog-card.is-danger {
+  border-color: rgba(242, 92, 84, 0.4);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.85),
+    0 0 24px rgba(242, 92, 84, 0.15);
+}
+
+.custom-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-dialog-title {
+  color: var(--on-surface);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.custom-dialog-message {
+  color: var(--on-surface-variant);
+  font-size: 13.5px;
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.custom-dialog-code-box {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.custom-dialog-code-box code {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-all;
+  letter-spacing: 0.04em;
+}
+
+.custom-dialog-copy-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  color: var(--primary-container);
+  font-size: 12px;
+  font-weight: 750;
+  background: var(--surface-container-high);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-chip);
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.custom-dialog-copy-btn:hover {
+  border-color: var(--primary-container);
+}
+
+.custom-dialog-copy-btn:active {
+  transform: scale(0.94);
+}
+
+.custom-dialog-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.custom-dialog-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  color: var(--on-surface);
+  font-size: 15px;
+  background: var(--surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.custom-dialog-input:focus {
+  border-color: var(--primary-container);
+  box-shadow: 0 0 0 3px rgba(238, 195, 94, 0.25);
+}
+
+.custom-dialog-helper {
+  color: var(--outline);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.custom-dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.custom-dialog-btn {
+  min-height: 42px;
+  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-chip);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-spring), background 160ms ease, border-color 160ms ease;
+}
+
+.custom-dialog-btn:active {
+  transform: scale(0.96);
+}
+
+.custom-dialog-cancel {
+  color: var(--on-surface-variant);
+  background: var(--surface-container-high);
+  border: 1px solid var(--border-subtle);
+}
+
+.custom-dialog-cancel:hover {
+  color: var(--on-surface);
+  border-color: var(--border-subtle);
+}
+
+.custom-dialog-confirm {
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 14px rgba(238, 195, 94, 0.35);
+}
+
+.custom-dialog-confirm.danger-btn {
+  color: #ffffff;
+  background: #e63946;
+  border-color: #ff4d6d;
+  box-shadow: 0 0 16px rgba(230, 57, 70, 0.45);
 }

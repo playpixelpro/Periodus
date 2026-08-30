@@ -31,7 +31,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
   async function exportReport() {
     setExportError(null)
     try {
-      await exportCurrentReport('Lunara private cycle report')
+      await exportCurrentReport('Periodus private cycle report')
     } catch {
       setExportError('The report export sheet could not open. Please try again.')
     }
@@ -54,7 +54,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
       </header>
 
       <div className="health-scroll">
-        <main className="health-canvas">
+        <div className="health-canvas">
           {exportError && (
             <p className="report-export-error no-print" role="alert">
               {exportError}
@@ -63,7 +63,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
           {!data ? (
             <div className="health-empty">
               <strong>Building your report</strong>
-              <p>Your entries stay on this device while Lunara calculates the summary.</p>
+              <p>Your entries stay on this device while Periodus calculates the summary.</p>
             </div>
           ) : (
             <>
@@ -219,7 +219,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
                     <div className="health-empty">
                       <strong>No repeatable pattern yet</strong>
                       <p>
-                        Patterns need at least three entries across two completed cycles. Lunara
+                        Patterns need at least three entries across two completed cycles. Periodus
                         does not turn one unusual day into a conclusion.
                       </p>
                     </div>
@@ -329,7 +329,7 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
               </button>
             </>
           )}
-        </main>
+        </div>
       </div>
     </div>
   )

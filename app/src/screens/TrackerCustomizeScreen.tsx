@@ -88,7 +88,7 @@ export function TrackerCustomizeScreen({ onBack }: TrackerCustomizeScreenProps) 
       </header>
 
       <div className="health-scroll">
-        <main className="health-canvas">
+        <div className="health-canvas">
           <section className="health-hero">
             <div className="health-kicker">Your daily log</div>
             <h1 className="health-display">Keep only what matters.</h1>
@@ -160,7 +160,7 @@ export function TrackerCustomizeScreen({ onBack }: TrackerCustomizeScreenProps) 
           >
             Restore default order
           </button>
-        </main>
+        </div>
       </div>
     </div>
   )

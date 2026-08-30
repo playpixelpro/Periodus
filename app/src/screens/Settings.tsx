@@ -19,6 +19,7 @@ import {
 } from '../db/schema'
 import type { Envelope } from '../crypto/vault'
 import { applyImport, collectExport, decryptImport, encryptedExport, shareOrDownload } from '../db/transfer'
+import { useDialog } from '../context/DialogContext'
 import { pushBackup, restoreBackup } from '../lib/backup'
 import { localToday } from '../lib/dates'
 import { addDays } from '../engine/cycle'
@@ -134,10 +135,12 @@ export function Settings() {
     setTtcDetailOpen,
     setTrackerCustomizeOpen,
   } = useApp()
+  const dialog = useDialog()
   const fileInput = useRef<HTMLInputElement>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [hasOpenAiKey, setHasOpenAiKey] = useState(false)
   const [hasAnthropicKey, setHasAnthropicKey] = useState(false)
+  const [hasCustomKey, setHasCustomKey] = useState(false)
   const [vaultLabel, setVaultLabel] = useState(isNative ? 'Checking…' : 'Session memory')
   const [biometrics, setBiometrics] = useState<BiometricStatus | null>(null)
   const [health, setHealth] = useState<HealthPlatformStatus | null>(null)
@@ -153,15 +156,17 @@ export function Settings() {
     void Promise.all([
       getSecureSecret(SECURE_SECRET_KEYS.openAiApiKey),
       getSecureSecret(SECURE_SECRET_KEYS.anthropicApiKey),
+      getSecureSecret(SECURE_SECRET_KEYS.customAiApiKey),
       secureVaultStatus(),
       getBiometricStatus(),
       getHealthPlatformStatus(),
       getWidgetStatus(),
     ])
-      .then(([openAiKey, anthropicKey, vault, biometricStatus, healthStatus, widgetStatus]) => {
+      .then(([openAiKey, anthropicKey, customKey, vault, biometricStatus, healthStatus, widgetStatus]) => {
         if (!alive) return
         setHasOpenAiKey(Boolean(openAiKey))
         setHasAnthropicKey(Boolean(anthropicKey))
+        setHasCustomKey(Boolean(customKey))
         setVaultLabel(
           vault.persistence === 'memory'
             ? 'Session memory'
@@ -217,7 +222,7 @@ export function Settings() {
       pregnancyDating,
       hasPin: !!hasPin,
       biometricLock: biometricLock === '1',
-      provider: provider === 'openai' ? 'openai' : 'anthropic',
+      provider: provider === 'openai' ? ('openai' as const) : provider === 'custom' ? ('custom' as const) : ('anthropic' as const),
       endpoint: endpoint ?? '',
       recoveryCode: code ?? '',
       legacyReminderTime: time,
@@ -319,7 +324,15 @@ export function Settings() {
   }
 
   async function exportEncrypted() {
-    const pass = prompt('Choose a passphrase to encrypt this file. You will need it to import.')
+    const pass = await dialog.prompt({
+      title: 'Encrypt export file',
+      message: 'Choose a passphrase to encrypt this export. You will need this passphrase whenever you import this backup.',
+      confirmText: 'Encrypt & Export',
+      input: {
+        type: 'password',
+        placeholder: 'Enter secure passphrase',
+      },
+    })
     if (!pass) return
     const env = await encryptedExport(pass)
     await shareOrDownload(`lunara-encrypted-${localToday()}.json`, JSON.stringify(env))
@@ -331,7 +344,15 @@ export function Settings() {
     const parsed = JSON.parse(text)
     try {
       if (parsed.kdf && parsed.data) {
-        const pass = prompt('Passphrase for this encrypted file:')
+        const pass = await dialog.prompt({
+          title: 'Unlock encrypted backup',
+          message: 'This file is encrypted. Enter the passphrase you used when creating it:',
+          confirmText: 'Decrypt & Import',
+          input: {
+            type: 'password',
+            placeholder: 'Enter passphrase',
+          },
+        })
         if (!pass) return
         const n = await decryptImport(parsed as Envelope, pass)
         setStatus(`Imported ${n} days from encrypted file.`)
@@ -345,9 +366,18 @@ export function Settings() {
   }
 
   async function setPin() {
-    const pin = prompt('Choose a 4-digit PIN:')
+    const pin = await dialog.prompt({
+      title: 'Set 4-digit PIN',
+      message: 'Choose a 4-digit numeric PIN to secure Periodus on this device:',
+      confirmText: 'Save PIN',
+      input: {
+        type: 'password',
+        placeholder: '4-digit PIN',
+        helperText: 'Must be exactly 4 digits (e.g. 1234)',
+      },
+    })
     if (!pin || !/^\d{4}$/.test(pin)) {
-      setStatus('PIN must be 4 digits.')
+      if (pin) setStatus('PIN must be exactly 4 digits.')
       return
     }
     const salt = newSalt()
@@ -381,7 +411,7 @@ export function Settings() {
     }
     setCapabilityBusy(true)
     try {
-      const result = await authenticateWithBiometrics('Confirm biometric unlock for Lunara')
+      const result = await authenticateWithBiometrics('Confirm biometric unlock for Periodus')
       if (!result.authenticated) {
         setStatus('Biometric confirmation was cancelled.')
         return
@@ -502,26 +532,44 @@ export function Settings() {
     await deleteSecureSecret(
       provider === 'anthropic'
         ? SECURE_SECRET_KEYS.anthropicApiKey
-        : SECURE_SECRET_KEYS.openAiApiKey,
+        : provider === 'custom'
+          ? SECURE_SECRET_KEYS.customAiApiKey
+          : SECURE_SECRET_KEYS.openAiApiKey,
     )
     await removeSetting(SK.aiKey)
     if (provider === 'anthropic') setHasAnthropicKey(false)
+    else if (provider === 'custom') setHasCustomKey(false)
     else setHasOpenAiKey(false)
     setStatus(
       provider === 'anthropic'
         ? 'Anthropic credential removed from this device. Revoke it in the Anthropic console to invalidate it everywhere.'
-        : 'OpenAI key removed from secure storage.',
+        : provider === 'custom'
+          ? 'Custom AI credential removed from secure storage.'
+          : 'OpenAI key removed from secure storage.',
     )
   }
 
   async function enableBackup() {
-    const endpoint = prompt('Backup relay URL (your deployed Lunara backup Worker):', s!.endpoint)
+    const endpoint = await dialog.prompt({
+      title: 'Cloud backup relay',
+      message: 'Enter your deployed Periodus backup Worker URL:',
+      confirmText: 'Connect & Back Up',
+      input: {
+        defaultValue: s!.endpoint || '',
+        placeholder: 'https://your-backup-relay.workers.dev',
+      },
+    })
     if (!endpoint) return
     let code = s!.recoveryCode
     if (!code) {
       code = generateRecoveryCode()
       await setSetting('recoveryCode', code)
-      alert(`Your recovery code — write it down, it is shown only once:\n\n${code}\n\nWithout it, backups cannot be restored.`)
+      await dialog.alert({
+        title: 'Recovery code',
+        message: 'Write down your recovery code. It is shown only once and without it, your backups cannot be restored:',
+        copyableText: code,
+        confirmText: 'I have saved my code',
+      })
     }
     await setSetting(SK.backupEndpoint, endpoint)
     try {
@@ -533,9 +581,24 @@ export function Settings() {
   }
 
   async function restore() {
-    const endpoint = prompt('Backup relay URL:', s!.endpoint)
+    const endpoint = await dialog.prompt({
+      title: 'Restore from cloud backup',
+      message: 'Enter your backup relay URL:',
+      confirmText: 'Next',
+      input: {
+        defaultValue: s!.endpoint || '',
+        placeholder: 'https://your-backup-relay.workers.dev',
+      },
+    })
     if (!endpoint) return
-    const code = prompt('Enter your recovery code:')
+    const code = await dialog.prompt({
+      title: 'Enter recovery code',
+      message: 'Enter your zero-knowledge recovery code:',
+      confirmText: 'Restore data',
+      input: {
+        placeholder: 'e.g. word1-word2-word3-word4',
+      },
+    })
     if (!code) return
     try {
       const n = await restoreBackup(endpoint, normalizeRecoveryCode(code))
@@ -647,7 +710,14 @@ export function Settings() {
   }
 
   async function wipe() {
-    if (!confirm('Delete ALL Lunara data on this device? This cannot be undone.')) return
+    const confirmed = await dialog.confirm({
+      title: 'Delete all data?',
+      message: 'Delete ALL Periodus data and health logs on this device?\n\nThis action cannot be undone.',
+      confirmText: 'Delete everything',
+      cancelText: 'Keep my data',
+      isDanger: true,
+    })
+    if (!confirmed) return
     await clearSecureSecrets()
     await db.delete()
     location.reload()
@@ -834,7 +904,7 @@ export function Settings() {
             </span>
           </div>
           <p className="muted" style={{ padding: '8px 0' }}>
-            Health imports are read-only, permission-scoped, and copied into your local Lunara
+            Health imports are read-only, permission-scoped, and copied into your local Periodus
             timeline. Manual entries are never silently replaced, and nothing is uploaded by this
             step.
           </p>
@@ -1047,18 +1117,22 @@ export function Settings() {
 
       <Section title="AI assistant">
         <button className="setting-row" onClick={() => setAssistantOpen(true)}>
-          <span>Open Lunara AI</span>
+          <span>Open Periodus AI</span>
           <span className="muted">
             {s.provider === 'anthropic'
               ? hasAnthropicKey
                 ? 'Anthropic connected ›'
                 : 'add Anthropic key ›'
-              : hasOpenAiKey
-                ? 'OpenAI key secured ›'
-                : 'add OpenAI key ›'}
+              : s.provider === 'custom'
+                ? hasCustomKey
+                  ? 'Custom AI connected ›'
+                  : 'configure custom AI ›'
+                : hasOpenAiKey
+                  ? 'OpenAI key secured ›'
+                  : 'add OpenAI key ›'}
           </span>
         </button>
-        {(s.provider === 'anthropic' ? hasAnthropicKey : hasOpenAiKey) && (
+        {(s.provider === 'anthropic' ? hasAnthropicKey : s.provider === 'custom' ? hasCustomKey : hasOpenAiKey) && (
           <button className="setting-row" onClick={removeAiKey}>
             <span>Remove saved credential</span>
             <span className="muted">›</span>
@@ -1074,7 +1148,7 @@ export function Settings() {
       </Section>
 
       <p className="muted" style={{ textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
-        Lunara is open source (AGPL-3.0) and not affiliated with Flo Health Inc. Not a medical
+        Periodus is open source (AGPL-3.0) and not affiliated with Flo Health Inc. Not a medical
         device. Removing the app deletes its local history — keep an encrypted backup.
       </p>
     </div>

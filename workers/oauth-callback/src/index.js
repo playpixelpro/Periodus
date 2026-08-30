@@ -17,8 +17,8 @@ const APPLE_ASSOCIATION_PATHS = new Set([
 const ANDROID_ASSOCIATION_PATH = '/.well-known/assetlinks.json'
 
 const DEFAULT_APPLE_TEAM_ID = 'R5R3ZS54LV'
-const DEFAULT_APPLE_BUNDLE_ID = 'app.lunara.mobile'
-const DEFAULT_ANDROID_PACKAGE_NAME = 'app.lunara.mobile'
+const DEFAULT_APPLE_BUNDLE_ID = 'com.playpixelpro.myperiod'
+const DEFAULT_ANDROID_PACKAGE_NAME = 'com.playpixelpro.myperiod'
 
 const JSON_HEADERS = {
   'content-type': 'application/json',

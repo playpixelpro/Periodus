@@ -6,6 +6,7 @@ import {
   askAssistant,
   CLI_TOKEN_PREFIX,
   DEFAULT_ANTHROPIC_MODEL,
+  DEFAULT_CUSTOM_MODEL,
   DEFAULT_OPENAI_MODEL,
   type AssistantConfig,
   type AssistantProvider,
@@ -53,13 +54,15 @@ const STARTERS = [
 ]
 
 function defaultModel(provider: AssistantProvider): string {
-  return provider === 'anthropic' ? DEFAULT_ANTHROPIC_MODEL : DEFAULT_OPENAI_MODEL
+  if (provider === 'anthropic') return DEFAULT_ANTHROPIC_MODEL
+  if (provider === 'custom') return DEFAULT_CUSTOM_MODEL
+  return DEFAULT_OPENAI_MODEL
 }
 
 function vaultKeyFor(provider: AssistantProvider) {
-  return provider === 'anthropic'
-    ? SECURE_SECRET_KEYS.anthropicApiKey
-    : SECURE_SECRET_KEYS.openAiApiKey
+  if (provider === 'anthropic') return SECURE_SECRET_KEYS.anthropicApiKey
+  if (provider === 'custom') return SECURE_SECRET_KEYS.customAiApiKey
+  return SECURE_SECRET_KEYS.openAiApiKey
 }
 
 export function AssistantScreen() {
@@ -87,7 +90,7 @@ export function AssistantScreen() {
   useEffect(() => {
     let alive = true
     ;(async () => {
-      const [savedProvider, savedModel, savedBaseUrl, savedConsent, status, legacyKey, savedOpenAiKey, savedAnthropicKey] =
+      const [savedProvider, savedModel, savedBaseUrl, savedConsent, status, legacyKey, savedOpenAiKey, savedAnthropicKey, savedCustomKey] =
         await Promise.all([
           getSetting(SK.aiProvider),
           getSetting(SK.aiModel),
@@ -97,8 +100,10 @@ export function AssistantScreen() {
           getSetting(SK.aiKey),
           getSecureSecret(SECURE_SECRET_KEYS.openAiApiKey),
           getSecureSecret(SECURE_SECRET_KEYS.anthropicApiKey),
+          getSecureSecret(SECURE_SECRET_KEYS.customAiApiKey),
         ])
-      const nextProvider: AssistantProvider = savedProvider === 'openai' ? 'openai' : 'anthropic'
+      const nextProvider: AssistantProvider =
+        savedProvider === 'openai' ? 'openai' : savedProvider === 'custom' ? 'custom' : 'anthropic'
 
       // One-time migration from the old Dexie implementation. Plaintext is
       // removed immediately after the secure bridge accepts it.
@@ -107,7 +112,11 @@ export function AssistantScreen() {
         await removeSetting(SK.aiKey)
       }
       const key =
-        nextProvider === 'anthropic' ? savedAnthropicKey : legacyKey || savedOpenAiKey
+        nextProvider === 'anthropic'
+          ? savedAnthropicKey
+          : nextProvider === 'custom'
+            ? savedCustomKey
+            : legacyKey || savedOpenAiKey
       if (!alive) return
       setProvider(nextProvider)
       setModel(savedModel || defaultModel(nextProvider))
@@ -119,7 +128,7 @@ export function AssistantScreen() {
           ? 'memory only for this browser tab'
           : `${status.persistence}${status.hardwareBacked ? ' · hardware protected' : ''}`,
       )
-      setSetupOpen(!key)
+      setSetupOpen(nextProvider === 'custom' ? !savedBaseUrl && !key : !key)
       setLoading(false)
     })().catch((reason: unknown) => {
       if (!alive) return
@@ -146,7 +155,6 @@ export function AssistantScreen() {
   async function chooseProvider(next: AssistantProvider) {
     setProvider(next)
     setModel(defaultModel(next))
-    setBaseUrl('')
     setKeyInput('')
     setError(null)
     setNotice(null)
@@ -178,7 +186,11 @@ export function AssistantScreen() {
         setSetting(SK.aiBaseUrl, baseUrl.trim()),
       ])
       setModel(cleanModel)
-      if (!apiKey && !suppliedKey) {
+      if (provider === 'custom' && !baseUrl.trim()) {
+        setError('Please specify an API endpoint / Base URL for your custom AI provider.')
+        return
+      }
+      if (provider !== 'custom' && !apiKey && !suppliedKey) {
         setError(
           provider === 'anthropic'
             ? 'Add an Anthropic API key, or paste a token from `claude setup-token`.'
@@ -200,7 +212,9 @@ export function AssistantScreen() {
     setNotice(
       provider === 'anthropic'
         ? 'Anthropic credential removed from this device. Revoke it in the Anthropic console to invalidate it everywhere.'
-        : 'OpenAI key removed.',
+        : provider === 'custom'
+          ? 'Custom AI credential removed.'
+          : 'OpenAI key removed.',
     )
   }
 
@@ -213,7 +227,7 @@ export function AssistantScreen() {
   async function send(textOverride?: string) {
     const text = (textOverride ?? input).trim()
     if (!text || busy) return
-    if (!apiKey) {
+    if (provider !== 'custom' && !apiKey) {
       setSetupOpen(true)
       setError(
         provider === 'anthropic'
@@ -305,14 +319,21 @@ export function AssistantScreen() {
                 onClick={() => void chooseProvider('anthropic')}
               >
                 <span className="choice-icon">✳</span>
-                <span><strong>Anthropic</strong><small>API key or Claude CLI login</small></span>
+                <span><strong>Anthropic</strong><small>Claude API / CLI</small></span>
               </button>
               <button
                 className={`choice-card compact ${provider === 'openai' ? 'selected' : ''}`}
                 onClick={() => void chooseProvider('openai')}
               >
                 <span className="choice-icon">✦</span>
-                <span><strong>OpenAI</strong><small>Cloud · your key</small></span>
+                <span><strong>OpenAI</strong><small>Official API</small></span>
+              </button>
+              <button
+                className={`choice-card compact ${provider === 'custom' ? 'selected' : ''}`}
+                onClick={() => void chooseProvider('custom')}
+              >
+                <span className="choice-icon">⚙</span>
+                <span><strong>Custom / Other</strong><small>Any endpoint</small></span>
               </button>
             </div>
           </section>
@@ -375,7 +396,7 @@ export function AssistantScreen() {
                   </select>
                 </div>
               </>
-            ) : (
+            ) : provider === 'openai' ? (
               <>
                 <div className="field">
                   <label htmlFor="assistant-key">OpenAI project API key</label>
@@ -397,6 +418,50 @@ export function AssistantScreen() {
                     id="assistant-model"
                     autoCapitalize="none"
                     spellCheck={false}
+                    value={model}
+                    onChange={(event) => setModel(event.target.value)}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="field">
+                  <label htmlFor="assistant-endpoint">API endpoint / Base URL</label>
+                  <input
+                    id="assistant-endpoint"
+                    type="url"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    placeholder="https://openrouter.ai/api/v1 or https://api.deepseek.com"
+                    value={baseUrl}
+                    onChange={(event) => setBaseUrl(event.target.value)}
+                  />
+                  <small className="field-hint">
+                    Works with OpenRouter, DeepSeek, Groq, Mistral, Ollama, LM Studio, or any OpenAI-compatible server.
+                  </small>
+                </div>
+                <div className="field">
+                  <label htmlFor="assistant-key">API key (optional for local models)</label>
+                  <input
+                    id="assistant-key"
+                    type="password"
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    placeholder={apiKey ? 'Saved securely · enter to replace' : 'Bearer API key'}
+                    value={keyInput}
+                    onChange={(event) => setKeyInput(event.target.value)}
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="assistant-model">Model name</label>
+                  <input
+                    id="assistant-model"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    placeholder="e.g. deepseek-chat, llama-3.3-70b-versatile"
                     value={model}
                     onChange={(event) => setModel(event.target.value)}
                   />
@@ -441,7 +506,7 @@ export function AssistantScreen() {
               </span>
               <span className="privacy-pill">
                 <i aria-hidden="true" />
-                {provider === 'anthropic' ? 'Anthropic' : 'OpenAI'}
+                {provider === 'anthropic' ? 'Anthropic' : provider === 'openai' ? 'OpenAI' : 'Custom AI'}
               </span>
               <svg className="assistant-context-chevron" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m7 9.5 5 5 5-5" />

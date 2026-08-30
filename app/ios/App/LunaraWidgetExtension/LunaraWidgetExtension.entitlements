@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.app.lunara.mobile</string>
+		<string>group.com.playpixelpro.myperiod</string>
 	</array>
 </dict>
 </plist>

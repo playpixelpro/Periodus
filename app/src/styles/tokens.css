@@ -1,84 +1,163 @@
 /*
- * Lunara's visual language: warm mineral paper, ink, coral, tidal teal, and
- * small sunlit accents. The serif/sans pairing gives intimate health data an
- * editorial tone while remaining native-feeling and highly legible.
+ * Lunara's visual language: Terminal Modernist.
+ * High-contrast, sleek dark modernist palette with warm parchment text,
+ * sunlit amber/gold highlights, floating depth cards, and crisp monospaced typography.
  */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* Core palette */
-  --ink-950: #2b2024;
-  --ink-900: #38292f;
-  --ink-800: #4e3b42;
-  --ink-650: #6f5a62;
-  --ink-500: #8e7980;
-  --ink-300: #b9a9ad;
+  /* Terminal Modernist Base Colors */
+  --surface: #16130b;
+  --surface-dim: #16130b;
+  --surface-bright: #3d392f;
+  --surface-container-lowest: #110e07;
+  --surface-container-low: #1e1b13;
+  --surface-container: #231f17;
+  --surface-container-high: #2d2a21;
+  --surface-container-highest: #38342b;
+  --on-surface: #f4efea;
+  --on-surface-variant: #d2c5b2;
+  --inverse-surface: #f4efea;
+  --inverse-on-surface: #343027;
+  --outline: #aba08e;
+  --outline-variant: #6f6553;
+  --surface-tint: #ecc15c;
 
-  --paper-50: #fffdf9;
-  --paper-100: #fbf7f0;
-  --paper-150: #f7f0e8;
-  --paper-200: #f1e7dc;
-  --paper-300: #e8d8cb;
+  --primary: #ffe1a3;
+  --on-primary: #281b00;
+  --primary-container: #eec35e;
+  --on-primary-container: #3f2e00;
+  --inverse-primary: #785a00;
 
-  --rose-700: #b83e58;
-  --rose-600: #d64b68;
-  --rose-500: #ea6079;
-  --rose-400: #f17d8d;
-  --rose-300: #f6b4bd;
-  --rose-200: #f9d2d6;
-  --rose-100: #fbe8e7;
-  --coral-400: #f28b75;
+  --secondary: #c8c6c2;
+  --on-secondary: #1e1b13;
+  --secondary-container: #474743;
+  --on-secondary-container: #e4e2dd;
 
-  --teal-700: #216f70;
-  --teal-600: #2f8584;
-  --teal-500: #45a29f;
-  --teal-300: #9bcfca;
-  --teal-200: #cae7e1;
-  --teal-100: #e5f2ee;
+  --tertiary: #d3e7ff;
+  --on-tertiary: #00223b;
+  --tertiary-container: #9dcdff;
+  --on-tertiary-container: #003354;
 
-  --yellow-600: #d49a2d;
-  --yellow-500: #edb846;
-  --yellow-300: #f7d88e;
-  --yellow-200: #fbe8b8;
-  --yellow-100: #fff3d6;
+  --error: #ffb4ab;
+  --on-error: #560004;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
 
-  --clay-500: #b78368;
-  --clay-200: #ead1c3;
-  --clay-100: #f3e3d9;
-  --purple-500: #856f9d;
-  --red-500: #c94747;
+  --primary-fixed: #ffdf9b;
+  --primary-fixed-dim: #ecc15c;
+  --on-primary-fixed: #251a00;
+  --on-primary-fixed-variant: #5a4300;
 
-  /* Compatibility aliases used by existing views */
+  --secondary-fixed: #e4e2dd;
+  --secondary-fixed-dim: #c8c6c2;
+  --on-secondary-fixed: #1b1c19;
+  --on-secondary-fixed-variant: #474743;
+
+  --tertiary-fixed: #cfe5ff;
+  --tertiary-fixed-dim: #9bcbfd;
+  --on-tertiary-fixed: #001d33;
+  --on-tertiary-fixed-variant: #0d4a75;
+
+  --background: #16130b;
+  --on-background: #f4efea;
+  --surface-variant: #38342b;
+  --surface-muted: rgba(236, 234, 229, 0.06);
+  --border-subtle: rgba(236, 234, 229, 0.16);
+  --border-muted: rgba(236, 234, 229, 0.26);
+  --accent-dim: rgba(238, 195, 94, 0.16);
+  --highlight: rgba(238, 195, 94, 0.45);
+  --surface-main: #16130b;
+  --accent-amber: #eec35e;
+  --error-red: #ffb4ab;
+
+  /* Mapped UI Inks for Lunara (High-Contrast & High Legibility) */
+  --ink-950: #ffffff;
+  --ink-900: #f4efea;
+  --ink-800: #e5dcd0;
+  --ink-650: #d2c5b2;
+  --ink-500: #aba08e;
+  --ink-300: #6f6553;
+
+  /* Surfaces */
+  --paper-50: var(--surface-container-highest);
+  --paper-100: var(--surface);
+  --paper-150: var(--surface-container-lowest);
+  --paper-200: var(--surface-container-low);
+  --paper-300: var(--surface-container);
+
+  /* Primary Accent Shades */
+  --rose-700: #ffe1a3;
+  --rose-600: #eec35e;
+  --rose-500: #eec35e;
+  --rose-400: #ffe1a3;
+  --rose-300: #ffdf9b;
+  --rose-200: #4a3b14;
+  --rose-100: #292008;
+  --coral-400: var(--error);
+
+  /* Tertiary / Sky Blue Shades */
+  --teal-700: #cfe5ff;
+  --teal-600: #9dcdff;
+  --teal-500: #9dcdff;
+  --teal-300: #4a749d;
+  --teal-200: #1b3044;
+  --teal-100: #102131;
+
+  /* Yellow / Amber Highlights */
+  --yellow-600: #eec35e;
+  --yellow-500: #eec35e;
+  --yellow-300: #ffe1a3;
+  --yellow-200: #54400a;
+  --yellow-100: #2b2005;
+
+  --clay-500: var(--secondary);
+  --clay-200: var(--surface-variant);
+  --clay-100: var(--surface-container);
+  --purple-500: var(--tertiary);
+  --red-500: var(--error);
+
+  /* Compatibility aliases */
   --plum-900: var(--ink-900);
   --plum-500: var(--ink-500);
-  --orange-500: #d88938;
-  --bg: var(--paper-100);
-  --card: rgba(255, 253, 249, 0.92);
+  --orange-500: #eec35e;
+  --bg: var(--background);
+  --card: #231f17;
 
-  /* Surfaces and lines */
-  --surface-raised: rgba(255, 254, 251, 0.94);
-  --surface-glass: rgba(255, 253, 249, 0.78);
-  --line-soft: rgba(82, 57, 65, 0.09);
-  --line-medium: rgba(82, 57, 65, 0.16);
-  --shadow-card: 0 12px 36px rgba(75, 45, 50, 0.07);
-  --shadow-float: 0 22px 60px rgba(75, 45, 50, 0.15);
-  --shadow-rose: 0 14px 28px rgba(213, 72, 99, 0.22);
+  /* Floating Surfaces, Lines & Layered Elevation Shadows */
+  --surface-raised: #231f17;
+  --surface-glass: rgba(35, 31, 23, 0.92);
+  --line-soft: rgba(236, 234, 229, 0.14);
+  --line-medium: rgba(236, 234, 229, 0.25);
+  --shadow-card:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 10px 24px -4px rgba(0, 0, 0, 0.65),
+    0 20px 48px -8px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(236, 234, 229, 0.12);
+  --shadow-float:
+    0 4px 8px rgba(0, 0, 0, 0.35),
+    0 18px 42px -6px rgba(0, 0, 0, 0.75),
+    0 36px 72px -12px rgba(0, 0, 0, 0.88),
+    inset 0 1px 0 rgba(236, 234, 229, 0.18);
+  --shadow-rose:
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    0 10px 24px -2px rgba(238, 195, 94, 0.28),
+    0 18px 36px -6px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
   /* Shape */
-  --radius-xs: 8px;
-  --radius-sm: 13px;
-  --radius-chip: 999px;
-  --radius-cta: 19px;
-  --radius-card: 24px;
-  --radius-large: 32px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-chip: 9999px;
+  --radius-cta: 10px;
+  --radius-card: 14px;
+  --radius-large: 20px;
 
   /* Typography */
-  --font-display:
-    'Iowan Old Style', 'Baskerville', 'Times New Roman', serif;
-  --font-sans:
-    'Avenir Next', Avenir, 'Segoe UI', Helvetica, sans-serif;
-  --tracking-tight: -0.035em;
-  --tracking-label: 0.12em;
+  --font-display: 'JetBrains Mono', monospace;
+  --font-sans: 'JetBrains Mono', monospace;
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.05em;
 
   /* Timing */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

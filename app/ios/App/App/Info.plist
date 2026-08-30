@@ -27,19 +27,19 @@
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>app.lunara.mobile.widget-refresh</string>
+		<string>com.playpixelpro.myperiod.widget-refresh</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>Lunara</string>
+        <string>Periodus</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>app.lunara.mobile.openrouter</string>
+			<string>com.playpixelpro.myperiod.openrouter</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>lunara</string>

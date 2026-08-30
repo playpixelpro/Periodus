@@ -1,4 +1,4 @@
-package app.lunara.mobile;
+package com.playpixelpro.myperiod;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

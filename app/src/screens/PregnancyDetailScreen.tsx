@@ -97,7 +97,7 @@ export function PregnancyDetailScreen({ dating, lmp, onBack }: PregnancyDetailSc
           <span />
         </header>
         <div className="health-scroll">
-          <main className="health-canvas">
+          <div className="health-canvas">
             <div className="health-empty">
               <strong>Check the pregnancy date</strong>
               <p>
@@ -105,7 +105,7 @@ export function PregnancyDetailScreen({ dating, lmp, onBack }: PregnancyDetailSc
                 in pregnancy settings.
               </p>
             </div>
-          </main>
+          </div>
         </div>
       </div>
     )
@@ -122,7 +122,7 @@ export function PregnancyDetailScreen({ dating, lmp, onBack }: PregnancyDetailSc
       </header>
 
       <div className="health-scroll">
-        <main className="health-canvas">
+        <div className="health-canvas">
           <section className="health-hero">
             <div className="health-kicker">Trimester {current.trimester}</div>
             <h1 className="health-display">
@@ -331,7 +331,7 @@ export function PregnancyDetailScreen({ dating, lmp, onBack }: PregnancyDetailSc
             {DATING_REFERENCE_LABELS[current.dating.method]}:{' '}
             {formatShort(current.dating.inputDate)} · Educational only, not prenatal care
           </p>
-        </main>
+        </div>
       </div>
     </div>
   )

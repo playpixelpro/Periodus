@@ -7,7 +7,7 @@ import WidgetKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    private let widgetRefreshTaskIdentifier = "app.lunara.mobile.widget-refresh"
+    private let widgetRefreshTaskIdentifier = "com.playpixelpro.myperiod.widget-refresh"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BGTaskScheduler.shared.register(
