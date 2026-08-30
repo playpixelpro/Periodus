@@ -189,6 +189,27 @@ const SLEEP_GOALS: Option[] = [
   { id: 'bedtime-routine', label: 'Build a steadier bedtime routine' },
 ]
 
+const AI_PROVIDER_OPTIONS: Option[] = [
+  {
+    id: 'anthropic',
+    icon: '✳',
+    label: 'Anthropic',
+    detail: 'Use an API key or a CLI token from `claude setup-token` to connect your Claude subscription.',
+  },
+  {
+    id: 'openai',
+    icon: '✦',
+    label: 'OpenAI',
+    detail: 'Bring your own project key. Stored securely in Keychain or Keystore on native.',
+  },
+  {
+    id: 'custom',
+    icon: '⚙',
+    label: 'Custom / Other',
+    detail: 'Connect OpenRouter, DeepSeek, Groq, Mistral, Ollama, or any OpenAI-compatible API.',
+  },
+]
+
 const HORMONAL_METHODS = new Set<ContraceptionMethod>([
   'combined-pill-patch-ring',
   'progestin-only-pill',
@@ -196,6 +217,7 @@ const HORMONAL_METHODS = new Set<ContraceptionMethod>([
   'implant',
   'hormonal-iud',
 ])
+
 
 const DEFAULT_DRAFT: Draft = {
   displayName: '',
@@ -1479,37 +1501,18 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           title="Choose how the assistant runs."
           body="Core tracking and calculations work without AI. You bring your own credential; Periodus never ships a shared key."
         />
-        <div className="ai-provider-grid">
-          <button
-            type="button"
-            className={`ai-provider-tab ${provider === 'anthropic' ? 'selected' : ''}`}
-            onClick={() => chooseProvider('anthropic')}
-          >
-            <span className="ai-provider-icon">✳</span>
-            <span className="ai-provider-name">Anthropic</span>
-          </button>
-          <button
-            type="button"
-            className={`ai-provider-tab ${provider === 'openai' ? 'selected' : ''}`}
-            onClick={() => chooseProvider('openai')}
-          >
-            <span className="ai-provider-icon">✦</span>
-            <span className="ai-provider-name">OpenAI</span>
-          </button>
-          <button
-            type="button"
-            className={`ai-provider-tab ${provider === 'custom' ? 'selected' : ''}`}
-            onClick={() => chooseProvider('custom')}
-          >
-            <span className="ai-provider-icon">⚙</span>
-            <span className="ai-provider-name">Custom / Other</span>
-          </button>
+        <div className="ob-option-stack">
+          {AI_PROVIDER_OPTIONS.map((item) => (
+            <OptionCard
+              key={item.id}
+              option={item}
+              selected={provider === item.id}
+              onClick={() => chooseProvider(item.id as AssistantProvider)}
+            />
+          ))}
         </div>
         {provider === 'anthropic' ? (
           <div className="card ai-setup-card">
-            <p className="ai-provider-desc">
-              An API key, or a token from <code>claude setup-token</code> to use your Claude subscription.
-            </p>
             <div className="field">
               <label htmlFor="anthropic-key">Anthropic API key or CLI token</label>
               <input
@@ -1544,9 +1547,6 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           </div>
         ) : provider === 'openai' ? (
           <div className="card ai-setup-card">
-            <p className="ai-provider-desc">
-              Bring your own OpenAI project key. Stored in Keychain or Keystore on native.
-            </p>
             <div className="field">
               <label htmlFor="openai-key">OpenAI project key</label>
               <input
@@ -1569,9 +1569,6 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           </div>
         ) : (
           <div className="card ai-setup-card">
-            <p className="ai-provider-desc">
-              Connect OpenRouter, DeepSeek, Groq, Mistral, Ollama, or any OpenAI-compatible API.
-            </p>
             <div className="field">
               <label htmlFor="custom-endpoint">API endpoint / Base URL</label>
               <input

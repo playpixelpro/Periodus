@@ -8358,83 +8358,9 @@ button.card:active {
   font-size: 9px;
 }
 
-.page.onboarding-ai .ai-provider-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  border: 0;
-  margin-bottom: 2px;
-}
-
-.page.onboarding-ai .ai-provider-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px 6px;
-  min-height: 74px;
-  background: var(--surface-container, #1F1B12);
-  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.14));
-  border-radius: 16px;
-  color: var(--on-surface, #F1DFD0);
-  cursor: pointer;
-  transition: all 0.18s ease;
-  text-align: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-
-.page.onboarding-ai .ai-provider-tab:hover {
-  border-color: rgba(255, 225, 163, 0.35);
-  background: rgba(255, 225, 163, 0.05);
-}
-
-.page.onboarding-ai .ai-provider-tab.selected {
-  background: rgba(238, 195, 94, 0.16);
-  border-color: var(--primary, #FFE1A3);
-  box-shadow: 0 0 0 1px var(--primary, #FFE1A3), 0 4px 16px rgba(0, 0, 0, 0.35);
-}
-
-.page.onboarding-ai .ai-provider-tab .ai-provider-icon {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  background: rgba(255, 225, 163, 0.08);
-  color: var(--primary, #FFE1A3);
-  font-size: 14px;
-  transition: all 0.18s ease;
-}
-
-.page.onboarding-ai .ai-provider-tab.selected .ai-provider-icon {
-  background: var(--primary, #FFE1A3);
-  color: #1a1408;
-  font-weight: 800;
-}
-
-.page.onboarding-ai .ai-provider-tab .ai-provider-name {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--on-surface, #F1DFD0);
-  line-height: 1.2;
-}
-
-.page.onboarding-ai .ai-provider-tab.selected .ai-provider-name {
-  color: var(--primary, #FFE1A3);
-}
-
-.page.onboarding-ai .ai-provider-desc {
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--on-surface-variant, #D8C5B2);
-  margin: 0;
-  padding-bottom: 2px;
-}
 
 .page.onboarding-ai .ai-setup-card {
+  margin-top: 14px;
   padding: 16px;
   display: flex;
   flex-direction: column;
