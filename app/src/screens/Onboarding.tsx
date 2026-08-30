@@ -189,27 +189,6 @@ const SLEEP_GOALS: Option[] = [
   { id: 'bedtime-routine', label: 'Build a steadier bedtime routine' },
 ]
 
-const AI_PROVIDER_OPTIONS: Option[] = [
-  {
-    id: 'anthropic',
-    icon: '✳',
-    label: 'Anthropic',
-    detail: 'Use an API key or a CLI token from `claude setup-token` to connect your Claude subscription.',
-  },
-  {
-    id: 'openai',
-    icon: '✦',
-    label: 'OpenAI',
-    detail: 'Bring your own project key. Stored securely in Keychain or Keystore on native.',
-  },
-  {
-    id: 'custom',
-    icon: '⚙',
-    label: 'Custom / Other',
-    detail: 'Connect OpenRouter, DeepSeek, Groq, Mistral, Ollama, or any OpenAI-compatible API.',
-  },
-]
-
 const HORMONAL_METHODS = new Set<ContraceptionMethod>([
   'combined-pill-patch-ring',
   'progestin-only-pill',
@@ -1496,25 +1475,166 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
   if (current === 'ai') {
     return (
       <Frame {...frameProps} chapter="Optional companion" onSkip={next}>
-        <QuestionIntro
-          eyebrow="AI is separate from prediction"
-          title="Choose how the assistant runs."
-          body="Core tracking and calculations work without AI. You bring your own credential; Periodus never ships a shared key."
-        />
-        <div className="ai-provider-grid">
-          {AI_PROVIDER_OPTIONS.map((item) => (
-            <OptionCard
-              key={item.id}
-              option={item}
-              selected={provider === item.id}
-              onClick={() => chooseProvider(item.id as AssistantProvider)}
-            />
-          ))}
+        <div className="assistant-setup-intro" style={{ marginBottom: 14 }}>
+          <p className="eyebrow" style={{ color: 'var(--gold, #FFE1A3)', fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+            Connection
+          </p>
+          <h1 style={{ fontSize: 26, fontWeight: 700, margin: '6px 0 8px', color: 'var(--on-surface, #F5EFE6)', lineHeight: 1.15 }}>
+            Choose where answers come from
+          </h1>
+          <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
+            Your key stays on this device.<br />
+            Periodus never ships a shared key.
+          </p>
         </div>
+
+        <div
+          className="ai-provider-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 8,
+            marginBottom: 16,
+          }}
+        >
+          <button
+            type="button"
+            className={`choice-card compact ${provider === 'anthropic' ? 'selected' : ''}`}
+            onClick={() => chooseProvider('anthropic')}
+            style={{
+              padding: '12px 6px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              gap: 6,
+              background: provider === 'anthropic' ? 'rgba(255, 225, 163, 0.12)' : 'var(--surface-container, #1F1B12)',
+              border: provider === 'anthropic' ? '1.5px solid var(--gold, #FFE1A3)' : '1px solid rgba(255, 225, 163, 0.15)',
+              borderRadius: 14,
+              cursor: 'pointer',
+              transition: 'all 0.18s ease',
+            }}
+          >
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                fontSize: 14,
+                borderRadius: 8,
+                display: 'grid',
+                placeItems: 'center',
+                background: provider === 'anthropic' ? 'var(--gold, #FFE1A3)' : 'rgba(255, 225, 163, 0.1)',
+                color: provider === 'anthropic' ? '#16130B' : 'var(--gold, #FFE1A3)',
+                fontWeight: 700,
+              }}
+            >
+              ✳
+            </span>
+            <strong style={{ fontSize: 11, color: 'var(--on-surface, #F5EFE6)', fontWeight: 600 }}>Anthropic</strong>
+          </button>
+
+          <button
+            type="button"
+            className={`choice-card compact ${provider === 'openai' ? 'selected' : ''}`}
+            onClick={() => chooseProvider('openai')}
+            style={{
+              padding: '12px 6px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              gap: 6,
+              background: provider === 'openai' ? 'rgba(255, 225, 163, 0.12)' : 'var(--surface-container, #1F1B12)',
+              border: provider === 'openai' ? '1.5px solid var(--gold, #FFE1A3)' : '1px solid rgba(255, 225, 163, 0.15)',
+              borderRadius: 14,
+              cursor: 'pointer',
+              transition: 'all 0.18s ease',
+            }}
+          >
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                fontSize: 14,
+                borderRadius: 8,
+                display: 'grid',
+                placeItems: 'center',
+                background: provider === 'openai' ? 'var(--gold, #FFE1A3)' : 'rgba(255, 225, 163, 0.1)',
+                color: provider === 'openai' ? '#16130B' : 'var(--gold, #FFE1A3)',
+                fontWeight: 700,
+              }}
+            >
+              ✦
+            </span>
+            <strong style={{ fontSize: 11, color: 'var(--on-surface, #F5EFE6)', fontWeight: 600 }}>OpenAI</strong>
+          </button>
+
+          <button
+            type="button"
+            className={`choice-card compact ${provider === 'custom' ? 'selected' : ''}`}
+            onClick={() => chooseProvider('custom')}
+            style={{
+              padding: '12px 6px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              gap: 6,
+              background: provider === 'custom' ? 'rgba(255, 225, 163, 0.12)' : 'var(--surface-container, #1F1B12)',
+              border: provider === 'custom' ? '1.5px solid var(--gold, #FFE1A3)' : '1px solid rgba(255, 225, 163, 0.15)',
+              borderRadius: 14,
+              cursor: 'pointer',
+              transition: 'all 0.18s ease',
+            }}
+          >
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                fontSize: 14,
+                borderRadius: 8,
+                display: 'grid',
+                placeItems: 'center',
+                background: provider === 'custom' ? 'var(--gold, #FFE1A3)' : 'rgba(255, 225, 163, 0.1)',
+                color: provider === 'custom' ? '#16130B' : 'var(--gold, #FFE1A3)',
+                fontWeight: 700,
+              }}
+            >
+              ⚙
+            </span>
+            <strong style={{ fontSize: 11, color: 'var(--on-surface, #F5EFE6)', fontWeight: 600 }}>Custom / Other</strong>
+          </button>
+        </div>
+
         {provider === 'anthropic' ? (
-          <div className="card ai-setup-card">
-            <div className="field">
-              <label htmlFor="anthropic-key">Anthropic API key or CLI token</label>
+          <div
+            className="card ai-setup-card"
+            style={{
+              background: 'var(--surface-container, #1F1B12)',
+              border: '1px solid rgba(255, 225, 163, 0.14)',
+              borderRadius: 20,
+              padding: '18px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="anthropic-key"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                Anthropic API key or CLI token
+              </label>
               <input
                 id="anthropic-key"
                 type="password"
@@ -1522,33 +1642,92 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 autoCapitalize="none"
                 autoCorrect="off"
                 spellCheck={false}
-                placeholder="Set up later if you prefer"
+                placeholder="sk-ant-api… or sk-ant-oat…"
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
               />
             </div>
-            <div className="field">
-              <label htmlFor="anthropic-model">Model</label>
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="anthropic-model"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                Model
+              </label>
               <select
                 id="anthropic-model"
                 value={ANTHROPIC_MODELS.some((entry) => entry.id === model) ? model : DEFAULT_ANTHROPIC_MODEL}
                 onChange={(event) => setModel(event.target.value)}
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
               >
                 {ANTHROPIC_MODELS.map((entry) => (
                   <option key={entry.id} value={entry.id}>{entry.label}</option>
                 ))}
               </select>
             </div>
-            <p className="microcopy">
+            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
               To bill answers to a Claude subscription instead of API credits, run{' '}
-              <code>claude setup-token</code> on a computer where you are signed in and paste the
-              token here. Periodus cannot run the CLI itself from a mobile app.
+              <code style={{ background: 'rgba(255, 225, 163, 0.1)', padding: '2px 6px', borderRadius: 4, color: 'var(--gold, #FFE1A3)' }}>
+                claude setup-token
+              </code>{' '}
+              on a computer where you are signed in and paste the token here.
+            </p>
+            <p style={{ margin: 0, fontSize: 11, color: 'rgba(216, 197, 178, 0.7)', fontStyle: 'italic' }}>
+              Storage: keystore. Credentials never enter the cycle database or a backup.
             </p>
           </div>
         ) : provider === 'openai' ? (
-          <div className="card ai-setup-card">
-            <div className="field">
-              <label htmlFor="openai-key">OpenAI project key</label>
+          <div
+            className="card ai-setup-card"
+            style={{
+              background: 'var(--surface-container, #1F1B12)',
+              border: '1px solid rgba(255, 225, 163, 0.14)',
+              borderRadius: 20,
+              padding: '18px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="openai-key"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                OpenAI project key
+              </label>
               <input
                 id="openai-key"
                 type="password"
@@ -1556,21 +1735,88 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 autoCapitalize="none"
                 autoCorrect="off"
                 spellCheck={false}
-                placeholder="Set up later if you prefer"
+                placeholder="sk-proj-…"
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
               />
             </div>
-            <div className="field">
-              <label htmlFor="openai-model">Model</label>
-              <input id="openai-model" autoCapitalize="none" spellCheck={false} value={model} onChange={(event) => setModel(event.target.value)} />
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="openai-model"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                Model name
+              </label>
+              <input
+                id="openai-model"
+                autoCapitalize="none"
+                spellCheck={false}
+                value={model}
+                onChange={(event) => setModel(event.target.value)}
+                placeholder="gpt-5.6-terra"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
+              />
             </div>
-            <p className="microcopy">Use a dedicated project key with a spending limit. Never paste a personal or reused secret into screenshots or chat.</p>
+            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
+              Use a dedicated project key with a spending limit. Never paste a personal or reused secret.
+            </p>
+            <p style={{ margin: 0, fontSize: 11, color: 'rgba(216, 197, 178, 0.7)', fontStyle: 'italic' }}>
+              Storage: keystore. Credentials never enter the cycle database or a backup.
+            </p>
           </div>
         ) : (
-          <div className="card ai-setup-card">
-            <div className="field">
-              <label htmlFor="custom-endpoint">API endpoint / Base URL</label>
+          <div
+            className="card ai-setup-card"
+            style={{
+              background: 'var(--surface-container, #1F1B12)',
+              border: '1px solid rgba(255, 225, 163, 0.14)',
+              borderRadius: 20,
+              padding: '18px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="custom-endpoint"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                API endpoint / Base URL
+              </label>
               <input
                 id="custom-endpoint"
                 type="url"
@@ -1580,10 +1826,35 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 placeholder="https://openrouter.ai/api/v1 or https://api.deepseek.com"
                 value={baseUrl}
                 onChange={(event) => setBaseUrl(event.target.value)}
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
               />
             </div>
-            <div className="field">
-              <label htmlFor="custom-key">API key (optional for local models)</label>
+            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
+              Works with OpenRouter, DeepSeek, Groq, Mistral, Ollama, LM Studio, or any OpenAI-compatible server.
+            </p>
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="custom-key"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                API key (optional for local models)
+              </label>
               <input
                 id="custom-key"
                 type="password"
@@ -1591,26 +1862,61 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 autoCapitalize="none"
                 autoCorrect="off"
                 spellCheck={false}
-                placeholder="Set up later if you prefer"
+                placeholder="Bearer API key"
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
               />
             </div>
-            <div className="field">
-              <label htmlFor="custom-model">Model name</label>
+            <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label
+                htmlFor="custom-model"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 750,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-500, #C5B29D)',
+                }}
+              >
+                Model name
+              </label>
               <input
                 id="custom-model"
                 autoCapitalize="none"
                 spellCheck={false}
-                placeholder="e.g. deepseek-chat, llama-3.3-70b-versatile"
+                placeholder="gpt-4o"
                 value={model}
                 onChange={(event) => setModel(event.target.value)}
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  borderRadius: 12,
+                  color: 'var(--on-surface, #F5EFE6)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 14,
+                  padding: '12px 14px',
+                  minHeight: 48,
+                  width: '100%',
+                }}
               />
             </div>
-            <p className="microcopy">Works with any OpenAI-compatible provider or local LLM server.</p>
+            <p style={{ margin: 0, fontSize: 11, color: 'rgba(216, 197, 178, 0.7)', fontStyle: 'italic' }}>
+              Storage: keystore. Credentials never enter the cycle database or a backup.
+            </p>
           </div>
         )}
-        <button className="cta" onClick={next}>
+        <button className="cta" onClick={next} style={{ marginTop: 14 }}>
           {apiKey.trim() ? 'Continue' : 'Connect later'}
         </button>
       </Frame>
