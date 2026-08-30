@@ -7106,23 +7106,21 @@ button.card:active {
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 0;
   overflow: hidden;
-  color: var(--ink-900);
+  color: var(--on-surface, #F5EFE6);
   font-family: var(--font-sans);
   background:
-    radial-gradient(circle at 102% 11%, rgba(246, 180, 189, 0.31), transparent 30%),
-    radial-gradient(circle at -8% 86%, rgba(202, 231, 225, 0.46), transparent 31%),
-    var(--paper-100);
+    radial-gradient(circle at 50% -10%, rgba(238, 195, 94, 0.08), transparent 45%),
+    var(--background, #16130B);
 }
 
 #root > .page.onboarding-sleep,
 #root > .page.onboarding-summary,
 #root > .page.onboarding-finish,
 #root > .page.onboarding-welcome {
-  color: var(--ink-900);
+  color: var(--on-surface, #F5EFE6);
   background:
-    radial-gradient(circle at 102% 11%, rgba(246, 180, 189, 0.31), transparent 30%),
-    radial-gradient(circle at -8% 86%, rgba(202, 231, 225, 0.46), transparent 31%),
-    var(--paper-100);
+    radial-gradient(circle at 50% -10%, rgba(238, 195, 94, 0.08), transparent 45%),
+    var(--background, #16130B);
 }
 
 .page.onboarding::before {
@@ -7140,7 +7138,7 @@ button.card:active {
 .page.onboarding .ob-atmosphere > span {
   position: absolute;
   display: block;
-  border: 1px solid rgba(214, 75, 104, 0.075);
+  border: 1px solid rgba(238, 195, 94, 0.06);
   border-radius: 50%;
 }
 
@@ -7156,7 +7154,7 @@ button.card:active {
   right: -80px;
   width: 156px;
   height: 156px;
-  border-color: rgba(47, 133, 132, 0.07);
+  border-color: rgba(238, 195, 94, 0.05);
 }
 
 .page.onboarding .ob-atmosphere > span:nth-child(3) {
@@ -7164,7 +7162,7 @@ button.card:active {
   left: -62px;
   width: 116px;
   height: 116px;
-  border-color: rgba(47, 133, 132, 0.07);
+  border-color: rgba(238, 195, 94, 0.05);
   border-style: dashed;
 }
 
@@ -7172,11 +7170,11 @@ button.card:active {
   position: relative;
   z-index: 20;
   padding: max(8px, var(--safe-top)) 20px 10px;
-  background: rgba(251, 247, 240, 0.92);
-  border-bottom: 1px solid var(--line-soft);
-  box-shadow: 0 7px 24px rgba(75, 45, 50, 0.035);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(22, 19, 11, 0.92);
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.12));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .page.onboarding .ob-appbar {
@@ -7192,6 +7190,12 @@ button.card:active {
   height: 42px;
   justify-self: center;
   pointer-events: none;
+  background:
+    radial-gradient(circle at 34% 24%, rgba(238, 195, 94, 0.25), transparent 50%),
+    var(--surface-container-high, #242018);
+  border: 1px solid rgba(255, 225, 163, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .page.onboarding .ob-appbar-spacer {
@@ -7208,11 +7212,11 @@ button.card:active {
   padding: 0;
   display: grid;
   place-items: center;
-  color: var(--ink-800);
-  background: rgba(255, 253, 249, 0.7);
-  border: 1px solid var(--line-soft);
-  border-radius: 15px;
-  box-shadow: none;
+  color: var(--primary, #FFE1A3);
+  background: var(--surface-container-high, #242018);
+  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.14));
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .page.onboarding .back-btn {
@@ -7223,10 +7227,12 @@ button.card:active {
 }
 
 .page.onboarding .ob-skip {
-  color: var(--ink-500);
+  color: var(--on-surface-variant, #D8C5B2);
+  font-family: var(--font-mono, monospace);
   font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .page.onboarding .onboarding-progress {
@@ -7245,10 +7251,11 @@ button.card:active {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  color: var(--ink-500);
-  font-size: 8px;
-  font-weight: 850;
-  letter-spacing: 0.11em;
+  color: var(--on-surface-variant, #D8C5B2);
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -7256,7 +7263,7 @@ button.card:active {
 .page.onboarding .onboarding-progress .progress-track {
   height: 4px;
   overflow: hidden;
-  background: rgba(82, 57, 65, 0.09);
+  background: rgba(255, 225, 163, 0.1);
   border: 0;
   border-radius: 999px;
 }
@@ -7265,9 +7272,9 @@ button.card:active {
 .page.onboarding .onboarding-progress .progress-track span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--coral-400), var(--rose-600));
+  background: linear-gradient(90deg, #EEC35E, #FFE1A3);
   border-radius: inherit;
-  box-shadow: none;
+  box-shadow: 0 0 8px rgba(238, 195, 94, 0.4);
 }
 
 .page.onboarding .ob-shell-scroll {
@@ -7299,7 +7306,7 @@ button.card:active {
   flex-direction: column;
   gap: 17px;
   overflow: visible;
-  color: var(--ink-900);
+  color: var(--on-surface, #F5EFE6);
 }
 
 .page.onboarding .onboarding-content > * {
@@ -7314,11 +7321,11 @@ button.card:active {
   position: relative;
   z-index: 30;
   padding: 10px 20px max(10px, var(--safe-bottom));
-  background: rgba(251, 247, 240, 0.94);
-  border-top: 1px solid var(--line-soft);
-  box-shadow: 0 -12px 28px rgba(75, 45, 50, 0.055);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(22, 19, 11, 0.95);
+  border-top: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.12));
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .page.onboarding .ob-shell-footer-inner {
@@ -7332,17 +7339,20 @@ button.card:active {
   min-height: 58px;
   margin: 0;
   padding: 0 20px;
-  color: #fffaf7;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 750;
-  letter-spacing: -0.01em;
-  background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.13), transparent 38%),
-    var(--rose-600);
-  border: 1px solid rgba(142, 39, 62, 0.18);
-  border-radius: var(--radius-cta);
-  box-shadow: var(--shadow-rose);
+  color: #16130B;
+  font-family: var(--font-mono, monospace);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--primary, #EEC35E);
+  border: 1px solid rgba(255, 225, 163, 0.35);
+  border-radius: var(--radius-cta, 18px);
+  box-shadow: 0 6px 20px rgba(238, 195, 94, 0.25);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.page.onboarding .ob-shell-footer .cta:active {
+  transform: scale(0.98);
 }
 
 .page.onboarding .ob-shell-footer .cta::before {
@@ -7350,9 +7360,9 @@ button.card:active {
 }
 
 .page.onboarding .ob-shell-footer .cta:disabled {
-  color: rgba(56, 41, 47, 0.42);
-  background: var(--paper-200);
-  border-color: transparent;
+  color: rgba(245, 239, 230, 0.35);
+  background: var(--surface-container, #1F1B12);
+  border-color: rgba(255, 225, 163, 0.08);
   box-shadow: none;
 }
 
@@ -7363,11 +7373,11 @@ button.card:active {
 .page.onboarding .eyebrow,
 .page.onboarding-sleep .eyebrow {
   margin: 0;
-  color: var(--rose-600);
-  font-family: var(--font-sans);
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: var(--tracking-label);
+  color: var(--primary, #FFE1A3);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -7381,11 +7391,11 @@ button.card:active {
   gap: 8px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 100% 0, rgba(255, 255, 255, 0.78), transparent 35%),
-    linear-gradient(145deg, rgba(251, 232, 231, 0.92), rgba(247, 240, 232, 0.9));
-  border: 1px solid rgba(214, 75, 104, 0.1);
-  border-radius: 28px;
-  box-shadow: var(--shadow-card);
+    radial-gradient(circle at 100% 0, rgba(238, 195, 94, 0.12), transparent 45%),
+    var(--surface-container, #1F1B12);
+  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.14));
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .page.onboarding .ob-question-intro::before,
@@ -7393,7 +7403,7 @@ button.card:active {
   content: '';
   position: absolute;
   pointer-events: none;
-  border: 1px solid rgba(214, 75, 104, 0.08);
+  border: 1px solid rgba(238, 195, 94, 0.12);
   border-radius: 50%;
 }
 
@@ -7409,7 +7419,7 @@ button.card:active {
   right: -18px;
   width: 102px;
   height: 102px;
-  border-color: rgba(47, 133, 132, 0.07);
+  border-color: rgba(255, 225, 163, 0.08);
 }
 
 .page.onboarding .ob-question-intro > * {
@@ -7423,7 +7433,7 @@ button.card:active {
 .page.onboarding-sleep .ob-question-intro h1 {
   max-width: 17ch;
   margin: 0;
-  color: var(--ink-950);
+  color: var(--on-surface, #F5EFE6);
   font-family: var(--font-display);
   font-size: clamp(30px, 8.2vw, 38px);
   font-weight: 500;
@@ -7435,7 +7445,7 @@ button.card:active {
 .page.onboarding .muted,
 .page.onboarding-sleep .ob-question-intro .muted {
   max-width: 42ch;
-  color: var(--ink-650);
+  color: var(--on-surface-variant, #D8C5B2);
   font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.52;
@@ -7458,7 +7468,7 @@ button.card:active {
   left: 4px;
   width: 104px;
   height: 72px;
-  border: 1px solid rgba(214, 75, 104, 0.2);
+  border: 1px solid rgba(238, 195, 94, 0.2);
   border-radius: 50%;
   transform: rotate(-14deg);
 }
@@ -7470,9 +7480,9 @@ button.card:active {
   bottom: -3px;
   width: 7px;
   height: 7px;
-  background: var(--rose-500);
+  background: var(--primary, #EEC35E);
   border-radius: 50%;
-  box-shadow: -84px -44px 0 -1px var(--yellow-500);
+  box-shadow: -84px -44px 0 -1px var(--primary-container, #FFE1A3);
 }
 
 .page.onboarding .moonseed .ob-crescent-mark {
@@ -7482,12 +7492,12 @@ button.card:active {
   left: 27px;
   width: 58px;
   height: 58px;
-  color: var(--rose-600);
-  filter: drop-shadow(0 10px 13px rgba(184, 62, 88, 0.16));
+  color: var(--primary, #EEC35E);
+  filter: drop-shadow(0 10px 13px rgba(0, 0, 0, 0.4));
 }
 
 .page.onboarding .moonseed-thinking .ob-crescent-mark {
-  color: var(--teal-600);
+  color: var(--primary, #EEC35E);
 }
 
 .page.onboarding .moonseed-resting .ob-crescent-mark {
