@@ -587,7 +587,7 @@
   justify-content: center;
   width: 100%;
   margin-top: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 
 .health-action:hover {
@@ -599,9 +599,18 @@
 }
 
 .health-action.secondary {
-  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.18));
-  background: var(--surface-container, #1F1B12);
-  color: var(--on-surface, #F1DFD0);
+  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.22)) !important;
+  background: var(--surface-container, #1F1B12) !important;
+  color: var(--primary, #FFE1A3) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+.health-action.secondary:hover {
+  background: rgba(255, 225, 163, 0.08) !important;
+  border-color: var(--primary, #FFE1A3) !important;
 }
 
 .health-action:disabled,
