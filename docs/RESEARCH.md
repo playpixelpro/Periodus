@@ -1,4 +1,4 @@
-# Lunara research synthesis
+# Periodus research synthesis
 
 Updated: 2026-07-26
 
@@ -11,14 +11,14 @@ not reveal every branch, the longitudinal data model, prediction weights,
 medical-review process, native permission behavior, entitlement rules, or
 proprietary content.
 
-Lunara therefore targets **independent product-depth equivalence**, not literal
+Periodus therefore targets **independent product-depth equivalence**, not literal
 Flo parity. The implementation combines:
 
 - the observed interaction and information needs from the screenshots;
 - current official Flo product documentation;
 - public clinical and platform guidance;
 - transparent, deterministic local algorithms;
-- original Lunara visual language, copy, illustrations, and icons.
+- original Periodus visual language, copy, illustrations, and icons.
 
 The earlier recommendation to reduce onboarding to five generic screens was
 incorrect for this product. A health tracker needs enough structured context to
@@ -39,7 +39,7 @@ Research findings are labeled by strength:
 - **Official observed** — a current Flo, Apple, Android, ACOG, ASRM, FDA, or
   other primary source states the behavior or guidance.
 - **Screenshot observed** — directly visible in one of the 52 supplied images.
-- **Repository observed** — implemented in this Lunara repository.
+- **Repository observed** — implemented in this Periodus repository.
 - **Inference** — a requirement inferred from the observed product behavior,
   but not proof of Flo's private implementation.
 - **Proprietary or unknown** — not recoverable from public evidence.
@@ -68,7 +68,7 @@ That implies a shared state model:
 5. longitudinal reports and event-triggered education;
 6. native permissions, reminders, security, and sharing.
 
-Lunara follows this topology. It does not implement the screenshots as isolated
+Periodus follows this topology. It does not implement the screenshots as isolated
 mock screens.
 
 ### Onboarding must branch
@@ -102,7 +102,7 @@ medications, water, weight, BBT, lifestyle events, exercise, and notes.
 Official product documentation confirms a broad, customizable tracker
 ([How do I use the app?](https://help.flo.health/hc/en-us/articles/360014347632-How-do-I-use-the-app)).
 
-Lunara consequently treats each saved day as a structured observation. It also
+Periodus consequently treats each saved day as a structured observation. It also
 distinguishes:
 
 - an untouched day;
@@ -118,7 +118,7 @@ Flo documents cycle and symptom analytics, including reports intended for
 review with a clinician
 ([Analyzing your cycles and symptoms](https://help.flo.health/hc/en-us/articles/4407228784276-Analyzing-your-cycles-and-symptoms)).
 
-An independent equivalent needs more than a chart. Lunara reports expose:
+An independent equivalent needs more than a chart. Periodus reports expose:
 
 - six- and twelve-completed-cycle windows;
 - sample size, range, median/average, and descriptive trend;
@@ -136,7 +136,7 @@ Flo's official guidance says hormonal-contraception settings can remove
 ovulation and fertile-window predictions
 ([birth-control logging](https://help.flo.health/hc/en-us/articles/360015106292-How-do-I-log-my-birth-control-method)).
 
-Lunara applies the same safety principle independently: it can keep bleeding
+Periodus applies the same safety principle independently: it can keep bleeding
 and adherence tracking available while suppressing forecasts that would be
 misleading in that context. A future regimen model still needs method history,
 pack/change schedules, missed-dose states, and dated start/stop transitions.
@@ -148,13 +148,13 @@ capabilities in Flo's public documentation
 ([account deletion and Anonymous Mode](https://help.flo.health/hc/en-us/articles/360042567131-How-can-I-delete-my-account),
 [account restore](https://help.flo.health/hc/en-us/articles/360015054351-How-can-I-sign-in-and-restore-my-data)).
 
-Lunara deliberately starts from a different architecture:
+Periodus deliberately starts from a different architecture:
 
 - no account is required for core tracking;
 - profile and logs remain device-owned;
 - AI, health import, notifications, and backup are separate opt-ins;
 - cloud backup, when enabled, transports an opaque client-encrypted blob;
-- local deletion and export do not depend on a Lunara account.
+- local deletion and export do not depend on a Periodus account.
 
 This does not make native WebView storage encrypted at rest. Migrating the core
 database to encrypted native SQLite remains a release blocker.
@@ -171,7 +171,7 @@ Independent evaluations also show that calendar-app prediction accuracy can be
 limited
 ([period-tracker prediction study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8504278/)).
 
-The current Lunara forecast therefore:
+The current Periodus forecast therefore:
 
 - uses recent completed cycle starts;
 - uses a robust median rather than a simple all-history average;
@@ -190,7 +190,7 @@ the day of ovulation
 
 ### Pregnancy dating
 
-Pregnancy dating must preserve the source and authority of a date. Lunara
+Pregnancy dating must preserve the source and authority of a date. Periodus
 supports clinician-assigned EDD, LMP, conception, and day-3/day-5 embryo
 transfer inputs. Calculated results remain visibly provisional; a
 clinician-assigned date takes precedence. This follows the general principle
@@ -207,7 +207,7 @@ limitations matter
 
 ### Safety routing
 
-Lunara has deterministic rules for a small set of explicit warning-sign
+Periodus has deterministic rules for a small set of explicit warning-sign
 combinations. The rules return routine, same-day, or emergency guidance with
 source identifiers. They are deliberately non-diagnostic and do not treat a
 no-match result as reassurance.
@@ -245,11 +245,11 @@ The screenshots establish useful interaction principles:
 - staged onboarding with visible progress;
 - just-in-time permission education.
 
-Lunara should match that level of clarity and polish while remaining visibly
+Periodus should match that level of clarity and polish while remaining visibly
 original. It must not redistribute or imitate Flo's logo, name, illustrations,
 copy, paid content, icon set, or proprietary trade dress. The target is:
 
-> Comparable ease, depth, and responsiveness through an original Lunara design.
+> Comparable ease, depth, and responsiveness through an original Periodus design.
 
 System typography, accessible controls, original art, distinct color tokens,
 reduced-motion behavior, dynamic type, and real-device visual QA are part of
@@ -289,7 +289,7 @@ Public screens and help pages cannot establish:
   tokens;
 - production reliability, security controls, or private incident history.
 
-Lunara can build and validate independent equivalents. It cannot truthfully
+Periodus can build and validate independent equivalents. It cannot truthfully
 claim to reproduce those private systems or to be medically equivalent because
 the UI looks similar.
 

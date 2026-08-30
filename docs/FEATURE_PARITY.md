@@ -4,7 +4,7 @@ Updated: 2026-07-26
 
 ## Target and status language
 
-Lunara's target is an original, premium-quality reproductive-health companion
+Periodus's target is an original, premium-quality reproductive-health companion
 with comparable product depth. It is not a counterfeit interface and does not
 claim literal Flo parity.
 

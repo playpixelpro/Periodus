@@ -1,8 +1,8 @@
-# Lunara native architecture
+# Periodus native architecture
 
 ## Decision
 
-Lunara is a native-distributed, local-first application. React and TypeScript
+Periodus is a native-distributed, local-first application. React and TypeScript
 own the shared product UI and deterministic health engines. Capacitor embeds
 that application in first-class iOS and Android projects. Native APIs are
 exposed through narrow, typed bridges rather than scattered platform checks.
@@ -67,19 +67,19 @@ No native bridge returns more health data than the requesting screen needs.
 - SQLCipher-backed SQLite is a viable encrypted native-store path, with export
   compliance reviewed before release.
 - Local notifications replace the PWA reminder compromise and work without a
-  Lunara server after the user grants permission.
+  Periodus server after the user grants permission.
 
 ## Build workflow
 
 ```sh
 pnpm install
-pnpm --filter @lunara/app test
-pnpm --filter @lunara/app build:native
-pnpm --filter @lunara/app native:sync
+pnpm --filter @periodus/app test
+pnpm --filter @periodus/app build:native
+pnpm --filter @periodus/app native:sync
 
 # Native IDEs
-pnpm --filter @lunara/app native:ios
-pnpm --filter @lunara/app native:android
+pnpm --filter @periodus/app native:ios
+pnpm --filter @periodus/app native:android
 ```
 
 Web development remains useful for fast UI iteration with `pnpm dev`, but the

@@ -84,7 +84,8 @@ cd Periodus
 pnpm install
 
 # Build and sync native bundles
-pnpm --filter @lunara/app native:sync
+pnpm --filter @periodus/app native:sync
+# or simply: pnpm native:sync
 ```
 
 ### 3. Run on Android (Windows, Mac, Linux)
@@ -92,14 +93,16 @@ pnpm --filter @lunara/app native:sync
 2. Enable **USB Debugging** on your Android phone under *Developer Options*.
 3. Open the Android project in Android Studio:
    ```sh
-   pnpm --filter @lunara/app native:android
+   pnpm --filter @periodus/app native:android
+   # or: pnpm native:android
    ```
 4. Connect your device and press **▶ Run**.
 
 ### 4. Run on iOS (macOS required)
 1. Open the iOS project in **Xcode**:
    ```sh
-   pnpm --filter @lunara/app native:ios
+   pnpm --filter @periodus/app native:ios
+   # or: pnpm native:ios
    ```
 2. Select the **App** target → **Signing & Capabilities** and choose your Apple ID team.
 3. Select your connected iPhone and press **▶ Run**.
@@ -118,7 +121,8 @@ pnpm dev
 pnpm test
 
 # Sync changes to native shells after code edits
-pnpm --filter @lunara/app native:sync
+pnpm --filter @periodus/app native:sync
+# or: pnpm native:sync
 ```
 
 ---

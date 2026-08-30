@@ -412,10 +412,10 @@ questionable/deferred set.
 ## Verification commands
 
 ```sh
-pnpm --filter @lunara/app test
-pnpm --filter @lunara/app build
-pnpm --filter @lunara/app native:ios:build
-pnpm --filter @lunara/app native:android:build
+pnpm --filter @periodus/app test
+pnpm --filter @periodus/app build
+pnpm --filter @periodus/app native:ios:build
+pnpm --filter @periodus/app native:android:build
 ```
 
 These prove compilation and automated behavior. They do not replace

@@ -1,12 +1,12 @@
 # What can actually run locally
 
-Lunara's shipping target is a bundled Capacitor application, not a PWA. The
+Periodus's shipping target is a bundled Capacitor application, not a PWA. The
 React product layer is copied into native iOS and Android shells and can launch
 with airplane mode enabled.
 
 ## Fully local and buildable
 
-These features can work without a Lunara account or hosted backend:
+These features can work without a Periodus account or hosted backend:
 
 - cycle, period, symptom, mood, medication, contraception, BBT and OPK logging;
 - predictions, uncertainty ranges, pattern analysis and cycle reports;
@@ -45,8 +45,8 @@ browser:
 
 - OpenAI mode sends the user's prompt plus only the tracker categories they
   explicitly toggle on to OpenAI's API. It requires internet access, a project
-  key, API access and billing. Lunara sets `store: false`; it does not proxy the
-  request through a Lunara server.
+  key, API access and billing. Periodus sets `store: false`; it does not proxy the
+  request through a Periodus server.
 - Zero-knowledge automatic backup needs somewhere to store the encrypted blob.
   The included Worker can be self-hosted, but it is still an external machine.
 - Fresh editorial/medical content requires a review and update process. Bundled
@@ -75,7 +75,7 @@ checkers and guided journeys from that group are also deliberately excluded.
 
 High-quality structural parity with another app is buildable. Redistributing
 Flo's screenshots, illustrations, logo, copy, paid media, or an
-indistinguishable trade dress is not an acceptable implementation path. Lunara
+indistinguishable trade dress is not an acceptable implementation path. Periodus
 uses original visual assets and copy while matching the useful interaction
 model and product depth.
 

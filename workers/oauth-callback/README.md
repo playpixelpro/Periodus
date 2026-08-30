@@ -1,13 +1,13 @@
-# Lunara OpenRouter callback Worker
+# Periodus OpenRouter callback Worker
 
 This Worker gives OpenRouter a conventional HTTPS callback:
 
-`https://lunara.app/auth/openrouter`
+`https://periodus.app/auth/openrouter`
 
 The native shells claim that URL with Universal Links / Android App Links. If
 link verification is unavailable and the browser reaches the Worker, a static
-fallback page offers an explicit **Open Lunara** button. The button forwards
-only this allowlist to `lunara://openrouter/callback`:
+fallback page offers an explicit **Open Periodus** button. The button forwards
+only this allowlist to `periodus://openrouter/callback`:
 
 - `code`
 - `state`
@@ -22,7 +22,7 @@ scripts/assets. PKCE verification and the one-time code exchange stay in the
 native app.
 
 The callback also answers `HEAD` with
-`X-Lunara-OpenRouter-Callback: v1`. The native app checks that marker before
+`X-Periodus-OpenRouter-Callback: v1`. The native app checks that marker before
 opening OpenRouter, so a missing DNS record or undeployed Worker fails before
 the user signs in instead of stranding the authorization response.
 
@@ -33,7 +33,7 @@ the user signs in instead of stranding the authorization response.
 - `/.well-known/assetlinks.json`
 
 The Apple Team ID and bundle ID in `wrangler.toml` are taken from the checked-in
-Xcode project (`R5R3ZS54LV.app.lunara.mobile`). A reviewable copy lives at
+Xcode project (`R5R3ZS54LV.com.playpixelpro.myperiod`). A reviewable copy lives at
 `associations/apple-app-site-association`.
 
 Android verification intentionally fails with HTTP 503 until
@@ -45,7 +45,7 @@ for directly distributed builds.
 
 ## Deploy
 
-1. Ensure `lunara.app` is in the Cloudflare account used by Wrangler.
+1. Ensure `periodus.app` is in the Cloudflare account used by Wrangler.
 2. Set `ANDROID_SHA256_CERT_FINGERPRINTS` in `wrangler.toml` or as a Cloudflare
    Worker environment variable before relying on Android App Links.
 3. From this directory, run `pnpm test`.
@@ -54,4 +54,4 @@ for directly distributed builds.
    files must return HTTP 200 with `Content-Type: application/json`.
 
 The route patterns are intentionally limited to the callback and association
-paths; deploying this Worker should not replace the main `lunara.app` site.
+paths; deploying this Worker should not replace the main `periodus.app` site.

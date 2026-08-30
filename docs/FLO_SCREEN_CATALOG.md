@@ -2,7 +2,7 @@
 
 This catalog records public evidence for product structure and interaction
 research. References may inform hierarchy, flow, state coverage and usability.
-Lunara must not redistribute or trace Flo illustrations, icons, copy, video, or
+Periodus must not redistribute or trace Flo illustrations, icons, copy, video, or
 other expressive assets.
 
 ## Evidence confidence
@@ -49,7 +49,7 @@ Implemented from those references:
 - Shared Today hierarchy: date strip → phase-specific hero → daily insight rail
   → phase education.
 - Rose period, mineral-teal fertility, apricot pregnancy, and deep-plum
-  perimenopause visual states using original Lunara geometry.
+  perimenopause visual states using original Periodus geometry.
 - Pregnancy gestational age as the dominant label, with due date secondary and
   cards for symptoms, body changes, development, and checklist.
 - Perimenopause result-first hierarchy with a current non-diagnostic score,
