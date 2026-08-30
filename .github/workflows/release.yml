@@ -74,9 +74,8 @@ jobs:
         if: env.HAS_KEYSTORE == 'true'
         env:
           HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
-        working-directory: app/android/app
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > periodus-release.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "$GITHUB_WORKSPACE/app/android/app/periodus-release.jks"
 
       # -----------------------------------------------------------------------
       # 6. Build release APK
@@ -86,16 +85,16 @@ jobs:
         working-directory: app/android
         env:
           HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
-          KEYSTORE_PATH: app/periodus-release.jks
+          KEYSTORE_PATH: ${{ github.workspace }}/app/android/app/periodus-release.jks
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=$KEYSTORE_PATH \
-            -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
-            -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
-            -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+            -Pandroid.injected.signing.store.file="$KEYSTORE_PATH" \
+            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
 
       - name: Build release APK (Unsigned fallback)
         if: env.HAS_KEYSTORE != 'true'
@@ -138,8 +137,8 @@ jobs:
       - name: Remove keystore from workspace
         if: always()
         run: |
-          if [ -f app/android/app/periodus-release.jks ]; then
-            shred -u app/android/app/periodus-release.jks || true
+          if [ -f "$GITHUB_WORKSPACE/app/android/app/periodus-release.jks" ]; then
+            shred -u "$GITHUB_WORKSPACE/app/android/app/periodus-release.jks" || true
           fi
 
       # -----------------------------------------------------------------------
