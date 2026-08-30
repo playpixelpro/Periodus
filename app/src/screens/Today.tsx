@@ -243,7 +243,7 @@ export function Today() {
   })
 
   const data = useLiveQuery(async () => {
-    const [periodStarts, ovulations, profile, legacyPregnancyLmp, historyLogs, selectedLog] =
+    const [periodStarts, ovulations, profile, legacyPregnancyLmp, historyLogs, selectedLog, generatedArticles] =
       await Promise.all([
         getPeriodStarts(),
         getOvulations(),
@@ -254,7 +254,12 @@ export function Today() {
           .belowOrEqual(selectedDate)
           .toArray(),
         db.dailyLogs.get(selectedDate),
+        db.generatedArticles.toArray(),
       ])
+    const latestAiArticle =
+      generatedArticles.length > 0
+        ? generatedArticles[generatedArticles.length - 1]
+        : null
     const forecastPeriodStarts = periodStarts.filter((date) => date <= selectedDate)
     const forecastOvulations = ovulations.filter((date) => date <= selectedDate)
     const recentLogs = historyLogs.filter(
@@ -315,6 +320,7 @@ export function Today() {
       periScore: periWindowSummary(recentLogs, selectedDate).score,
       symptomPatterns,
       selectedLog,
+      latestAiArticle,
     }
   }, [selectedDate])
 
@@ -886,6 +892,21 @@ export function Today() {
             <strong>{data.periScore}</strong>
             <span>of 100</span>
           </div>
+        </button>
+      )}
+
+      {data.latestAiArticle && (
+        <button
+          className="card phase-reading-card"
+          onClick={() => setArticleSlug(data.latestAiArticle!.slug)}
+        >
+          <div className="section-label">
+            ✨ {data.latestAiArticle.category.toUpperCase()}
+          </div>
+          <p>
+            {data.latestAiArticle.title}
+          </p>
+          <span>Explore the guide <b aria-hidden="true">↗</b></span>
         </button>
       )}
 
