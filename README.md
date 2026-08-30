@@ -51,10 +51,10 @@
 - **Pregnancy Support**: Multi-source dating (LMP, ultrasound EDD, conception date) and developmental milestone timelines.
 - **Perimenopause Monitoring**: Tracking vasomotor symptoms, cycle length shifts, and clinician prompt generation.
 
-### 🛡️ 3. Zero-Knowledge Backups & Sync
-- **Local File Encrypted Snapshots**: Export and import complete database vaults secured with AES-256-GCM.
-- **Google Drive Integration**: Direct, private backups into your personal Google Drive Application Data folder (`appDataFolder`) where other apps cannot see them.
-- **Cloudflare Relay**: Support for stateless zero-knowledge Worker + R2 relays.
+### 🛡️ 3. Zero-Knowledge Backups & Native Cloud Sync
+- **Native Cloud & Drive Sync (Zero-Setup)**: Save encrypted database snapshots (`.vault` / `.json`) directly into **Google Drive**, **iCloud Drive**, **OneDrive**, **Proton Drive**, **Dropbox**, **Nextcloud**, or local device folders using the OS file picker and share sheet — **with 0 API keys, 0 Google Cloud setup, and 0 approval hassles**.
+- **Client-Side AES-256-GCM Encryption**: All exports are protected on-device with authenticated encryption using your zero-knowledge recovery passphrase.
+- **Stateless Cloudflare Relay**: Optional support for headless zero-knowledge Worker + R2 relays.
 
 ### 🤖 4. Private AI Companion & Curated Insights
 - **Bring Your Own Key**: Connect Anthropic (Claude), OpenAI, or local custom endpoints (Ollama / LocalAI).
@@ -62,8 +62,10 @@
 - **Granular Consent**: Choose exactly what categories of tracker context (if any) are attached to each question.
 - **AI-Curated Women's Health Articles**: Generate evidence-based articles dynamically saved directly into your local database.
 
-### 🩺 5. Doctor Summary Reports
-- Export clinical summaries formatted specifically for healthcare consultations without printing identifying telemetry.
+### 🩺 5. Executive Doctor & Clinical PDF Reports
+- **Executive Clinical Formatting**: Structured PDF reports featuring the Periodus vector logo badge, 3 key cycle metrics cards, recent cycle history tables, 2-column symptom frequency grids, and biomarker logs.
+- **Physician Consultation Notes**: Dedicated clinician notes section for appointments and doctor visits.
+- **Native Sharing & File Export**: Built-in `@capacitor/share` and `@capacitor/filesystem` integration for native share sheet export on mobile and modern "Save As" file dialog on desktop.
 
 ---
 
