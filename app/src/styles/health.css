@@ -3,9 +3,9 @@
   --health-soft-ink: var(--on-surface-variant);
   --health-paper: var(--surface);
   --health-coral: var(--primary-container);
-  --health-coral-soft: rgba(238, 195, 94, 0.16);
+  --health-coral-soft: rgba(var(--accent-rgb), 0.16);
   --health-moss: var(--tertiary-container);
-  --health-moss-soft: rgba(157, 205, 255, 0.16);
+  --health-moss-soft: rgba(var(--tertiary-rgb), 0.16);
   --health-gold: var(--accent-amber);
   --health-line: var(--border-subtle);
   position: fixed;
@@ -49,7 +49,7 @@
   display: grid;
   place-items: center;
   background: var(--surface-container);
-  color: var(--primary-container);
+  color: var(--on-surface);
   box-shadow: var(--shadow-card);
   font-size: 20px;
   line-height: 1;
@@ -71,7 +71,7 @@
   touch-action: pan-y;
   padding: 6px 18px calc(var(--safe-bottom) + 48px);
   scrollbar-width: thin;
-  scrollbar-color: rgba(238, 195, 94, 0.4) transparent;
+  scrollbar-color: rgba(var(--accent-rgb), 0.4) transparent;
 }
 
 .health-scroll::-webkit-scrollbar {
@@ -83,7 +83,7 @@
 }
 
 .health-scroll::-webkit-scrollbar-thumb {
-  background: rgba(238, 195, 94, 0.4);
+  background: rgba(var(--accent-rgb), 0.4);
   border-radius: 99px;
 }
 
@@ -107,13 +107,13 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   background:
-    radial-gradient(circle at 100% 0, rgba(238, 195, 94, 0.15), transparent 45%),
-    linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+    radial-gradient(circle at 100% 0, rgba(var(--accent-rgb), 0.15), transparent 45%),
+    var(--card-bg, var(--surface-container));
   box-shadow: var(--shadow-card);
 }
 
 .health-kicker {
-  color: var(--primary-container);
+  color: var(--primary);
   font-family: var(--font-sans);
   font-size: 10px;
   font-weight: 800;
@@ -129,7 +129,7 @@
   line-height: 1.08;
   letter-spacing: -0.035em;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--on-surface);
   word-break: normal;
 }
 
@@ -148,8 +148,8 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   background:
-    radial-gradient(circle at 100% 0, rgba(238, 195, 94, 0.15), transparent 45%),
-    linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+    radial-gradient(circle at 100% 0, rgba(var(--accent-rgb), 0.15), transparent 45%),
+    var(--card-bg, linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%));
   box-shadow: var(--shadow-card);
 }
 
@@ -422,7 +422,7 @@
   padding: 18px;
   border: 1px solid var(--health-line);
   border-radius: var(--radius-card);
-  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  background: var(--card-bg, linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%));
   box-shadow: var(--shadow-card);
 }
 
@@ -481,7 +481,7 @@
   padding: 18px 18px 16px;
   border: 1px solid var(--health-line);
   border-radius: var(--radius-card);
-  background: linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%);
+  background: var(--card-bg, linear-gradient(180deg, rgba(45, 42, 33, 0.85) 0%, rgba(35, 31, 23, 0.98) 100%));
   color: var(--health-ink);
   box-shadow: var(--shadow-card);
   text-align: left;
@@ -558,7 +558,7 @@
 
 .health-note {
   padding: 14px 16px;
-  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.14));
+  border: 1px solid var(--border-subtle, rgba(var(--primary-rgb), 0.14));
   border-left: 3px solid var(--primary, #FFE1A3);
   border-radius: 4px 14px 14px 4px;
   background: var(--surface-container, #1F1B12);
@@ -599,7 +599,7 @@
 }
 
 .health-action.secondary {
-  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.22)) !important;
+  border: 1px solid var(--border-subtle, rgba(var(--primary-rgb), 0.22)) !important;
   background: var(--surface-container, #1F1B12) !important;
   color: var(--primary, #FFE1A3) !important;
   font-weight: 700;
@@ -609,7 +609,7 @@
 }
 
 .health-action.secondary:hover {
-  background: rgba(255, 225, 163, 0.08) !important;
+  background: rgba(var(--primary-rgb), 0.08) !important;
   border-color: var(--primary, #FFE1A3) !important;
 }
 
@@ -961,7 +961,7 @@
   height: 34px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.18));
+  border: 1px solid var(--border-subtle, rgba(var(--primary-rgb), 0.18));
   border-radius: 10px;
   background: var(--surface-container, #1F1B12);
   color: var(--primary, #FFE1A3);
@@ -973,7 +973,7 @@
 }
 
 .health-sort-button:hover:not(:disabled) {
-  background: rgba(255, 225, 163, 0.12);
+  background: rgba(var(--primary-rgb), 0.12);
   border-color: var(--primary, #FFE1A3);
   transform: translateY(-1px);
 }
@@ -986,7 +986,7 @@
   opacity: 0.22;
   cursor: default;
   color: var(--on-surface-variant, #777);
-  border-color: rgba(255, 225, 163, 0.06);
+  border-color: rgba(var(--primary-rgb), 0.06);
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -995,8 +995,8 @@
   height: 28px;
   padding: 3px;
   border-radius: 99px;
-  border: 1px solid var(--border-subtle, rgba(255, 225, 163, 0.2));
-  background: rgba(255, 225, 163, 0.12);
+  border: 1px solid var(--border-subtle, rgba(var(--primary-rgb), 0.2));
+  background: rgba(var(--primary-rgb), 0.12);
   cursor: pointer;
   transition: all 0.18s ease;
   box-sizing: border-box;
@@ -1016,7 +1016,7 @@
 .health-toggle[aria-pressed='true'] {
   background: var(--primary, #FFE1A3);
   border-color: var(--primary, #FFE1A3);
-  box-shadow: 0 0 10px rgba(255, 225, 163, 0.25);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.25);
 }
 
 .health-toggle[aria-pressed='true']::after {

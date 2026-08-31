@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useState } from 'react'
 import { DateStrip } from '../components/DateStrip'
 import { LunaraMark } from '../components/LunaraMark'
+import { ARTICLES, type Article } from '../content/articles'
 import { PREGNANCY_WEEKS } from '../content/pregnancyWeeks'
 import {
   db,
@@ -11,6 +12,7 @@ import {
   getPeriodStarts,
   SK,
   type DailyLog,
+  type GeneratedArticle,
   type Goal,
 } from '../db/schema'
 import { addDays, daysBetween } from '../engine/cycle'
@@ -256,10 +258,32 @@ export function Today() {
         db.dailyLogs.get(selectedDate),
         db.generatedArticles.toArray(),
       ])
-    const latestAiArticle =
-      generatedArticles.length > 0
-        ? generatedArticles[generatedArticles.length - 1]
-        : null
+    const sortedGenerated = [...generatedArticles].sort((a, b) => {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+      return timeB - timeA
+    })
+
+    // Filter standard educational articles matching the user's primary focus
+    const relevantStandard = ARTICLES.filter((art) => {
+      if (profile.primaryGoal === 'ttc') {
+        return art.category === 'Fertility' || art.slug === 'fertile-window'
+      }
+      if (profile.primaryGoal === 'peri') {
+        return art.category === 'Perimenopause' || art.slug === 'peri-what-is'
+      }
+      if (profile.primaryGoal === 'pregnancy') {
+        return art.category === 'Pregnancy'
+      }
+      return art.category === 'Cycle basics' || art.category === 'Symptoms'
+    })
+
+    // Combine up to 5 articles: newest AI generated articles first, followed by relevant standard guides
+    const recentArticles: (Article | GeneratedArticle)[] = [
+      ...sortedGenerated,
+      ...relevantStandard.filter((std) => !sortedGenerated.some((gen) => gen.slug === std.slug)),
+    ].slice(0, 5)
+
     const forecastPeriodStarts = periodStarts.filter((date) => date <= selectedDate)
     const forecastOvulations = ovulations.filter((date) => date <= selectedDate)
     const recentLogs = historyLogs.filter(
@@ -320,7 +344,7 @@ export function Today() {
       periScore: periWindowSummary(recentLogs, selectedDate).score,
       symptomPatterns,
       selectedLog,
-      latestAiArticle,
+      recentArticles,
     }
   }, [selectedDate])
 
@@ -577,7 +601,6 @@ export function Today() {
     data.prediction.ovulationDate != null
       ? daysBetween(selectedDate, data.prediction.ovulationDate)
       : null
-  const fertileSoon = daysToOvulation != null && daysToOvulation >= 0 && daysToOvulation <= 5
   const stale = data.forecastDiagnostics.stale
   const phase = phaseFor(
     data.goal,
@@ -895,39 +918,24 @@ export function Today() {
         </button>
       )}
 
-      {data.latestAiArticle && (
-        <button
-          className="card phase-reading-card"
-          onClick={() => setArticleSlug(data.latestAiArticle!.slug)}
-        >
-          <div className="section-label">
-            ✨ {data.latestAiArticle.category.toUpperCase()}
-          </div>
-          <p>
-            {data.latestAiArticle.title}
-          </p>
-          <span>Explore the guide <b aria-hidden="true">↗</b></span>
-        </button>
-      )}
-
-      <button
-        className="card phase-reading-card"
-        onClick={() =>
-          setArticleSlug(fertileSoon ? 'fertile-window' : data.goal === 'peri' ? 'peri-what-is' : 'cycle-phases')
-        }
-      >
-        <div className="section-label">
-          {fertileSoon ? 'Understand your fertile window' : data.goal === 'peri' ? 'Understand midlife changes' : 'For this part of your cycle'}
-        </div>
-        <p>
-          {fertileSoon
-            ? 'Spot the signals that can add context to a calendar estimate.'
-            : data.goal === 'peri'
-              ? 'Track changes month to month without turning a pattern into a diagnosis.'
-              : 'Learn what may be changing — and what can vary from person to person.'}
-        </p>
-        <span>Explore the guide <b aria-hidden="true">↗</b></span>
-      </button>
+      {data.recentArticles.map((article) => {
+        const isAi = 'source' in article && article.source === 'ai'
+        return (
+          <button
+            key={article.slug}
+            className="card phase-reading-card"
+            onClick={() => setArticleSlug(article.slug)}
+          >
+            <div className="section-label">
+              {isAi ? `✨ ${article.category.toUpperCase()}` : article.category.toUpperCase()}
+            </div>
+            <p>{article.title}</p>
+            <span>
+              Explore the guide <b aria-hidden="true">↗</b>
+            </span>
+          </button>
+        )
+      })}
 
       <Disclaimer />
     </div>

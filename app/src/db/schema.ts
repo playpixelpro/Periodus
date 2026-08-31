@@ -359,12 +359,19 @@ export interface ContentBookmark {
   savedAt: string
 }
 
+export interface ArticleReference {
+  title: string
+  url: string
+  source?: string
+}
+
 export interface GeneratedArticle {
   slug: string
   title: string
   category: string
   minutes: number
   body: string[]
+  references?: ArticleReference[]
   source: 'ai'
   promptTopic?: string
   createdAt: string

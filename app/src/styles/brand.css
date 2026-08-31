@@ -10,9 +10,9 @@
   height: 42px;
   display: grid;
   place-items: center;
-  color: var(--primary-container);
+  color: var(--primary);
   background:
-    radial-gradient(circle at 34% 24%, rgba(238, 195, 94, 0.25), transparent 50%),
+    radial-gradient(circle at 34% 24%, rgba(var(--accent-rgb), 0.25), transparent 50%),
     var(--surface-container);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);

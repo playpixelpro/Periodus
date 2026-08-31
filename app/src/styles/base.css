@@ -28,7 +28,7 @@ body {
   color: var(--on-surface);
   background:
     radial-gradient(circle at 14% -5%, var(--accent-dim), transparent 35%),
-    radial-gradient(circle at 96% 18%, rgba(157, 205, 255, 0.05), transparent 30%),
+    radial-gradient(circle at 96% 18%, var(--glow-secondary), transparent 30%),
     var(--surface);
   -webkit-user-select: none;
   user-select: none;
@@ -42,16 +42,16 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: var(--grain-opacity, 0.18);
   background-image:
     repeating-linear-gradient(
       112deg,
-      rgba(236, 234, 229, 0.03) 0,
-      rgba(236, 234, 229, 0.03) 1px,
+      rgba(var(--ink-rgb), 0.03) 0,
+      rgba(var(--ink-rgb), 0.03) 1px,
       transparent 1px,
       transparent 6px
     );
-  mix-blend-mode: screen;
+  mix-blend-mode: var(--grain-blend, screen);
 }
 
 #root {

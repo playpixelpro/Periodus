@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { getSetting, removeSetting, setSetting, SK } from '../db/schema'
 import {
   anthropicCredentialKind,
@@ -18,6 +18,7 @@ import {
   parseAssistantConsent,
   type AssistantConsent,
 } from '../lib/assistantContext'
+import { fetchAvailableModels, type AvailableModel } from '../lib/modelDiscovery'
 import { screenAssistantUrgency } from '../lib/assistantSafety'
 import {
   deleteSecureSecret,
@@ -82,8 +83,23 @@ export function AssistantScreen() {
   const [contextOpen, setContextOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
+  const [models, setModels] = useState<AvailableModel[]>([])
+  const [modelsLoading, setModelsLoading] = useState(false)
+  const [modelsError, setModelsError] = useState<string | null>(null)
+  const [modelFilter, setModelFilter] = useState('')
+  const [isCustomManual, setIsCustomManual] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
   const composerInput = useRef<HTMLTextAreaElement>(null)
+
+  const filteredModels = useMemo(() => {
+    if (!modelFilter.trim()) return models
+    const q = modelFilter.toLowerCase().trim()
+    return models.filter(
+      (m) =>
+        m.id.toLowerCase().includes(q) ||
+        (m.ownedBy && m.ownedBy.toLowerCase().includes(q)),
+    )
+  }, [models, modelFilter])
 
   const credentialKind = apiKey ? anthropicCredentialKind(apiKey) : null
 
@@ -217,6 +233,50 @@ export function AssistantScreen() {
           : 'OpenAI key removed.',
     )
   }
+
+  async function loadModels(urlOverride?: string) {
+    const endpoint = (urlOverride ?? baseUrl).trim()
+    if (!endpoint) {
+      setModelsError('Enter an API endpoint / Base URL first, then load models.')
+      return
+    }
+    setModelsLoading(true)
+    setModelsError(null)
+    try {
+      const found = await fetchAvailableModels(endpoint, apiKey ?? undefined)
+      setModels(found)
+      if (found.length) {
+        setModel((current) => (current && found.some((m) => m.id === current) ? current : found[0].id))
+      } else {
+        setModelsError('No models found at this endpoint. Enter the model name manually below.')
+      }
+    } catch (reason) {
+      setModelsError(reason instanceof Error ? reason.message : 'Could not load models from this endpoint.')
+    } finally {
+      setModelsLoading(false)
+    }
+  }
+
+  // Automatically probe the endpoint for available models once it looks like a
+  // real URL, so the user only has to pick one. Debounced so typing doesn't
+  // hammer the provider.
+  useEffect(() => {
+    if (provider !== 'custom') {
+      setModels([])
+      setModelsError(null)
+      return
+    }
+    if (!baseUrl.trim() || !/^https?:\/\//.test(baseUrl.trim())) {
+      setModels([])
+      setModelsError(null)
+      return
+    }
+    const timer = setTimeout(() => {
+      void loadModels()
+    }, 800)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [baseUrl, provider])
 
   async function toggleConsent(key: keyof AssistantConsent) {
     const next = { ...consent, [key]: !consent[key] }
@@ -414,13 +474,20 @@ export function AssistantScreen() {
                 </div>
                 <div className="field">
                   <label htmlFor="assistant-model">Model</label>
-                  <input
+                  <select
                     id="assistant-model"
-                    autoCapitalize="none"
-                    spellCheck={false}
                     value={model}
                     onChange={(event) => setModel(event.target.value)}
-                  />
+                  >
+                    <option value="gpt-4o">GPT-4o · flagship</option>
+                    <option value="gpt-4o-mini">GPT-4o mini · fast & affordable</option>
+                    <option value="o3-mini">o3-mini · reasoning</option>
+                    <option value="o1">o1 · deep reasoning</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    {!['gpt-4o', 'gpt-4o-mini', 'o3-mini', 'o1', 'gpt-4-turbo'].includes(model) && model && (
+                      <option value={model}>{model} (Current)</option>
+                    )}
+                  </select>
                 </div>
               </>
             ) : (
@@ -441,6 +508,7 @@ export function AssistantScreen() {
                     Works with OpenRouter, DeepSeek, Groq, Mistral, Ollama, LM Studio, or any OpenAI-compatible server.
                   </small>
                 </div>
+
                 <div className="field">
                   <label htmlFor="assistant-key">API key (optional for local models)</label>
                   <input
@@ -455,16 +523,113 @@ export function AssistantScreen() {
                     onChange={(event) => setKeyInput(event.target.value)}
                   />
                 </div>
+
                 <div className="field">
-                  <label htmlFor="assistant-model">Model name</label>
-                  <input
-                    id="assistant-model"
-                    autoCapitalize="none"
-                    spellCheck={false}
-                    placeholder="e.g. deepseek-chat, llama-3.3-70b-versatile"
-                    value={model}
-                    onChange={(event) => setModel(event.target.value)}
-                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                    <label htmlFor="assistant-model">Model {models.length > 0 ? `(${models.length} loaded)` : ''}</label>
+                    {models.length > 0 && (
+                      <button
+                        type="button"
+                        className="text-button"
+                        style={{ fontSize: 11, padding: 0, minHeight: 'auto', color: 'var(--primary)' }}
+                        onClick={() => setIsCustomManual((prev) => !prev)}
+                      >
+                        {isCustomManual ? `Choose from list (${models.length})` : 'Type manually'}
+                      </button>
+                    )}
+                  </div>
+
+                  {models.length > 0 && !isCustomManual ? (
+                    <>
+                      {models.length > 6 && (
+                        <input
+                          type="search"
+                          style={{ minHeight: 38, fontSize: 13, marginBottom: 8 }}
+                          placeholder="Filter models (e.g. gpt, claude, deepseek, llama)…"
+                          value={modelFilter}
+                          onChange={(e) => setModelFilter(e.target.value)}
+                        />
+                      )}
+                      <select
+                        id="assistant-model"
+                        value={model}
+                        onChange={(event) => {
+                          if (event.target.value === '__manual__') {
+                            setIsCustomManual(true)
+                          } else {
+                            setModel(event.target.value)
+                          }
+                        }}
+                      >
+                        {model && !filteredModels.some((m) => m.id === model) && (
+                          <option value={model}>{model} (Selected)</option>
+                        )}
+                        {filteredModels.map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.id}{m.ownedBy ? ` (${m.ownedBy})` : ''}
+                          </option>
+                        ))}
+                        <option value="__manual__">✏️ Enter custom model name…</option>
+                      </select>
+                    </>
+                  ) : (
+                    <input
+                      id="assistant-model"
+                      autoCapitalize="none"
+                      spellCheck={false}
+                      placeholder="e.g. deepseek-chat, llama-3.3-70b-versatile, gpt-4o"
+                      value={model}
+                      onChange={(event) => setModel(event.target.value)}
+                    />
+                  )}
+
+                  <div className="model-load-row">
+                    <button
+                      type="button"
+                      className="text-button"
+                      onClick={() => void loadModels()}
+                      disabled={modelsLoading || !baseUrl.trim()}
+                    >
+                      {modelsLoading
+                        ? 'Loading models…'
+                        : models.length
+                          ? `↻ ${models.length} model${models.length === 1 ? '' : 's'} · refresh`
+                          : 'Load available models'}
+                    </button>
+                    <span className="field-hint" role="status">
+                      {modelsLoading
+                        ? 'Probing endpoint…'
+                        : modelsError
+                          ? 'Not discoverable — type the model name above.'
+                          : models.length
+                            ? `${models.length} models discovered. Pick one above.`
+                            : 'Enter a model name, or load the list.'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="openrouter-hint">
+                  <strong>New to AI endpoints?</strong>
+                  <p>
+                    Create a free account on <b>OpenRouter</b> and use its free tier — one key
+                    unlocks many models from a single endpoint.
+                  </p>
+                  <button
+                    type="button"
+                    className="text-button"
+                    onClick={() => {
+                      setBaseUrl('https://openrouter.ai/api/v1')
+                      void loadModels('https://openrouter.ai/api/v1')
+                    }}
+                  >
+                    Use the OpenRouter endpoint
+                  </button>
+                  <div className="privacy-alert" role="alert">
+                    <b>Beware — free tiers can train on your data.</b> Many free or zero-credit
+                    endpoints log your prompts and may use them to train their models. For private
+                    health topics, prefer a paid provider you trust or a fully local model (e.g.
+                    Ollama) that never leaves your device.
+                  </div>
                 </div>
               </>
             )}

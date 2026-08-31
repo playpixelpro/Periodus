@@ -9,7 +9,7 @@ private struct CycleSnapshot: Decodable {
     let detail: String?
 
     static let empty = CycleSnapshot(
-        headline: "Open Lunara",
+        headline: "Open Periodus",
         detail: "Log today to see your cycle at a glance."
     )
 
@@ -71,7 +71,7 @@ private struct LunaraCycleWidgetView: View {
             HStack(spacing: 6) {
                 Image(systemName: "moon.fill")
                     .font(.caption)
-                Text("LUNARA")
+                Text("PERIODUS")
                     .font(.caption2.weight(.bold))
                     .tracking(1.1)
             }
@@ -114,7 +114,7 @@ private struct LunaraCycleWidget: Widget {
             LunaraCycleWidgetView(entry: entry)
         }
         .configurationDisplayName("Cycle at a glance")
-        .description("See the latest private summary published by Lunara.")
+        .description("See the latest private summary published by Periodus.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

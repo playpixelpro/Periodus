@@ -5,7 +5,7 @@
   padding: 14px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 102% -12%, rgba(157, 205, 255, 0.12), transparent 44%),
+    radial-gradient(circle at 102% -12%, rgba(var(--tertiary-rgb), 0.12), transparent 44%),
     var(--surface-container);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);

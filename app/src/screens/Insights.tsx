@@ -7,7 +7,7 @@ import { useDialog } from '../context/DialogContext'
 import {
   generateAndSaveAiInsight,
   getActiveAssistantConfig,
-  pickRandomTopic,
+  pickTopicForCategory,
 } from '../lib/aiInsightsGenerator'
 
 const GOAL_CATEGORY: Record<Goal, string> = {
@@ -34,6 +34,7 @@ export function Insights() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatingTopic, setGeneratingTopic] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const data = useLiveQuery(async () => {
     const [goal, bookmarks, customArticles] = await Promise.all([
@@ -86,13 +87,16 @@ export function Insights() {
       return
     }
 
-    const randomDefault = pickRandomTopic(goal)
+    const activeCategory = selectedCategory && selectedCategory !== 'AI Insights' ? selectedCategory : undefined
+    const chosenOption = pickTopicForCategory(activeCategory, goal)
 
     const chosen = await dialog.confirm({
-      title: 'Generate Fresh Insight',
-      message: `Would you like Periodus AI to research and generate a fresh educational guide on:
+      title: activeCategory ? `Generate ${activeCategory} Insight` : 'Generate Fresh Insight',
+      message: `Would you like Periodus AI to research and generate an evidence-backed educational guide${
+        activeCategory ? ` in "${activeCategory}"` : ''
+      } on:
 
-"${randomDefault.topic}"?`,
+"${chosenOption.topic}"?`,
       confirmText: 'Generate Guide',
       cancelText: 'Cancel',
     })
@@ -100,14 +104,14 @@ export function Insights() {
     if (!chosen) return
 
     setIsGenerating(true)
-    setGeneratingTopic(randomDefault.topic)
+    setGeneratingTopic(chosenOption.topic)
     setStatusMessage(null)
 
     try {
       const generated = await generateAndSaveAiInsight(config, {
         goal,
-        topic: randomDefault.topic,
-        category: randomDefault.category,
+        topic: chosenOption.topic,
+        category: chosenOption.category,
       })
       setStatusMessage(`✨ Generated: "${generated.title}"`)
       setArticleSlug(generated.slug)
@@ -118,6 +122,12 @@ export function Insights() {
       setGeneratingTopic(null)
     }
   }
+
+  const categoryButtonLabel = isGenerating
+    ? 'Generating fresh insight…'
+    : selectedCategory && selectedCategory !== 'AI Insights'
+      ? `Generate fresh ${selectedCategory} insight`
+      : 'Generate fresh women’s health insight'
 
   return (
     <div className="page insights-page">
@@ -147,63 +157,6 @@ export function Insights() {
         </span>
       </button>
 
-      {/* AI Generate Fresh Insight Button */}
-      <div style={{ margin: '14px 0 6px' }}>
-        <button
-          className="health-action"
-          disabled={isGenerating}
-          onClick={() => void handleGenerateInsight()}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            padding: '12px 16px',
-            background: 'var(--surface-dark, #1F1B12)',
-            border: '1px solid rgba(255, 225, 163, 0.4)',
-            color: 'var(--gold, #FFE1A3)',
-            borderRadius: 14,
-            fontWeight: 600,
-            fontSize: 14,
-            cursor: isGenerating ? 'wait' : 'pointer',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <span>{isGenerating ? '✦' : '✨'}</span>
-          <span>
-            {isGenerating
-              ? `Generating fresh insight…`
-              : 'Generate fresh women’s health insight'}
-          </span>
-        </button>
-        {generatingTopic && (
-          <p
-            className="muted"
-            style={{
-              fontSize: 12,
-              textAlign: 'center',
-              margin: '6px 0 0',
-              fontStyle: 'italic',
-            }}
-          >
-            Researching: &ldquo;{generatingTopic}&rdquo;
-          </p>
-        )}
-        {statusMessage && (
-          <p
-            style={{
-              fontSize: 13,
-              textAlign: 'center',
-              margin: '6px 0 0',
-              color: 'var(--gold, #FFE1A3)',
-            }}
-          >
-            {statusMessage}
-          </p>
-        )}
-      </div>
-
       <div className="insights-search">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="10.5" cy="10.5" r="6.5" />
@@ -212,7 +165,7 @@ export function Insights() {
         <input
           type="search"
           aria-label="Search articles"
-          placeholder="Search cycles, symptoms, fertility…"
+          placeholder="Search cycles, symptoms, fertility, privacy…"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -282,13 +235,78 @@ export function Insights() {
         <>
           <nav className="category-ribbon" aria-label="Insight categories">
             {categories.map((category) => (
-              <a key={category} href={`#category-${category.toLowerCase().replaceAll(' ', '-')}`}>
+              <button
+                key={category}
+                className={`category-chip${selectedCategory === category ? ' active' : ''}`}
+                onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+              >
                 {category}
-              </a>
+              </button>
             ))}
           </nav>
+
+          {/* AI Category-Contextual Generate Insight Action */}
+          <div style={{ margin: '8px 0 16px' }}>
+            <button
+              className="health-action"
+              disabled={isGenerating}
+              onClick={() => void handleGenerateInsight()}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 9,
+                padding: '13px 18px',
+                background: 'var(--card-bg, var(--surface-container))',
+                border: selectedCategory
+                  ? '1.5px solid var(--primary)'
+                  : '1px solid var(--border-subtle)',
+                color: 'var(--on-surface)',
+                borderRadius: 16,
+                fontWeight: 700,
+                fontSize: 14,
+                boxShadow: selectedCategory ? 'var(--shadow-float)' : 'var(--shadow-card)',
+                cursor: isGenerating ? 'wait' : 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <span style={{ color: 'var(--primary)', fontSize: 16 }}>{isGenerating ? '✦' : '✨'}</span>
+              <span>{categoryButtonLabel}</span>
+            </button>
+            {generatingTopic && (
+              <p
+                className="muted"
+                style={{
+                  fontSize: 12,
+                  textAlign: 'center',
+                  margin: '8px 0 0',
+                  fontStyle: 'italic',
+                  color: 'var(--on-surface-variant)',
+                  fontWeight: 500,
+                }}
+              >
+                Researching sources for &ldquo;{generatingTopic}&rdquo;…
+              </p>
+            )}
+            {statusMessage && (
+              <p
+                style={{
+                  fontSize: 13,
+                  textAlign: 'center',
+                  margin: '8px 0 0',
+                  color: 'var(--primary)',
+                  fontWeight: 600,
+                }}
+              >
+                {statusMessage}
+              </p>
+            )}
+          </div>
           <div className="insight-sections">
-            {categories.map((category, categoryIndex) => {
+            {categories
+              .filter((category) => !selectedCategory || category === selectedCategory)
+              .map((category, categoryIndex) => {
               const articles = allArticles.filter((article) => article.category === category)
               const tone = CATEGORY_TONE[category] ?? 'rose'
               return (

@@ -74,6 +74,7 @@ import {
 } from '../native/secureVault'
 import { getWidgetStatus, type WidgetStatus } from '../native/widgets'
 import { useApp } from '../state/appStore'
+import { THEMES, useTheme, type Theme } from '../context/ThemeContext'
 import {
   geminiNanoStatus,
   geminiNanoDownload,
@@ -147,6 +148,7 @@ export function Settings() {
     setAboutOpen,
   } = useApp()
   const dialog = useDialog()
+  const { theme, setTheme } = useTheme()
   const fileInput = useRef<HTMLInputElement>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [hasOpenAiKey, setHasOpenAiKey] = useState(false)
@@ -852,6 +854,29 @@ export function Settings() {
           {status}
         </div>
       )}
+
+      <Section title="Appearance">
+        <div className="theme-picker">
+          <span className="theme-preview" aria-hidden="true">
+            <span style={{ background: THEMES.find((o) => o.id === theme)?.swatch ?? '#eec35e' }} />
+            <i
+              className={THEMES.find((o) => o.id === theme)?.light ? 'is-light' : ''}
+            />
+          </span>
+          <select
+            className="theme-select"
+            value={theme}
+            onChange={(event) => setTheme(event.target.value as Theme)}
+            aria-label="Appearance theme"
+          >
+            {THEMES.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </Section>
 
       <Section title="Goal">
         {(Object.keys(GOAL_LABELS) as Goal[]).map((g) => (
