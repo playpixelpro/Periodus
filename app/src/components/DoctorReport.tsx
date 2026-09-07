@@ -91,7 +91,7 @@ export function DoctorReport() {
     })
     // Statistics are anchored to the end of the selected window, not to today,
     // so a historical range is not reported as mostly-unlogged.
-    const report = buildCycleReport(logs, periodStarts, range.end)
+    const report = buildCycleReport(logs, periodStarts, range.end, profile.cycle.typicalPeriodLength)
     const dates = logs.map((log) => log.date).sort()
     const fertilityTests = countItems(
       logs.map((log) => [
@@ -136,11 +136,17 @@ export function DoctorReport() {
     try {
       const allLogs = await db.dailyLogs.toArray()
       const allPeriodStarts = await getPeriodStarts()
-      const cycleReport = buildCycleReport(allLogs, allPeriodStarts, today)
+      const cycleReport = buildCycleReport(
+        allLogs,
+        allPeriodStarts,
+        today,
+        data.profile.cycle.typicalPeriodLength,
+      )
       const blob = generateCycleReportPdf({
         report: cycleReport,
         cycles: completedCycles(allPeriodStarts),
         userDisplayName: data.profile.displayName,
+        typicalPeriodLength: data.profile.cycle.typicalPeriodLength,
       })
       await shareOrDownloadPdf(`periodus-doctor-report-${today}.pdf`, blob)
     } catch {
@@ -310,9 +316,9 @@ export function DoctorReport() {
         <ReportRow
           label="Average bleeding"
           value={
-            data.report.bleedingTrend.averageDays != null
+            data.report.bleedingTrend.averageDays != null && data.report.bleedingTrend.averageDays > 1
               ? `${data.report.bleedingTrend.averageDays} logged days`
-              : '—'
+              : `${data.profile.cycle.typicalPeriodLength ?? 5} days (initial setup)`
           }
         />
         <ReportRow

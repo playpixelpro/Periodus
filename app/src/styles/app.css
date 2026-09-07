@@ -578,15 +578,15 @@ button.card:active {
 }
 
 .cal-day.period-expected {
-  background: rgba(238, 195, 94, 0.22);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
   color: var(--primary);
-  border: 1.5px dashed var(--primary-container);
+  border: 1.5px dashed var(--primary);
   font-weight: 700;
 }
 
 .cal-day.predicted {
   color: var(--primary);
-  border: 1.5px dashed var(--primary-container);
+  border: 2px dashed var(--primary);
 }
 
 .cal-day.fertile {
@@ -975,6 +975,12 @@ button.card:active {
 .phase-empty {
   --phase-accent: var(--primary);
   background: var(--phase-hero-cycle-bg);
+  border-color: rgba(var(--accent-rgb), 0.2);
+}
+
+.phase-period {
+  --phase-accent: var(--primary);
+  background: var(--phase-hero-period-bg, var(--phase-hero-bg));
   border-color: rgba(var(--accent-rgb), 0.2);
 }
 

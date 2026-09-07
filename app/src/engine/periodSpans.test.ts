@@ -89,4 +89,26 @@ describe('calculatePeriodSpans', () => {
     expect(spans[0].endDate).toBe('2026-09-12')
     expect(spans[0].dates).toEqual(['2026-09-10', '2026-09-11', '2026-09-12'])
   })
+
+  it('does not treat periodEnd with flow as a new cycle start when gap exists', () => {
+    // User starts period on Aug 29, then marks end on Sep 3 with light flow
+    const logs: DailyLog[] = [
+      { date: '2026-07-07', flow: 'heavy', periodStart: true },
+      { date: '2026-08-02', flow: 'heavy', periodStart: true },
+      { date: '2026-08-29', flow: 'medium', periodStart: true },
+      { date: '2026-09-03', flow: 'light', periodEnd: true },
+    ]
+    const spans = calculatePeriodSpans(logs, 5)
+    // There should be exactly 3 spans, corresponding to the 3 real period starts:
+    // Jul 7, Aug 2, and Aug 29. Sep 3 must NOT be a start!
+    expect(spans).toHaveLength(3)
+    expect(spans.map((s) => s.startDate)).toEqual(['2026-07-07', '2026-08-02', '2026-08-29'])
+    expect(spans[2]).toEqual({
+      startDate: '2026-08-29',
+      endDate: '2026-09-03',
+      isConfirmedEnd: true,
+      dates: ['2026-08-29', '2026-08-30', '2026-08-31', '2026-09-01', '2026-09-02', '2026-09-03'],
+    })
+  })
 })
+

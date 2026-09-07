@@ -411,6 +411,7 @@ export function buildCycleReport(
   logs: DailyLog[],
   periodStarts: ISODate[],
   today: ISODate,
+  baselinePeriodLength?: number,
 ): CycleReport {
   const cycles = completedCycles(uniqueSorted(periodStarts))
   const lengths = cycles.map((cycle) => cycle.length)
@@ -432,16 +433,28 @@ export function buildCycleReport(
     90,
   )
 
+  const rawAvgBleed = episodes.length
+    ? Math.round((episodes.reduce((sum, episode) => sum + episode.days, 0) / episodes.length) * 10) /
+      10
+    : null
+
+  const hasExplicitOneDayEnd =
+    episodes.length === 1 &&
+    episodes[0].days === 1 &&
+    logs.some((l) => l.date === episodes[0].start && l.periodEnd)
+
+  const averageBleedingDays =
+    rawAvgBleed && (rawAvgBleed > 1 || hasExplicitOneDayEnd)
+      ? rawAvgBleed
+      : baselinePeriodLength ?? rawAvgBleed
+
   return {
     generatedOn: today,
     completedCycleCount: cycles.length,
     averageCycleDays: lengths.length ? Math.round(averageCycleLength(periodStarts)) : null,
     shortestCycleDays: lengths.length ? Math.min(...lengths) : null,
     longestCycleDays: lengths.length ? Math.max(...lengths) : null,
-    averageBleedingDays: episodes.length
-      ? Math.round((episodes.reduce((sum, episode) => sum + episode.days, 0) / episodes.length) * 10) /
-        10
-      : null,
+    averageBleedingDays,
     loggedDaysLast90,
     trackingCoverageLast90: Math.round((loggedDaysLast90 / 90) * 100),
     topSignals: symptomFrequency(logs).slice(0, 8),

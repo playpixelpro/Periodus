@@ -134,6 +134,7 @@ export interface CycleReportPdfInput {
   stats12?: CycleWindowStatistics | null
   userDisplayName?: string
   dateRangeLabel?: string
+  typicalPeriodLength?: number
 }
 
 export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
@@ -272,7 +273,10 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
     input.stats6?.longestDays ??
     (cycleLengths.length > 0 ? Math.max(...cycleLengths) : null)
 
-  const avgBleed = input.report.averageBleedingDays ?? input.report.bleedingTrend?.averageDays ?? 5
+  const typicalBleed = input.typicalPeriodLength ?? 5
+  const rawBleed = input.report.averageBleedingDays ?? input.report.bleedingTrend?.averageDays
+  const isSetupFallback = !rawBleed || rawBleed <= 1
+  const avgBleed = isSetupFallback ? typicalBleed : rawBleed
 
   const cardWidth = (contentWidth - 6) / 3
   const cardHeight = 24
@@ -343,12 +347,12 @@ export function generateCycleReportPdf(input: CycleReportPdfInput): Blob {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(15)
   doc.setTextColor(textDark[0], textDark[1], textDark[2])
-  doc.text(avgBleed ? `${avgBleed} days` : '5 days', card3X + 4, y + 14)
+  doc.text(`${avgBleed} ${avgBleed === 1 ? 'day' : 'days'}`, card3X + 4, y + 14)
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7)
   doc.setTextColor(textMuted[0], textMuted[1], textMuted[2])
-  doc.text('Mean self-reported flow', card3X + 4, y + 20)
+  doc.text(isSetupFallback ? 'Initial setup duration' : 'Mean self-reported flow', card3X + 4, y + 20)
 
   y += cardHeight + 8
 

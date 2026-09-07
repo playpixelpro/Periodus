@@ -22,10 +22,15 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
   const [exportError, setExportError] = useState<string | null>(null)
   const [exportBusy, setExportBusy] = useState(false)
   const data = useLiveQuery(async () => {
-    const [periodStarts, logs] = await Promise.all([getPeriodStarts(), db.dailyLogs.toArray()])
+    const [periodStarts, logs, profile] = await Promise.all([
+      getPeriodStarts(),
+      db.dailyLogs.toArray(),
+      getHealthProfile(),
+    ])
     return {
-      report: buildCycleReport(logs, periodStarts, today),
+      report: buildCycleReport(logs, periodStarts, today, profile?.cycle?.typicalPeriodLength),
       cycles: completedCycles(periodStarts).slice(-12),
+      profile,
     }
   }, [today])
 
@@ -34,11 +39,11 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
     setExportError(null)
     setExportBusy(true)
     try {
-      const profile = await getHealthProfile()
       const blob = generateCycleReportPdf({
         report: data.report,
         cycles: data.cycles,
-        userDisplayName: profile?.displayName,
+        userDisplayName: data.profile?.displayName,
+        typicalPeriodLength: data.profile?.cycle?.typicalPeriodLength,
       })
       await shareOrDownloadPdf(`periodus-cycle-report-${today}.pdf`, blob)
     } catch {
@@ -103,8 +108,16 @@ export function CycleReportScreen({ onBack }: CycleReportScreenProps) {
                     <span>cycle-length range · days</span>
                   </div>
                   <div className="health-metric">
-                    <strong>{data.report.averageBleedingDays ?? '—'}</strong>
-                    <span>average logged bleeding days</span>
+                    <strong>
+                      {data.report.averageBleedingDays && data.report.averageBleedingDays > 1
+                        ? `${data.report.averageBleedingDays}d`
+                        : `${data.profile?.cycle?.typicalPeriodLength ?? 5}d`}
+                    </strong>
+                    <span>
+                      {data.report.averageBleedingDays && data.report.averageBleedingDays > 1
+                        ? 'average logged bleeding days'
+                        : 'typical period duration (setup)'}
+                    </span>
                   </div>
                   <div className="health-metric">
                     <strong>{data.report.completeness.completeCheckInDays}</strong>

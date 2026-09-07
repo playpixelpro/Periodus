@@ -143,9 +143,12 @@
   --insight-rose-bg: linear-gradient(180deg, rgba(48, 38, 22, 0.85) 0%, rgba(34, 27, 16, 0.98) 100%);
 
   /* Phase Hero Theme Tokens */
-  --phase-hero-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 238, 195, 94), 0.12), transparent 50%),
-    radial-gradient(circle at 20% 80%, rgba(184, 62, 88, 0.2), transparent 50%),
-    linear-gradient(155deg, #381b25 0%, #29141c 64%, #1e0e14 100%);
+  --phase-hero-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 238, 195, 94), 0.18), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(var(--accent-rgb, 238, 195, 94), 0.08), transparent 50%),
+    linear-gradient(155deg, #2c2419 0%, #221c13 64%, #17130c 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 238, 195, 94), 0.22), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(var(--accent-rgb, 238, 195, 94), 0.10), transparent 50%),
+    linear-gradient(155deg, #302619 0%, #241d13 64%, #18130c 100%);
   --phase-hero-ovulation-bg: radial-gradient(circle at 80% 20%, rgba(var(--tertiary-rgb, 157, 205, 255), 0.15), transparent 50%),
     radial-gradient(circle at 20% 80%, rgba(33, 123, 112, 0.2), transparent 50%),
     linear-gradient(155deg, #102d2c 0%, #0d2121 58%, #081616 100%);
@@ -158,8 +161,8 @@
     linear-gradient(155deg, #38281a 0%, #2b1e13 65%, #1c130b 100%);
   --phase-hero-ink: #ffffff;
   --phase-hero-shadow: 0 22px 40px -26px rgba(0, 0, 0, 0.7);
-  --phase-seed-bg: rgba(255, 255, 255, 0.28);
-  --phase-seed-border: rgba(255, 255, 255, 0.45);
+  --phase-seed-bg: rgba(var(--accent-rgb, 238, 195, 94), 0.22);
+  --phase-seed-border: rgba(var(--accent-rgb, 238, 195, 94), 0.45);
   --phase-pill-bg: var(--surface-glass, rgba(35, 31, 23, 0.92));
   --phase-pill-color: var(--primary);
   --phase-pill-border: 1px solid rgba(var(--accent-rgb, 238, 195, 94), 0.25);
@@ -375,6 +378,29 @@
 
   --cta-border: rgba(244, 204, 209, 0.55);
   --cta-glow: rgba(232, 180, 186, 0.4);
+
+  /* Phase Hero Theme Tokens */
+  --phase-hero-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 217, 83, 108), 0.18), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(183, 110, 121, 0.12), transparent 50%),
+    linear-gradient(155deg, #2e1e25 0%, #22151c 64%, #170d13 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 217, 83, 108), 0.22), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(183, 110, 121, 0.15), transparent 50%),
+    linear-gradient(155deg, #332029 0%, #25161e 64%, #180d13 100%);
+  --phase-hero-ovulation-bg: radial-gradient(circle at 80% 20%, rgba(179, 130, 198, 0.15), transparent 50%),
+    linear-gradient(155deg, #21192b 0%, #191222 58%, #110a19 100%);
+  --phase-hero-cycle-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 217, 83, 108), 0.15), transparent 50%),
+    linear-gradient(150deg, #291b22, #1f141a 62%, #160c12);
+  --phase-hero-peri-bg: radial-gradient(circle at 16% 11%, rgba(244, 204, 209, 0.15), transparent 31%),
+    linear-gradient(155deg, #2e1c2e, #221223 66%, #170818);
+  --phase-hero-pregnancy-bg: radial-gradient(circle at 50% 25%, rgba(var(--accent-rgb, 217, 83, 108), 0.15), transparent 30%),
+    linear-gradient(155deg, #2e1f26 0%, #23161c 65%, #180d13 100%);
+  --phase-hero-ink: #ffffff;
+  --phase-hero-shadow: 0 22px 40px -26px rgba(0, 0, 0, 0.7);
+  --phase-seed-bg: rgba(217, 83, 108, 0.22);
+  --phase-seed-border: rgba(217, 83, 108, 0.45);
+  --phase-pill-bg: var(--surface-glass, rgba(33, 26, 31, 0.92));
+  --phase-pill-color: var(--primary);
+  --phase-pill-border: 1px solid rgba(var(--accent-rgb, 217, 83, 108), 0.25);
 }
 
 /*
@@ -526,6 +552,29 @@
 
   --cta-border: rgba(232, 92, 79, 0.55);
   --cta-glow: rgba(232, 92, 79, 0.4);
+
+  /* Phase Hero Theme Tokens */
+  --phase-hero-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 232, 92, 79), 0.18), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(232, 92, 79, 0.08), transparent 50%),
+    linear-gradient(155deg, #2e1e1b 0%, #231613 64%, #180e0c 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 232, 92, 79), 0.22), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(232, 92, 79, 0.10), transparent 50%),
+    linear-gradient(155deg, #33201d 0%, #261714 64%, #190e0c 100%);
+  --phase-hero-ovulation-bg: radial-gradient(circle at 80% 20%, rgba(166, 178, 110, 0.15), transparent 50%),
+    linear-gradient(155deg, #1c2217 0%, #151b10 58%, #0d130a 100%);
+  --phase-hero-cycle-bg: radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb, 232, 92, 79), 0.15), transparent 50%),
+    linear-gradient(150deg, #281c19, #201512 62%, #170d0b);
+  --phase-hero-peri-bg: radial-gradient(circle at 16% 11%, rgba(247, 210, 204, 0.15), transparent 31%),
+    linear-gradient(155deg, #2f1c24, #23121a 66%, #180911);
+  --phase-hero-pregnancy-bg: radial-gradient(circle at 50% 25%, rgba(var(--accent-rgb, 232, 92, 79), 0.15), transparent 30%),
+    linear-gradient(155deg, #2e1e1b 0%, #231613 65%, #180e0c 100%);
+  --phase-hero-ink: #ffffff;
+  --phase-hero-shadow: 0 22px 40px -26px rgba(0, 0, 0, 0.7);
+  --phase-seed-bg: rgba(232, 92, 79, 0.22);
+  --phase-seed-border: rgba(232, 92, 79, 0.45);
+  --phase-pill-bg: var(--surface-glass, rgba(35, 27, 24, 0.92));
+  --phase-pill-color: var(--primary);
+  --phase-pill-border: 1px solid rgba(var(--accent-rgb, 232, 92, 79), 0.25);
 }
 
 /* ============================== LIGHT THEMES ============================== */
@@ -736,6 +785,9 @@
   --phase-hero-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(217, 83, 108, 0.22), transparent 50%),
     linear-gradient(155deg, #fde4e8 0%, #f9cad2 52%, #f5adbb 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(217, 83, 108, 0.24), transparent 50%),
+    linear-gradient(155deg, #fde4e8 0%, #f9cad2 52%, #f5adbb 100%);
   --phase-hero-ovulation-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(79, 107, 69, 0.2), transparent 50%),
     linear-gradient(155deg, #eaf2e6 0%, #d4e5ce 52%, #bad8b2 100%);
@@ -865,6 +917,9 @@
 
   --phase-hero-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(142, 98, 196, 0.22), transparent 50%),
+    linear-gradient(155deg, #f3ebfd 0%, #e6d5f7 52%, #d2b7f0 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(142, 98, 196, 0.24), transparent 50%),
     linear-gradient(155deg, #f3ebfd 0%, #e6d5f7 52%, #d2b7f0 100%);
   --phase-hero-ovulation-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(67, 92, 134, 0.2), transparent 50%),
@@ -996,6 +1051,9 @@
   --phase-hero-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(181, 130, 28, 0.22), transparent 50%),
     linear-gradient(155deg, #fdf4da 0%, #f8e5b3 52%, #eccd7f 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(181, 130, 28, 0.24), transparent 50%),
+    linear-gradient(155deg, #fdf4da 0%, #f8e5b3 52%, #eccd7f 100%);
   --phase-hero-ovulation-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(56, 97, 126, 0.2), transparent 50%),
     linear-gradient(155deg, #e9f2f8 0%, #d2e4f0 52%, #b5d3e6 100%);
@@ -1125,6 +1183,9 @@
 
   --phase-hero-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(185, 97, 53, 0.22), transparent 50%),
+    linear-gradient(155deg, #fdeee5 0%, #f7d8c4 52%, #eeb697 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(185, 97, 53, 0.24), transparent 50%),
     linear-gradient(155deg, #fdeee5 0%, #f7d8c4 52%, #eeb697 100%);
   --phase-hero-ovulation-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.7), transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(47, 107, 94, 0.2), transparent 50%),

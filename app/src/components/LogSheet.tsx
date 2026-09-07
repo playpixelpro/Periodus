@@ -156,7 +156,7 @@ export function LogSheet({
       await db.dailyLogs.put(draft)
       if (draft.periodEnd) {
         const starts = await getPeriodStarts()
-        const precedingStarts = starts.filter((s) => s <= date)
+        const precedingStarts = starts.filter((s) => s < date)
         if (precedingStarts.length > 0) {
           const lastStart = precedingStarts[precedingStarts.length - 1]
           const spanDays = daysBetween(lastStart, date)

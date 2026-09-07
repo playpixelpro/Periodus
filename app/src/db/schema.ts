@@ -457,24 +457,13 @@ export class PeriodusDB extends Dexie {
 export const db = new PeriodusDB()
 
 /**
- * Period starts for the engine: first day of each run of consecutive
- * flow-logged days or explicit periodStart.
+ * Period starts for the engine: derived from confirmed menstruation spans.
+ * Ensures period-end markers and bleeding duration boundaries are never
+ * misidentified as new cycle starts.
  */
 export async function getPeriodStarts(): Promise<string[]> {
-  const flowLogs = await db.dailyLogs
-    .filter((l) => l.flow !== undefined || l.periodStart === true)
-    .toArray()
-  flowLogs.sort((a, b) => a.date.localeCompare(b.date))
-  const starts: string[] = []
-  let prevEpoch = Number.NEGATIVE_INFINITY
-  for (const log of flowLogs) {
-    const d = log.date
-    const [y, m, day] = d.split('-').map(Number)
-    const epoch = Date.UTC(y, m - 1, day) / 86_400_000
-    if (log.periodStart || epoch - prevEpoch > 1) starts.push(d)
-    prevEpoch = epoch
-  }
-  return [...new Set(starts)]
+  const spans = await getPeriodSpans()
+  return spans.map((s) => s.startDate)
 }
 
 export interface PeriodSpan {
@@ -552,10 +541,10 @@ export function calculatePeriodSpans(
       }
     }
 
-    if (hasFlow && (epoch - prevFlowEpoch > 1 || !activeStart)) {
+    if (!isEnd && hasFlow && (epoch - prevFlowEpoch > 1 || !activeStart)) {
       starts.push(log.date)
       activeStart = log.date
-      activeEnd = isEnd ? log.date : null
+      activeEnd = null
     }
     prevFlowEpoch = epoch
   }
