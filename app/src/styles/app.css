@@ -7278,6 +7278,7 @@ button.card:active {
   position: relative;
   isolation: isolate;
   width: 100%;
+  max-width: 100% !important;
   height: 100%;
   min-height: 0;
   margin: 0;
@@ -7297,6 +7298,9 @@ button.card:active {
 #root > .page.onboarding-summary,
 #root > .page.onboarding-finish,
 #root > .page.onboarding-welcome {
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0;
   color: var(--on-surface, #F5EFE6);
   background:
     radial-gradient(circle at 50% -10%, rgba(var(--accent-rgb), 0.08), transparent 45%),
@@ -8777,51 +8781,106 @@ button.card:active {
 }
 
 
+.page.onboarding .onboarding-finish,
 .page.onboarding-finish .onboarding-finish {
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   justify-content: center;
   gap: 17px;
   background: transparent;
 }
 
+.page.onboarding .onboarding-finish .eyebrow,
 .page.onboarding-finish .eyebrow,
+.page.onboarding .onboarding-finish h1,
 .page.onboarding-finish h1,
+.page.onboarding .onboarding-finish .lead,
 .page.onboarding-finish .lead {
   color: var(--on-surface, #F5EFE6);
+  text-align: center;
 }
 
+.page.onboarding .onboarding-finish .eyebrow,
+.page.onboarding-finish .eyebrow {
+  margin: 0 auto;
+}
+
+.page.onboarding .onboarding-finish h1,
+.page.onboarding-finish h1 {
+  max-width: 22ch;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.page.onboarding .onboarding-finish .lead,
 .page.onboarding-finish .lead {
+  max-width: 44ch;
+  margin: 0 auto;
   color: var(--on-surface-variant, #D8C5B2);
+  text-align: center;
 }
 
 .page.onboarding-finish .ob-finish-orbit {
   min-height: 190px;
+  display: grid;
+  place-items: center;
 }
 
+.page.onboarding .onboarding-finish .ob-commitment,
 .page.onboarding-finish .ob-commitment {
-  padding: 14px 16px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
   background: var(--surface-container, #1F1B12);
   border: 1px solid var(--border-subtle, rgba(var(--primary-rgb), 0.14));
   border-radius: 18px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
+:root[data-theme='luna-rose'] .page.onboarding-finish .ob-commitment,
+:root[data-theme='opal-moon'] .page.onboarding-finish .ob-commitment,
+:root[data-theme='luxe-silk'] .page.onboarding-finish .ob-commitment,
+:root[data-theme='beach-sand'] .page.onboarding-finish .ob-commitment,
+:root[data-theme='mountain-air'] .page.onboarding-finish .ob-commitment,
+.theme-light .page.onboarding-finish .ob-commitment {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.page.onboarding .onboarding-finish .ob-commitment strong,
 .page.onboarding-finish .ob-commitment strong {
   color: var(--on-surface, #F5EFE6);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
+  text-align: center;
 }
 
+.page.onboarding .onboarding-finish .ob-commitment span,
 .page.onboarding-finish .ob-commitment span {
   color: var(--on-surface-variant, #D8C5B2);
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: center;
+  max-width: 48ch;
 }
+
+.page.onboarding .onboarding-finish .error-text,
 .page.onboarding-finish .error-text {
   color: var(--error, #FFB4AB);
   background: rgba(147, 0, 10, 0.25);
   border: 1px solid var(--error-container, #93000A);
   border-radius: 12px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 @media (max-height: 720px) {
@@ -9609,27 +9668,245 @@ button.card:active {
 /* Tablet / iPad                                                               */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/* Tablet / iPad / iPad Pro                                                   */
+/* -------------------------------------------------------------------------- */
+
 @media (min-width: 700px) {
   #root > main {
     background:
-      radial-gradient(circle at 4% -6%, var(--accent-dim), transparent 38%),
-      radial-gradient(circle at 97% 6%, var(--glow-secondary), transparent 36%);
+      radial-gradient(circle at 4% -6%, var(--accent-dim), transparent 42%),
+      radial-gradient(circle at 97% 6%, var(--glow-secondary), transparent 40%),
+      radial-gradient(circle at 50% 105%, var(--accent-dim), transparent 50%);
   }
 
   .page {
-    gap: 24px;
-    padding-top: 26px;
+    gap: 26px;
+    padding-top: 28px;
   }
 
   .page h1 {
-    font-size: clamp(44px, 5vw, 58px);
+    font-size: clamp(42px, 4.8vw, 56px);
   }
 
   .page h2 {
-    font-size: 31px;
+    font-size: 30px;
   }
 
-  /* Today: quick-action buttons a little larger on tablet */
+  /* ------------------------------------------------------------------------ */
+  /* Onboarding: centered intros, finish screen, and form controls             */
+  /* ------------------------------------------------------------------------ */
+
+  .page.onboarding .onboarding-content {
+    max-width: 600px;
+    padding: 24px 20px 28px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .page.onboarding .ob-shell-top .ob-appbar,
+  .page.onboarding .ob-shell-top .onboarding-progress {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .page.onboarding .onboarding-content > *,
+  .page.onboarding .onboarding-hero > *,
+  .page.onboarding .ob-chapter-band,
+  .page.onboarding .ob-question-intro,
+  .page.onboarding .ob-number-stage,
+  .page.onboarding .ob-why,
+  .page.onboarding .ob-summary-list,
+  .page.onboarding .ob-safety-note,
+  .page.onboarding .ob-consent,
+  .page.onboarding .ob-option-stack,
+  .page.onboarding .ob-date-card,
+  .page.onboarding .ob-inline-fields,
+  .page.onboarding .ob-measure-grid,
+  .page.onboarding .ob-impact-grid,
+  .page.onboarding .ob-subquestion,
+  .page.onboarding .ob-selection-note,
+  .page.onboarding .ob-prediction-gate,
+  .page.onboarding .choice-grid,
+  .page.onboarding .ob-option,
+  .page.onboarding .field,
+  .page.onboarding .ob-hero-field,
+  .page.onboarding .ob-segmented,
+  .page.onboarding .ob-theme-card,
+  .page.onboarding .ob-hero-art,
+  .page.onboarding .ob-hero-copy,
+  .page.onboarding .ob-proof-row,
+  .page.onboarding .ob-health-import,
+  .page.onboarding .ai-setup-card,
+  .page.onboarding .cycle-history-card,
+  .page.onboarding .ob-summary-card,
+  .page.onboarding .onboarding-finish,
+  .page.onboarding .ob-commitment {
+    width: 100% !important;
+    max-width: 560px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .page.onboarding .ob-question-intro {
+    align-items: center;
+    text-align: center;
+    padding: 28px 24px 26px;
+  }
+
+  .page.onboarding .ob-question-intro .eyebrow {
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .page.onboarding .ob-question-intro h1 {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 22ch;
+  }
+
+  .page.onboarding .ob-question-intro .muted {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 44ch;
+  }
+
+  .page.onboarding .ob-question-intro::before {
+    top: -88px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 210px;
+    height: 210px;
+  }
+
+  .page.onboarding .ob-question-intro::after {
+    top: -42px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 130px;
+    height: 130px;
+  }
+
+  .page.onboarding .onboarding-finish,
+  .page.onboarding-finish .onboarding-finish {
+    align-items: center;
+    text-align: center;
+  }
+
+  .page.onboarding .onboarding-finish .eyebrow,
+  .page.onboarding-finish .eyebrow {
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .page.onboarding .onboarding-finish h1,
+  .page.onboarding-finish h1 {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 22ch;
+  }
+
+  .page.onboarding .onboarding-finish .lead,
+  .page.onboarding-finish .lead {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 46ch;
+  }
+
+  .page.onboarding .onboarding-finish .ob-commitment,
+  .page.onboarding-finish .ob-commitment {
+    text-align: center;
+  }
+
+  .page.onboarding .ob-chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .page.onboarding .ob-shell-footer-inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Main App Tab Bar: elegant floating pill dock for tablet & iPad Pro        */
+  /* ------------------------------------------------------------------------ */
+
+  .tabbar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 24px calc(var(--safe-bottom) + 16px);
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    border-top: none;
+    box-shadow: none;
+    pointer-events: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .tabbar-inner {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 6px 14px;
+    background: var(--tabbar-bg, rgba(22, 19, 11, 0.94));
+    border: 1px solid var(--border-subtle, rgba(var(--primary-rgb), 0.16));
+    border-radius: 999px;
+    box-shadow: var(--tabbar-shadow, 0 14px 40px rgba(0, 0, 0, 0.5));
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  }
+
+  :root[data-theme='luna-rose'] .tabbar-inner,
+  :root[data-theme='opal-moon'] .tabbar-inner,
+  :root[data-theme='luxe-silk'] .tabbar-inner,
+  :root[data-theme='beach-sand'] .tabbar-inner,
+  :root[data-theme='mountain-air'] .tabbar-inner,
+  .theme-light .tabbar-inner {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  }
+
+  .tabbar-item {
+    min-height: 60px;
+    border-radius: 999px;
+    transition: transform 140ms ease, background 160ms ease;
+  }
+
+  .tabbar-item:hover {
+    background: rgba(var(--primary-rgb), 0.06);
+  }
+
+  .tabbar-item.is-active::after {
+    bottom: 4px;
+    width: 18px;
+    height: 3px;
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Today Page on Tablet                                                      */
+  /* ------------------------------------------------------------------------ */
+
+  .date-panel {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .today-quick-actions {
+    justify-content: center;
+    gap: 32px;
+    padding: 6px 0;
+  }
+
   .quick-action-circle {
     width: 86px;
     height: 86px;
@@ -9640,7 +9917,6 @@ button.card:active {
     height: 41px;
   }
 
-  /* Today: insight tiles become a static 3-column grid instead of a swipe rail */
   .daily-insight-rail {
     margin: 0;
     padding: 0;
@@ -9656,14 +9932,47 @@ button.card:active {
     min-height: 120px;
   }
 
-  /* Overlays feel less cramped on tablet */
+  /* ------------------------------------------------------------------------ */
+  /* Overlays & Dialogs (Settings, Quick Log, Assistant)                       */
+  /* ------------------------------------------------------------------------ */
+
+  .overlay-head {
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
   .overlay-body {
-    max-width: 620px;
+    max-width: 640px;
+  }
+
+  .assistant-overlay .assistant-head {
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .assistant-overlay .assistant-scroll {
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .assistant-overlay .assistant-compose {
+    display: flex;
+    justify-content: center;
+  }
+
+  .assistant-compose-row {
+    max-width: 680px;
   }
 }
 
-/* Wide tablet / small desktop: Today's reading cards sit side by side */
-@media (min-width: 1100px) {
+/* -------------------------------------------------------------------------- */
+/* iPad Pro (1024px+ portrait & landscape, 11" and 12.9")                     */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
   .today-page {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -9681,5 +9990,14 @@ button.card:active {
   .today-page > .disclaimer {
     grid-column: 1 / -1;
   }
+
+  .today-page > .article-card {
+    min-height: 100%;
+  }
+
+  .date-panel {
+    gap: 18px;
+  }
 }
+
 

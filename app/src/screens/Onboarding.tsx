@@ -1541,8 +1541,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
               justifyContent: 'center',
               textAlign: 'center',
               gap: 6,
-              background: provider === 'anthropic' ? 'rgba(255, 225, 163, 0.12)' : 'var(--surface-container, #1F1B12)',
-              border: provider === 'anthropic' ? '1.5px solid var(--gold, #FFE1A3)' : '1px solid rgba(255, 225, 163, 0.15)',
+              background: provider === 'anthropic' ? 'rgba(var(--primary-rgb), 0.14)' : 'var(--surface-container)',
+              border: provider === 'anthropic' ? '1.5px solid var(--primary)' : '1px solid var(--border-subtle)',
               borderRadius: 14,
               cursor: 'pointer',
               transition: 'all 0.18s ease',
@@ -1556,14 +1556,14 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 borderRadius: 8,
                 display: 'grid',
                 placeItems: 'center',
-                background: provider === 'anthropic' ? 'var(--gold, #FFE1A3)' : 'rgba(255, 225, 163, 0.1)',
-                color: provider === 'anthropic' ? '#16130B' : 'var(--gold, #FFE1A3)',
+                background: provider === 'anthropic' ? 'var(--primary)' : 'rgba(var(--primary-rgb), 0.1)',
+                color: provider === 'anthropic' ? 'var(--on-primary)' : 'var(--primary)',
                 fontWeight: 700,
               }}
             >
               ✳
             </span>
-            <strong style={{ fontSize: 11, color: 'var(--on-surface, #F5EFE6)', fontWeight: 600 }}>Anthropic</strong>
+            <strong style={{ fontSize: 11, color: 'var(--on-surface)', fontWeight: 600 }}>Anthropic</strong>
           </button>
 
           <button
@@ -1578,8 +1578,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
               justifyContent: 'center',
               textAlign: 'center',
               gap: 6,
-              background: provider === 'openai' ? 'rgba(255, 225, 163, 0.12)' : 'var(--surface-container, #1F1B12)',
-              border: provider === 'openai' ? '1.5px solid var(--gold, #FFE1A3)' : '1px solid rgba(255, 225, 163, 0.15)',
+              background: provider === 'openai' ? 'rgba(var(--primary-rgb), 0.14)' : 'var(--surface-container)',
+              border: provider === 'openai' ? '1.5px solid var(--primary)' : '1px solid var(--border-subtle)',
               borderRadius: 14,
               cursor: 'pointer',
               transition: 'all 0.18s ease',
@@ -1593,14 +1593,14 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 borderRadius: 8,
                 display: 'grid',
                 placeItems: 'center',
-                background: provider === 'openai' ? 'var(--gold, #FFE1A3)' : 'rgba(255, 225, 163, 0.1)',
-                color: provider === 'openai' ? '#16130B' : 'var(--gold, #FFE1A3)',
+                background: provider === 'openai' ? 'var(--primary)' : 'rgba(var(--primary-rgb), 0.1)',
+                color: provider === 'openai' ? 'var(--on-primary)' : 'var(--primary)',
                 fontWeight: 700,
               }}
             >
               ✦
             </span>
-            <strong style={{ fontSize: 11, color: 'var(--on-surface, #F5EFE6)', fontWeight: 600 }}>OpenAI</strong>
+            <strong style={{ fontSize: 11, color: 'var(--on-surface)', fontWeight: 600 }}>OpenAI</strong>
           </button>
 
           <button
@@ -1615,8 +1615,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
               justifyContent: 'center',
               textAlign: 'center',
               gap: 6,
-              background: provider === 'custom' ? 'rgba(255, 225, 163, 0.12)' : 'var(--surface-container, #1F1B12)',
-              border: provider === 'custom' ? '1.5px solid var(--gold, #FFE1A3)' : '1px solid rgba(255, 225, 163, 0.15)',
+              background: provider === 'custom' ? 'rgba(var(--primary-rgb), 0.14)' : 'var(--surface-container)',
+              border: provider === 'custom' ? '1.5px solid var(--primary)' : '1px solid var(--border-subtle)',
               borderRadius: 14,
               cursor: 'pointer',
               transition: 'all 0.18s ease',
@@ -1630,14 +1630,14 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 borderRadius: 8,
                 display: 'grid',
                 placeItems: 'center',
-                background: provider === 'custom' ? 'var(--gold, #FFE1A3)' : 'rgba(255, 225, 163, 0.1)',
-                color: provider === 'custom' ? '#16130B' : 'var(--gold, #FFE1A3)',
+                background: provider === 'custom' ? 'var(--primary)' : 'rgba(var(--primary-rgb), 0.1)',
+                color: provider === 'custom' ? 'var(--on-primary)' : 'var(--primary)',
                 fontWeight: 700,
               }}
             >
               ⚙
             </span>
-            <strong style={{ fontSize: 11, color: 'var(--on-surface, #F5EFE6)', fontWeight: 600 }}>Custom / Other</strong>
+            <strong style={{ fontSize: 11, color: 'var(--on-surface)', fontWeight: 600 }}>Custom / Other</strong>
           </button>
         </div>
 
@@ -1645,8 +1645,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           <div
             className="card ai-setup-card"
             style={{
-              background: 'var(--surface-container, #1F1B12)',
-              border: '1px solid rgba(255, 225, 163, 0.14)',
+              background: 'var(--surface-container)',
+              border: '1px solid var(--border-subtle)',
               borderRadius: 20,
               padding: '18px 16px',
               display: 'flex',
@@ -1662,7 +1662,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 Anthropic API key or CLI token
@@ -1678,10 +1678,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: 14,
                   padding: '12px 14px',
@@ -1698,7 +1698,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 Model
@@ -1708,10 +1708,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 value={ANTHROPIC_MODELS.some((entry) => entry.id === model) ? model : DEFAULT_ANTHROPIC_MODEL}
                 onChange={(event) => setModel(event.target.value)}
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontSize: 14,
                   padding: '12px 14px',
                   minHeight: 48,
@@ -1723,14 +1723,24 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 ))}
               </select>
             </div>
-            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
+            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant)' }}>
               To bill answers to a Claude subscription instead of API credits, run{' '}
-              <code style={{ background: 'rgba(255, 225, 163, 0.1)', padding: '2px 6px', borderRadius: 4, color: 'var(--gold, #FFE1A3)' }}>
+              <code
+                style={{
+                  background: 'rgba(var(--primary-rgb), 0.12)',
+                  border: '1px solid rgba(var(--primary-rgb), 0.22)',
+                  padding: '2px 7px',
+                  borderRadius: 6,
+                  color: 'var(--primary)',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontWeight: 700,
+                }}
+              >
                 claude setup-token
               </code>{' '}
               on a computer where you are signed in and paste the token here.
             </p>
-            <p style={{ margin: 0, fontSize: 11, color: 'rgba(216, 197, 178, 0.7)', fontStyle: 'italic' }}>
+            <p style={{ margin: 0, fontSize: 11, color: 'var(--on-surface-variant)', opacity: 0.8, fontStyle: 'italic' }}>
               Storage: keystore. Credentials never enter the cycle database or a backup.
             </p>
           </div>
@@ -1738,8 +1748,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           <div
             className="card ai-setup-card"
             style={{
-              background: 'var(--surface-container, #1F1B12)',
-              border: '1px solid rgba(255, 225, 163, 0.14)',
+              background: 'var(--surface-container)',
+              border: '1px solid var(--border-subtle)',
               borderRadius: 20,
               padding: '18px 16px',
               display: 'flex',
@@ -1755,7 +1765,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 OpenAI project key
@@ -1771,10 +1781,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: 14,
                   padding: '12px 14px',
@@ -1791,7 +1801,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 Model name
@@ -1804,10 +1814,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 onChange={(event) => setModel(event.target.value)}
                 placeholder="gpt-5.6-terra"
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: 14,
                   padding: '12px 14px',
@@ -1816,10 +1826,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 }}
               />
             </div>
-            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
+            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant)' }}>
               Use a dedicated project key with a spending limit. Never paste a personal or reused secret.
             </p>
-            <p style={{ margin: 0, fontSize: 11, color: 'rgba(216, 197, 178, 0.7)', fontStyle: 'italic' }}>
+            <p style={{ margin: 0, fontSize: 11, color: 'var(--on-surface-variant)', opacity: 0.8, fontStyle: 'italic' }}>
               Storage: keystore. Credentials never enter the cycle database or a backup.
             </p>
           </div>
@@ -1827,8 +1837,8 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           <div
             className="card ai-setup-card"
             style={{
-              background: 'var(--surface-container, #1F1B12)',
-              border: '1px solid rgba(255, 225, 163, 0.14)',
+              background: 'var(--surface-container)',
+              border: '1px solid var(--border-subtle)',
               borderRadius: 20,
               padding: '18px 16px',
               display: 'flex',
@@ -1844,7 +1854,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 API endpoint / Base URL
@@ -1859,10 +1869,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 value={baseUrl}
                 onChange={(event) => setBaseUrl(event.target.value)}
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: 14,
                   padding: '12px 14px',
@@ -1871,7 +1881,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 }}
               />
             </div>
-            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant, #D8C5B2)' }}>
+            <p className="microcopy" style={{ margin: 0, fontSize: 11, lineHeight: 1.45, color: 'var(--on-surface-variant)' }}>
               Works with OpenRouter, DeepSeek, Groq, Mistral, Ollama, LM Studio, or any OpenAI-compatible server.
             </p>
             <div className="field" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -1882,7 +1892,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 API key (optional for local models)
@@ -1898,10 +1908,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: 14,
                   padding: '12px 14px',
@@ -1918,7 +1928,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   fontWeight: 750,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--ink-500, #C5B29D)',
+                  color: 'var(--on-surface-variant)',
                 }}
               >
                 Model name
@@ -1931,10 +1941,10 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 value={model}
                 onChange={(event) => setModel(event.target.value)}
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid rgba(255, 225, 163, 0.18)',
+                  background: 'var(--surface-container-high)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 12,
-                  color: 'var(--on-surface, #F5EFE6)',
+                  color: 'var(--on-surface)',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: 14,
                   padding: '12px 14px',
@@ -1943,7 +1953,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 }}
               />
             </div>
-            <p style={{ margin: 0, fontSize: 11, color: 'rgba(216, 197, 178, 0.7)', fontStyle: 'italic' }}>
+            <p style={{ margin: 0, fontSize: 11, color: 'var(--on-surface-variant)', opacity: 0.8, fontStyle: 'italic' }}>
               Storage: keystore. Credentials never enter the cycle database or a backup.
             </p>
           </div>

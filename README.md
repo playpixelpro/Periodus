@@ -131,6 +131,42 @@ pnpm --filter @periodus/app native:sync
 
 ---
 
+## 🚀 Releasing a New Version
+
+Periodus includes a single-command version bumper and automated GitHub Actions publishing:
+
+### 1. Bump version across all project files
+Run the release helper from the root directory with your target version (e.g. `1.2.0`):
+
+```sh
+pnpm run release:bump 1.2.0
+```
+
+This single command automatically:
+- Updates `"version"` in root `package.json` and `app/package.json`
+- Updates `APP_VERSION` in `app/src/lib/version.ts`
+- Increments Android `versionCode` (e.g. `2` → `3`) and updates `versionName` in `app/android/app/build.gradle`
+- Updates iOS `MARKETING_VERSION` in `app/ios/App/App.xcodeproj/project.pbxproj`
+
+### 2. Commit, tag, and push to GitHub
+The command outputs the exact git commands to run:
+
+```sh
+git add -A
+git commit -m "chore: release v1.2.0"
+git tag v1.2.0
+git push origin main --tags
+```
+
+### 3. Automated Cloud Build & Publishing
+Once the tag is pushed, **GitHub Actions automatically**:
+1. Compiles web assets and syncs Capacitor
+2. Builds the signed/release Android APK (`Periodus-v1.2.0.apk`)
+3. Publishes a GitHub Release with the APK attached and formatted changelog
+4. The in-app updater automatically notifies users of the new update on their devices
+
+---
+
 ## 📂 Project Architecture
 
 ```text

@@ -10,6 +10,7 @@
     "preview": "pnpm --filter @periodus/app preview",
     "native:sync": "pnpm --filter @periodus/app native:sync",
     "native:android": "pnpm --filter @periodus/app native:android",
-    "native:ios": "pnpm --filter @periodus/app native:ios"
+    "native:ios": "pnpm --filter @periodus/app native:ios",
+    "release:bump": "node scripts/bump-version.mjs"
   }
 }

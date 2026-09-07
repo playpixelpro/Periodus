@@ -47,17 +47,17 @@ repository secret** and add:
 | `ANDROID_KEY_ALIAS`          | `periodus` (or whatever alias you used)         |
 | `ANDROID_KEY_PASSWORD`       | The key password (often same as keystore)       |
 
-## Step 4 — Tag a release
+## Step 4 — Bump version & tag a release
+You can bump all version files automatically using the release helper:
 
 ```bash
-# Bump the version in:
-#   app/package.json           → "version": "1.0.1"
-#   app/android/app/build.gradle → versionCode 2 / versionName "1.0.1"
-#   app/src/lib/version.ts      → APP_VERSION = '1.0.1'
+# Bump version across package.json, version.ts, build.gradle, and project.pbxproj:
+pnpm run release:bump 1.2.0
 
+# Commit, tag, and push:
 git add -A
-git commit -m "chore: bump version to 1.0.1"
-git tag v1.0.1
+git commit -m "chore: release v1.2.0"
+git tag v1.2.0
 git push origin main --tags
 ```
 
