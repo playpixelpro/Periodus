@@ -3,9 +3,9 @@
  * High-contrast, sleek dark modernist palette with warm parchment text,
  * sunlit amber/gold highlights, floating depth cards, and crisp monospaced typography.
  *
- * Seven selectable themes:
+ * Eight selectable themes:
  *   DARK  — terminal, feminine, fierce-focus
- *   LIGHT — luna-rose, opal-moon, luxe-silk, beach-sand
+ *   LIGHT — luna-rose, opal-moon, luxe-silk, beach-sand, mountain-air
  *
  * Every theme drives colors, fonts, button shape/glow, and surfaces via the
  * same set of custom properties, so a theme change is visible across the app.
@@ -586,7 +586,8 @@
 [data-theme='luna-rose'],
 [data-theme='opal-moon'],
 [data-theme='luxe-silk'],
-[data-theme='beach-sand'] {
+[data-theme='beach-sand'],
+[data-theme='mountain-air'] {
   color-scheme: light;
 
   --surface: #fffdfc;
@@ -1204,6 +1205,139 @@
   --phase-pill-bg: rgba(255, 255, 255, 0.88);
   --phase-pill-color: #271810;
   --phase-pill-border: 1px solid rgba(161, 77, 36, 0.22);
+}
+
+/* Mountain Air (light) — deep greens and misty blues, quiet and strong */
+[data-theme='mountain-air'] {
+  --surface-tint: #254b5a;
+
+  --surface: #f5f9fa;
+  --surface-dim: #e5edf1;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #eef4f7;
+  --surface-container: #e4ecf0;
+  --surface-container-high: #d9e4ea;
+  --surface-container-highest: #cddbe2;
+  --surface-main: #f5f9fa;
+  --surface-variant: #dbe6ec;
+  --background: #f5f9fa;
+  --bg: #f5f9fa;
+  --card: #edf4f7;
+  --card-bg: linear-gradient(180deg, #ffffff 0%, #e2ecf1 100%);
+  --card-selected-bg: linear-gradient(180deg, #ffffff 0%, #d4e3eb 100%);
+
+  --on-surface: #082434;
+  --on-surface-variant: #254b5a;
+  --on-background: #082434;
+  --ink-950: #04151f;
+  --ink-900: #082434;
+  --ink-800: #113243;
+  --ink-650: #254b5a;
+  --ink-500: #4b6d7c;
+  --ink-300: #8da6b5;
+  --ink-rgb: 8, 36, 52;
+  --ink-warm-rgb: 8, 36, 52;
+
+  --border-subtle: rgba(37, 75, 90, 0.14);
+  --border-muted: rgba(37, 75, 90, 0.24);
+  --line-soft: rgba(37, 75, 90, 0.1);
+  --line-medium: rgba(37, 75, 90, 0.2);
+
+  --primary: #254b5a;
+  --on-primary: #ffffff;
+  --primary-container: #d4e1e7;
+  --on-primary-container: #082434;
+  --inverse-primary: #99bad7;
+
+  --secondary: #527057;
+  --on-secondary: #ffffff;
+  --secondary-container: #dce8df;
+  --on-secondary-container: #102414;
+
+  --tertiary: #5a6f3f;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #e2ebd3;
+  --on-tertiary-container: #1a260d;
+
+  --primary-fixed: #d4e1e7;
+  --primary-fixed-dim: #b8d1de;
+  --on-primary-fixed: #082434;
+  --on-primary-fixed-variant: #1d3c49;
+
+  --secondary-fixed: #dce8df;
+  --secondary-fixed-dim: #bed5c2;
+  --on-secondary-fixed: #102414;
+  --on-secondary-fixed-variant: #3a563f;
+
+  --tertiary-fixed: #e2ebd3;
+  --tertiary-fixed-dim: #c5d8ad;
+  --on-tertiary-fixed: #1a260d;
+  --on-tertiary-fixed-variant: #43552d;
+
+  --rose-700: #18333e;
+  --rose-600: #254b5a;
+  --rose-500: #3b6577;
+  --rose-400: #668ea1;
+  --rose-300: #99bad7;
+  --rose-200: #254b5a;
+  --rose-100: #d4e1e7;
+  --rose-800: #082434;
+
+  --teal-700: #394a28;
+  --teal-600: #526639;
+  --teal-500: #778c58;
+  --teal-300: #a3b589;
+  --teal-200: #cbdbb5;
+  --teal-100: #e8f0dc;
+
+  --yellow-600: #254b5a;
+  --yellow-500: #3b6577;
+  --yellow-300: #99bad7;
+  --yellow-200: #254b5a;
+  --yellow-100: #d4e1e7;
+
+  --orange-500: #254b5a;
+  --accent-amber: #254b5a;
+  --accent-dim: rgba(37, 75, 90, 0.12);
+  --highlight: rgba(37, 75, 90, 0.28);
+  --glow-secondary: rgba(119, 140, 88, 0.08);
+  --primary-rgb: 37, 75, 90;
+  --accent-rgb: 37, 75, 90;
+  --tertiary-rgb: 90, 111, 63;
+
+  --cta-bg: linear-gradient(135deg, #325e70 0%, #1c3d4a 100%);
+  --cta-border: #1c3d4a;
+  --cta-glow: rgba(37, 75, 90, 0.35);
+  --shadow-rose:
+    0 4px 12px rgba(8, 36, 52, 0.15),
+    0 10px 24px -2px rgba(37, 75, 90, 0.28),
+    0 18px 36px -6px rgba(8, 36, 52, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  --phase-hero-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.75), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(153, 186, 215, 0.28), transparent 50%),
+    linear-gradient(155deg, #eff5f8 0%, #dbe7ed 52%, #b5cee0 100%);
+  --phase-hero-period-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.75), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(37, 75, 90, 0.24), transparent 50%),
+    linear-gradient(155deg, #eff5f8 0%, #d8e5ec 52%, #b8d2de 100%);
+  --phase-hero-ovulation-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.75), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(119, 140, 88, 0.24), transparent 50%),
+    linear-gradient(155deg, #eef4ec 0%, #dce8db 52%, #b6d3b6 100%);
+  --phase-hero-cycle-bg: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.85), transparent 45%),
+    linear-gradient(155deg, #f2f7fa 0%, #e1edf3 52%, #c7dbe6 100%);
+  --phase-hero-peri-bg: radial-gradient(circle at 16% 11%, rgba(255, 255, 255, 0.8), transparent 35%),
+    radial-gradient(circle at 88% 78%, rgba(127, 154, 131, 0.25), transparent 35%),
+    linear-gradient(155deg, #f0f6f4 0%, #dce8e3 60%, #bdd2c8 100%);
+  --phase-hero-pregnancy-bg: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.8), transparent 35%),
+    linear-gradient(155deg, #eef5f8 0%, #d8e6ee 65%, #b4cee0 100%);
+  --phase-hero-ink: #082434;
+  --phase-hero-shadow: 0 16px 36px -16px rgba(8, 36, 52, 0.32);
+  --phase-seed-bg: rgba(37, 75, 90, 0.18);
+  --phase-seed-border: rgba(37, 75, 90, 0.35);
+  --phase-pill-bg: rgba(255, 255, 255, 0.88);
+  --phase-pill-color: #082434;
+  --phase-pill-border: 1px solid rgba(37, 75, 90, 0.22);
 }
 
 /* ------------------------------ Tablet / iPad ----------------------------- */

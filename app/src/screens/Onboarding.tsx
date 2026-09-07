@@ -1,5 +1,6 @@
 import { Children, isValidElement, type ReactNode, useMemo, useState } from 'react'
 import { PeriodusMark } from '../components/PeriodusMark'
+import { THEMES, useTheme } from '../context/ThemeContext'
 import {
   createDefaultHealthProfile,
   db,
@@ -440,6 +441,7 @@ function recentCycleLength(startsNewestFirst: string[]): number | undefined {
 }
 
 export function Onboarding({ onDone }: { onDone: () => void }) {
+  const { theme, setTheme } = useTheme()
   const [current, setCurrent] = useState<StepId>('welcome')
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [provider, setProvider] = useState<AssistantProvider>('anthropic')
@@ -780,7 +782,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
             <Moonseed />
             <span className="ob-hero-label">Built for private, local-first tracking</span>
           </div>
-          <div>
+          <div className="ob-hero-copy">
             <p className="eyebrow">Meet Periodus</p>
             <h1>A clearer map of your changing body.</h1>
             <p className="lead">
@@ -792,6 +794,36 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
             <span><strong>Local</strong><small>Core history</small></span>
             <span><strong>Explainable</strong><small>Every estimate</small></span>
             <span><strong>Optional</strong><small>Sensitive answers</small></span>
+          </div>
+          <div className="ob-theme-card" role="region" aria-label="Choose appearance theme">
+            <div className="ob-theme-card-header">
+              <p className="eyebrow">Choose your theme</p>
+              <span className="ob-theme-current-badge">
+                {THEMES.find((t) => t.id === theme)?.light ? 'Light' : 'Dark'}
+              </span>
+            </div>
+            <div className="ob-theme-grid">
+              {THEMES.map((t) => {
+                const isSelected = theme === t.id
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`ob-theme-item ${isSelected ? 'selected' : ''}`}
+                    onClick={() => setTheme(t.id)}
+                    aria-pressed={isSelected}
+                    aria-label={`${t.label} theme (${t.light ? 'Light' : 'Dark'})`}
+                  >
+                    <span className="ob-theme-swatch" style={{ background: t.swatch }} aria-hidden="true" />
+                    <span className="ob-theme-meta">
+                      <span className="ob-theme-name">{t.label}</span>
+                      <span className="ob-theme-tag">{t.light ? 'Light' : 'Dark'}</span>
+                    </span>
+                    {isSelected && <span className="ob-theme-check" aria-hidden="true">✓</span>}
+                  </button>
+                )
+              })}
+            </div>
           </div>
           <p className="ob-legal">Educational estimates only—not diagnosis or birth control.</p>
         </div>

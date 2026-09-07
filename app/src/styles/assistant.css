@@ -203,7 +203,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--on-primary);
+  color: var(--on-primary-container);
   font-size: 8px;
   font-weight: 850;
   letter-spacing: 0.04em;
@@ -217,20 +217,20 @@
 .assistant-overlay .privacy-pill i {
   width: 5px;
   height: 5px;
-  background: var(--on-primary);
+  background: var(--on-primary-container);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px rgba(40, 27, 0, 0.2);
+  box-shadow: 0 0 0 2.5px rgba(var(--primary-rgb), 0.25);
 }
 
 .assistant-overlay .privacy-pill.local {
-  color: var(--on-tertiary);
+  color: var(--on-tertiary-container);
   background: var(--tertiary-container);
   border-color: var(--tertiary);
 }
 
 .assistant-overlay .privacy-pill.local i {
-  background: var(--on-tertiary);
-  box-shadow: 0 0 0 3px rgba(0, 34, 59, 0.2);
+  background: var(--on-tertiary-container);
+  box-shadow: 0 0 0 2.5px rgba(var(--primary-rgb), 0.25);
 }
 
 .assistant-context-chevron {
@@ -564,12 +564,21 @@
   padding: 7px;
   justify-self: end;
   fill: none;
-  stroke: var(--primary-container);
-  stroke-width: 1.75;
+  stroke: var(--primary);
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
   background: rgba(var(--accent-rgb), 0.15);
+  border: 1px solid rgba(var(--primary-rgb), 0.18);
   border-radius: 10px;
+  transition: background 160ms var(--ease-soft), stroke 160ms var(--ease-soft), transform 160ms var(--ease-spring);
+}
+
+.assistant-overlay .starter-list button:hover svg {
+  background: var(--primary);
+  stroke: var(--on-primary);
+  border-color: var(--primary);
+  transform: translate(1px, -1px);
 }
 
 .assistant-overlay .chat-bubble {
@@ -729,7 +738,8 @@
 }
 
 .assistant-overlay .assistant-compose textarea::placeholder {
-  color: var(--ink-300);
+  color: var(--on-surface-variant);
+  opacity: 0.55;
 }
 
 .assistant-overlay .assistant-compose button {
@@ -737,11 +747,11 @@
   height: 42px;
   display: grid;
   place-items: center;
-  color: var(--ink-950);
-  background: var(--rose-600);
-  border: 1px solid rgba(142, 39, 62, 0.12);
+  color: var(--on-primary);
+  background: var(--cta-bg, var(--primary));
+  border: 1px solid rgba(var(--primary-rgb), 0.25);
   border-radius: 14px;
-  box-shadow: 0 7px 16px rgba(214, 75, 104, 0.18);
+  box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.25);
   transition:
     color 160ms var(--ease-soft),
     background 160ms var(--ease-soft),
@@ -764,10 +774,12 @@
 }
 
 .assistant-overlay .assistant-compose button:disabled {
-  color: var(--ink-300);
-  background: var(--paper-200);
-  border-color: transparent;
+  color: var(--on-surface-variant);
+  color: color-mix(in srgb, var(--on-surface) 40%, transparent);
+  background: var(--surface-container-high);
+  border: 1px solid var(--border-subtle);
   box-shadow: none;
+  cursor: not-allowed;
 }
 
 .assistant-overlay .assistant-compose > p {
@@ -775,9 +787,10 @@
   max-width: 552px;
   margin: 5px auto 0;
   overflow: hidden;
-  color: var(--ink-500);
-  font-size: 7.5px;
-  font-weight: 650;
+  color: var(--on-surface-variant);
+  opacity: 0.75;
+  font-size: 8.5px;
+  font-weight: 600;
   line-height: 1.3;
   letter-spacing: 0.015em;
   text-align: center;

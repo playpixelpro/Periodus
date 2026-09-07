@@ -1,9 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 /**
- * Seven themes: 4 light + 3 dark.
+ * Eight themes: 5 light + 3 dark.
  *   DARK  — terminal, feminine, fierce-focus
- *   LIGHT — luna-rose, opal-moon, luxe-silk, beach-sand
+ *   LIGHT — luna-rose, opal-moon, luxe-silk, beach-sand, mountain-air
  */
 export type Theme =
   | 'terminal'
@@ -13,6 +13,7 @@ export type Theme =
   | 'opal-moon'
   | 'luxe-silk'
   | 'beach-sand'
+  | 'mountain-air'
 
 export interface ThemeOption {
   id: Theme
@@ -29,6 +30,7 @@ export const THEMES: ThemeOption[] = [
   { id: 'opal-moon', label: 'Opal Moon', swatch: '#9d80c4', light: true },
   { id: 'luxe-silk', label: 'Luxe Silk', swatch: '#a57e2e', light: true },
   { id: 'beach-sand', label: 'Beach Sand', swatch: '#a57e4e', light: true },
+  { id: 'mountain-air', label: 'Mountain Air', swatch: '#254b5a', light: true },
 ]
 
 export const THEME_STORAGE_KEY = 'periodus.theme'
@@ -41,6 +43,7 @@ const THEME_META_COLOR: Record<Theme, string> = {
   'opal-moon': '#fffdfc',
   'luxe-silk': '#fffdfc',
   'beach-sand': '#fffdfc',
+  'mountain-air': '#f5f9fa',
 }
 
 const VALID_THEMES = new Set<Theme>(THEMES.map((t) => t.id))
