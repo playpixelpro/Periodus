@@ -6,10 +6,10 @@ import Security
 import UIKit
 import WidgetKit
 
-@objc(LunaraNativePlugin)
-public final class LunaraNativePlugin: CAPPlugin, CAPBridgedPlugin {
-    public let identifier = "LunaraNativePlugin"
-    public let jsName = "LunaraNative"
+@objc(PeriodusNativePlugin)
+public final class PeriodusNativePlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "PeriodusNativePlugin"
+    public let jsName = "PeriodusNative"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "secureVaultStatus", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "secureSet", returnType: CAPPluginReturnPromise),
@@ -44,7 +44,7 @@ public final class LunaraNativePlugin: CAPPlugin, CAPBridgedPlugin {
 
             let controller = UIPrintInteractionController.shared
             let info = UIPrintInfo(dictionary: nil)
-            info.jobName = call.getString("jobName") ?? "Lunara cycle report"
+            info.jobName = call.getString("jobName") ?? "Periodus cycle report"
             info.outputType = .general
             controller.printInfo = info
             controller.printFormatter = webView.viewPrintFormatter()

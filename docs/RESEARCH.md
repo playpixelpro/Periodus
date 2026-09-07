@@ -23,7 +23,7 @@ Flo parity. The implementation combines:
 The earlier recommendation to reduce onboarding to five generic screens was
 incorrect for this product. A health tracker needs enough structured context to
 decide which forecasts are appropriate, which questions should appear, and
-which safety boundaries should be visible. Lunara now uses a modular adaptive
+which safety boundaries should be visible. Periodus now uses a modular adaptive
 onboarding graph: short when an answer makes a branch irrelevant, deeper when
 the selected goal or health context needs more information.
 

@@ -4,7 +4,7 @@ Updated: 2026-07-26
 
 ## Bottom line
 
-Lunara is now a substantial local-first native-app codebase, not a screenshot
+Periodus is now a substantial local-first native-app codebase, not a screenshot
 prototype and not a PWA product plan. It has a shared React/TypeScript product
 layer, Capacitor iOS and Android shells, a versioned health profile, adaptive
 onboarding, a deep typed logger, transparent forecast engines, longitudinal
@@ -72,7 +72,7 @@ Design principles:
 
 ### Adaptive onboarding and profile
 
-- Original Lunara onboarding UI with a goal-conditioned step queue.
+- Original Periodus onboarding UI with a goal-conditioned step queue.
 - Cycle, TTC, pregnancy, and perimenopause primary modes.
 - Age 13 minimum, age bands, and assistant hidden for minors.
 - Explicit local-health-storage consent and a versioned consent ledger.
@@ -186,7 +186,7 @@ evaluation program.
 
 ### Fully local application behavior
 
-These can run without a Lunara account or hosted Lunara database:
+These can run without a Periodus account or hosted Periodus database:
 
 - adaptive onboarding and local profile;
 - cycle, symptom, mood, discharge, intimacy, medication-event, test, activity,

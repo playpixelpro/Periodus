@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
-import { LunaraMark } from './LunaraMark'
+import { PeriodusMark } from './PeriodusMark'
 
 interface Props {
   children: ReactNode
@@ -29,7 +29,7 @@ export class StartupErrorBoundary extends Component<Props, State> {
         <div className="page startup-failure-page">
           <section className="card startup-failure-card" role="alert">
             <span className="startup-failure-mark" aria-hidden="true">
-              <LunaraMark decorative size={34} />
+              <PeriodusMark decorative size={34} />
             </span>
             <p className="page-kicker">Startup interrupted</p>
             <h1>Periodus couldn’t open.</h1>

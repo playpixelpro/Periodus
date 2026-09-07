@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public final class LunaraCycleWidgetProvider extends AppWidgetProvider {
+public final class PeriodusCycleWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         WidgetRefreshJobService.schedule(context);
@@ -33,7 +33,7 @@ public final class LunaraCycleWidgetProvider extends AppWidgetProvider {
     static void updateAll(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         int[] ids = manager.getAppWidgetIds(
-            new ComponentName(context, LunaraCycleWidgetProvider.class)
+            new ComponentName(context, PeriodusCycleWidgetProvider.class)
         );
         render(context, manager, ids);
     }
@@ -44,7 +44,7 @@ public final class LunaraCycleWidgetProvider extends AppWidgetProvider {
         for (int id : appWidgetIds) {
             RemoteViews views = new RemoteViews(
                 context.getPackageName(),
-                R.layout.lunara_cycle_widget
+                R.layout.periodus_cycle_widget
             );
             views.setTextViewText(R.id.widget_headline, snapshot.headline);
             views.setTextViewText(R.id.widget_detail, snapshot.detail);

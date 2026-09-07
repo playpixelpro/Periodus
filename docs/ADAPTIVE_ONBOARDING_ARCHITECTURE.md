@@ -260,7 +260,7 @@ as a completed setup.
 
 ## UI architecture
 
-The UI uses an original Lunara design system:
+The UI uses an original Periodus design system:
 
 - chapter banners and an original moon/seed character;
 - clear progress and back/skip behavior;

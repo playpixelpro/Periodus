@@ -42,7 +42,7 @@
 			<string>com.playpixelpro.myperiod.openrouter</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>lunara</string>
+				<string>Periodus</string>
 			</array>
 		</dict>
 	</array>

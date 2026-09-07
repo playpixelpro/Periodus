@@ -6,7 +6,7 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        registerPlugin(LunaraNativePlugin.class);
+        registerPlugin(PeriodusNativePlugin.class);
         registerPlugin(GeminiNanoPlugin.class);
         super.onCreate(savedInstanceState);
         WidgetRefreshJobService.schedule(this);

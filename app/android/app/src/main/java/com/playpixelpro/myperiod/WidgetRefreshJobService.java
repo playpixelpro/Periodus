@@ -37,7 +37,7 @@ public final class WidgetRefreshJobService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        LunaraCycleWidgetProvider.updateAll(this);
+        PeriodusCycleWidgetProvider.updateAll(this);
         jobFinished(params, false);
         return false;
     }

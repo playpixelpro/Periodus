@@ -11,7 +11,7 @@ The 52 supplied screenshots are valuable reference evidence, but they are not a 
 - subscription entitlement, platform, locale, experiments, and time;
 - accumulated longitudinal logs, pregnancy week, cycle phase, or event triggers.
 
-Lunara now has meaningful foundations—adaptive onboarding, local cycle/TTC/pregnancy/perimenopause engines, an extensive tracker taxonomy, reports, native shells, health bridges, notifications, and an optional AI assistant—but it does **not** yet have full behavioral parity. The largest remaining gaps are not cosmetic. They are:
+Periodus now has meaningful foundations—adaptive onboarding, local cycle/TTC/pregnancy/perimenopause engines, an extensive tracker taxonomy, reports, native shells, health bridges, notifications, and an optional AI assistant—but it does **not** yet have full behavioral parity. The largest remaining gaps are not cosmetic. They are:
 
 1. missing onboarding branches and permission/privacy states;
 2. incomplete structured logging and reminder models;
@@ -23,7 +23,7 @@ Lunara now has meaningful foundations—adaptive onboarding, local cycle/TTC/pre
 8. no clinically governed assistant content/evaluation program;
 9. no account, cloud restore, or Anonymous Mode identity architecture.
 
-Exact Flo parity is also not a legitimate or technically obtainable target in several areas. Flo's prediction weights, training data, calibration, Perimenopause Score, private medical content corpus, experiments, and proprietary art/assets are not public. Lunara can build independent equivalents based on public medical guidance and transparent local algorithms, but cannot truthfully claim to reproduce Flo's internal models or medical validation.
+Exact Flo parity is also not a legitimate or technically obtainable target in several areas. Flo's prediction weights, training data, calibration, Perimenopause Score, private medical content corpus, experiments, and proprietary art/assets are not public. Periodus can build independent equivalents based on public medical guidance and transparent local algorithms, but cannot truthfully claim to reproduce Flo's internal models or medical validation.
 
 ## Evidence labels
 
@@ -31,7 +31,7 @@ This audit distinguishes evidence instead of treating every screenshot or market
 
 - **Official observed**: described by a current Flo Help Center, Flo product, App Store/Google Play, platform, or privacy page.
 - **Screenshot observed**: directly visible in the 52 user-supplied screenshots.
-- **Repository observed**: present in the Lunara repository as of the update date.
+- **Repository observed**: present in the Periodus repository as of the update date.
 - **Inference**: a likely product requirement inferred from public behavior; not claimed as a verified Flo implementation.
 - **Proprietary/unknown**: cannot be recovered from screens or public documentation.
 
@@ -88,7 +88,7 @@ Official Flo documentation describes a broader topology:
 - goal-specific experiences change the home state, predictions, content, and logs;
 - free and premium entitlements materially change available analysis and content ([free version](https://help.flo.health/hc/en-us/articles/4411293934740-What-s-included-in-the-free-version), [Flo Premium](https://flo.health/flo-premium)).
 
-Lunara should model these as independent domains connected by a shared health profile:
+Periodus should model these as independent domains connected by a shared health profile:
 
 ```mermaid
 flowchart TD
@@ -118,7 +118,7 @@ flowchart TD
 
 Official Flo setup has seven broad stages: permissions, goal, birth year, feature introduction, registration, personalized onboarding, and period logging. It also says last-period data is essential and that additional completed cycles enable more sophisticated predictions ([official setup guide](https://help.flo.health/hc/en-us/articles/4406826484500-Setting-up-your-Flo-account)).
 
-| Requirement | Evidence | Lunara status | Gap |
+| Requirement | Evidence | Periodus status | Gap |
 |---|---|---:|---|
 | Name/display name | Screenshot observed | Present | Add accessibility, blank-name, and edit-later states |
 | Birth year and age-sensitive experience | Screenshot + official observed | Partial | Repository accepts implausibly young ages; add region-aware minimum-age gate and age-change consequences |
@@ -130,7 +130,7 @@ Official Flo setup has seven broad stages: permissions, goal, birth year, featur
 | Loading/analysis interstitials | Screenshot observed | Present visually in part | Tie them to actual persisted calculations; never imply proprietary “intelligence” |
 | Summary and editable answers | Product requirement | Partial | Add a review screen grouped by data purpose and prediction effect |
 
-The Flo setup guide lists a minimum age of 13 in most regions and 16 in the EU. Lunara needs a documented regional age policy before release; this is product/legal implementation work, not merely a numeric picker.
+The Flo setup guide lists a minimum age of 13 in most regions and 16 in the EU. Periodus needs a documented regional age policy before release; this is product/legal implementation work, not merely a numeric picker.
 
 ### Cycle-tracking branch
 
@@ -143,7 +143,7 @@ Expected inputs:
 - known conditions and cycle abnormalities;
 - baseline symptoms and user priorities.
 
-Lunara already captures most of these. Remaining work:
+Periodus already captures most of these. Remaining work:
 
 - request two to six historical cycle starts when available instead of relying on one date;
 - distinguish “regular,” “variable,” “unknown,” postpartum, breastfeeding, amenorrhea, and hormonal-contraception contexts;
@@ -151,13 +151,13 @@ Lunara already captures most of these. Remaining work:
 - persist why a forecast changed after an edited log;
 - add “I do not remember” and low-confidence states throughout.
 
-Flo explicitly says the app is not intended as birth control or a conception method ([How do I use the app?](https://help.flo.health/hc/en-us/articles/360014347632-How-do-I-use-the-app)). Lunara should keep the same type of safety boundary and must not present a “low chance” day as “safe.”
+Flo explicitly says the app is not intended as birth control or a conception method ([How do I use the app?](https://help.flo.health/hc/en-us/articles/360014347632-How-do-I-use-the-app)). Periodus should keep the same type of safety boundary and must not present a “low chance” day as “safe.”
 
 ### Trying-to-conceive branch
 
 Official Flo material describes fertility-window guidance, ovulation-test and basal-temperature tracking, prenatal-vitamin reminders, pregnancy-test timing, and a doctor-facing health report ([Flo ovulation tracker](https://flo.health/product-tour/ovulation-tracker), [manual ovulation entry](https://help.flo.health/hc/en-us/articles/360015106752-Can-I-enter-my-ovulation-manually)).
 
-Lunara currently has a deterministic TTC engine with qualitative fertility bands, OPK and BBT evidence, pregnancy-test planning, and logging counts. It still needs:
+Periodus currently has a deterministic TTC engine with qualitative fertility bands, OPK and BBT evidence, pregnancy-test planning, and logging counts. It still needs:
 
 - TTC-specific onboarding for cycle history, trying-since date, recent hormonal-contraception discontinuation, known diagnoses, and test preferences;
 - structured OPK values/results, test brand or method only when useful, and manual ovulation confirmation;
@@ -168,13 +168,13 @@ Lunara currently has a deterministic TTC engine with qualitative fertility bands
 - clinician-friendly TTC summary;
 - uncertainty language that separates predicted fertile window, positive OPK, retrospective BBT shift, and clinician-confirmed ovulation.
 
-Numeric “chance of pregnancy” should not be fabricated from a generic calendar. A transparent qualitative band is safer unless Lunara later develops and validates an evidence-backed probability model.
+Numeric “chance of pregnancy” should not be fabricated from a generic calendar. A transparent qualitative band is safer unless Periodus later develops and validates an evidence-backed probability model.
 
 ### Pregnancy branch
 
 Flo's pregnancy onboarding can derive gestational age from last menstrual period, estimated due date, or conception date; it asks lifestyle and prior-pregnancy questions. Pregnancy mode includes gestational age, due date, number of babies, weekly development, stories, articles, videos, and courses ([pregnant-user setup](https://help.flo.health/hc/en-us/articles/4407228824340-Getting-started-for-pregnant-users), [pregnancy mode](https://help.flo.health/hc/en-us/articles/360054523711-What-is-Pregnancy-mode-and-how-do-I-activate-it), [pregnancy product tour](https://flo.health/product-tour/pregnancy-app)).
 
-Lunara currently supports LMP-derived gestational age, a due date, weekly detail, checklists, FAQs, and urgent-warning text. Gaps:
+Periodus currently supports LMP-derived gestational age, a due date, weekly detail, checklists, FAQs, and urgent-warning text. Gaps:
 
 - allow LMP, due-date, conception-date, IVF transfer, and clinician-adjusted dating inputs;
 - track which date source is authoritative and preserve change history;
@@ -186,20 +186,20 @@ Lunara currently supports LMP-derived gestational age, a due date, weekly detail
 - add postpartum transition and pregnancy-loss-safe mode switching;
 - avoid presenting a calculation as a diagnosis or replacing prenatal care.
 
-Flo's public pages contain some marketing inconsistencies about duration. Lunara should use authoritative obstetric guidance and a single internal gestational-age convention rather than reproducing marketing copy.
+Flo's public pages contain some marketing inconsistencies about duration. Periodus should use authoritative obstetric guidance and a single internal gestational-age convention rather than reproducing marketing copy.
 
 ### Perimenopause branch
 
 Flo publicly describes a perimenopause experience with a “Perimenopause Score,” a next-period window instead of an exact prediction, hot-flash/mood/fatigue/sleep tracking, daily tips, milestones, trends, reports, and expert content ([Flo perimenopause announcement](https://flo.health/newsroom/flo-for-perimenopause-is-launching-to-empower-the-1-billion-women-who-experience-perimenopause-without-the-support-they-deserve)).
 
-Lunara has an original, non-diagnostic tracking-burden score, 28-day windows, symptom domains, trends, and observations. That is an appropriate independent direction. Gaps:
+Periodus has an original, non-diagnostic tracking-burden score, 28-day windows, symptom domains, trends, and observations. That is an appropriate independent direction. Gaps:
 
 - dedicated onboarding for age range, changing cycle pattern, last bleed, vasomotor symptoms, sleep, mood, genitourinary symptoms, contraception, hysterectomy/oophorectomy, and hormone therapy;
 - no-exact-date forecast mode with explicit widening windows;
 - 60-day/90-day/annual trend reports;
 - transition logic when bleeding is absent or medically induced;
 - perimenopause-specific content and clinician discussion prompts;
-- careful terminology: do not label the original Lunara score as Flo's validated score or a menopause stage diagnosis.
+- careful terminology: do not label the original Periodus score as Flo's validated score or a menopause stage diagnosis.
 
 Flo's exact score formula, thresholds, validation data, and calibration are proprietary/unknown and cannot be recreated from public screens.
 
@@ -207,7 +207,7 @@ Flo's exact score formula, thresholds, validation data, and calibration are prop
 
 Flo supports pills, ring, patch, injection, IUD, and implant logging/reminders. Oral contraception can distinguish on-time and previous-day pills and configure pack length/break behavior. Turning on hormonal-contraception reminders hides fertile and ovulation predictions; copper IUD behavior differs ([official contraception guide](https://help.flo.health/hc/en-us/articles/360015106292-How-do-I-log-my-birth-control-method), [prediction behavior](https://help.flo.health/hc/en-us/articles/360015106672-Why-can-t-I-see-ovulation-predictions)).
 
-Lunara has a broad contraception question and already suppresses some forecasts. It still needs a first-class regimen model:
+Periodus has a broad contraception question and already suppresses some forecasts. It still needs a first-class regimen model:
 
 - method, start/stop dates, dose or product label when entered by the user;
 - pill pack configuration, placebo/break schedule, missed/late dose, and “yesterday's pill” correction;
@@ -220,7 +220,7 @@ Lunara has a broad contraception question and already suppresses some forecasts.
 
 ### Discharge, sexual wellbeing, and sensitive questions
 
-The screenshots reveal a much richer discharge and sexual-health taxonomy than Lunara's current typed model. The existing `DailyLog` has a narrow discharge enum and a narrow sex enum even though some additional concepts appear as generic events.
+The screenshots reveal a much richer discharge and sexual-health taxonomy than Periodus's current typed model. The existing `DailyLog` has a narrow discharge enum and a narrow sex enum even though some additional concepts appear as generic events.
 
 Required structured additions:
 
@@ -234,7 +234,7 @@ Generic event tags are insufficient where downstream logic depends on semantics,
 
 ### Weight, activity, sleep, and wearables
 
-Lunara captures height, weight, activity, wearable brand, sleep impact, and goals, but onboarding currently needs:
+Periodus captures height, weight, activity, wearable brand, sleep impact, and goals, but onboarding currently needs:
 
 - locale-aware units with canonical metric storage;
 - “skip/prefer not to answer” without degrading core cycle tracking;
@@ -249,7 +249,7 @@ Lunara captures height, weight, activity, wearable brand, sleep impact, and goal
 
 Flo's Today surface is not one screen. It is a renderer over mode, date, phase, history completeness, pregnancy week, forecast certainty, and log state.
 
-Lunara should define explicit state contracts for:
+Periodus should define explicit state contracts for:
 
 - no usable period history;
 - current period day;
@@ -298,7 +298,7 @@ The current more-than-80-signal catalog is a strong base, but many signals still
 
 Flo describes cycle dates/durations/averages, comparison with a previous cycle, a six-cycle chart, event patterns, and a doctor report that can be shared or printed on supported platforms ([official cycle analysis guide](https://help.flo.health/hc/en-us/articles/4407228784276-Analyzing-your-cycles-and-symptoms)).
 
-Lunara has cycle statistics and an initial printable doctor summary. Gaps:
+Periodus has cycle statistics and an initial printable doctor summary. Gaps:
 
 - six- and twelve-cycle trend views;
 - cycle-length variability and confidence;
@@ -318,7 +318,7 @@ No pattern should be called causal. Small samples should be labeled as observati
 
 Flo's Insights area includes articles, insights, videos, courses, surveys, stories, search, bookmarks, and goal/topic filtering ([official Insights guide](https://help.flo.health/hc/en-us/articles/360061400651-What-is-Insights-and-how-do-I-navigate-there)). Premium marketing also lists articles, videos, and audio ([Flo Premium](https://flo.health/flo-premium)).
 
-Lunara currently has article search but no full editorial/media system. A complete local implementation needs:
+Periodus currently has article search but no full editorial/media system. A complete local implementation needs:
 
 - an original, licensed, versioned content corpus;
 - medical-review metadata: author, reviewer, review date, citations, jurisdiction, and next review date;
@@ -330,13 +330,13 @@ Lunara currently has article search but no full editorial/media system. A comple
 - rules connecting a log/phase to appropriate content;
 - editorial admin workflow, even if content ships statically.
 
-Flo's private copy, videos, audio, courses, illustrations, mascot, and animations are proprietary assets. Lunara needs an original design language and original reviewed content rather than redistributing or tracing them.
+Flo's private copy, videos, audio, courses, illustrations, mascot, and animations are proprietary assets. Periodus needs an original design language and original reviewed content rather than redistributing or tracing them.
 
 ### Messages and event-triggered assistant
 
 Flo describes its Health Assistant as an interactive educational dialogue launched from topics/prompts or events and cycle phases. Some prompts expire after a changed signal or after 24 hours, and the content is medically checked. Flo says it is not a substitute for diagnosis or treatment ([official Health Assistant guide](https://help.flo.health/hc/en-us/articles/360052676191-How-do-I-chat-with-Flo-Health-Assistant-)).
 
-Lunara's assistant foundation includes:
+Periodus's assistant foundation includes:
 
 - explicit sharing categories;
 - BYO OpenAI key stored in the native secure vault;
@@ -366,7 +366,7 @@ The assistant can be useful locally, but “AI parity” is not achieved by conn
 
 Flo exposes cycle, medication, contraception, lifestyle, content, offer, and community-related notification categories, with some platform differences ([official notification settings](https://help.flo.health/hc/en-us/articles/360052675411-How-do-I-turn-off-notifications-from-Flo)).
 
-Lunara currently has a generic daily local reminder. Required schedule model:
+Periodus currently has a generic daily local reminder. Required schedule model:
 
 - period approaching, period late, log-period, fertile-window/ovulation estimate, and pregnancy-week reminders;
 - pill, ring, patch, injection, implant/IUD follow-up, prenatal vitamin, and other medication schedules;
@@ -383,7 +383,7 @@ Local notifications are buildable. Remote push campaigns, cross-device schedulin
 
 Flo supports importing selected Apple Health and Health Connect data after OS permission. Its current documentation notes that permissions can be scoped and that some sources or indirect integrations may behave differently ([Apple Health import](https://help.flo.health/hc/en-us/articles/34890229122068-How-to-import-data-from-the-Health-app-to-Flo-iOS), [Health Connect pairing](https://help.flo.health/hc/en-us/articles/34890469974292-How-to-pair-Flo-with-Health-Connect-Android), [step tracking](https://help.flo.health/hc/en-us/articles/4401755925652-How-do-I-track-step-data-in-Flo)).
 
-Lunara's native bridge currently imports menstrual flow, BBT, OPK, weight, sleep, and steps. Gaps:
+Periodus's native bridge currently imports menstrual flow, BBT, OPK, weight, sleep, and steps. Gaps:
 
 - per-type permission UI and a source-of-truth policy;
 - incremental background sync and deduplication;
@@ -408,7 +408,7 @@ Flo also offers:
 - account restore ([restore guide](https://help.flo.health/hc/en-us/articles/360015054351-How-can-I-sign-in-and-restore-my-data));
 - an Anonymous Mode designed to decouple personal identifiers, with deliberate recovery/support limitations ([Anonymous Mode](https://flo.health/product-tour/anonymous-mode)).
 
-Lunara already provides immediate local export, import, wipe, PIN/biometric gating, secure key storage, and an encrypted-backup foundation. Critical gaps:
+Periodus already provides immediate local export, import, wipe, PIN/biometric gating, secure key storage, and an encrypted-backup foundation. Critical gaps:
 
 - the primary Dexie database is not encrypted at rest;
 - PIN currently gates UI access but is not equivalent to database encryption;
@@ -428,7 +428,7 @@ An account-free local app is already pseudonymous in a useful sense, but it is n
 
 Flo Premium uses recurring weekly/monthly/yearly plans, platform billing, trials, restoration, and web subscriptions in some cases. Flo says payment credentials are handled by Apple, Google, or Stripe rather than stored by Flo ([trying Premium](https://help.flo.health/hc/en-us/articles/4407228743956-Trying-Flo-Premium), [restore access](https://help.flo.health/hc/en-us/articles/4651865803668-I-paid-for-a-subscription-but-I-can-t-access-Premium-features), [payment information](https://help.flo.health/hc/en-us/articles/360042626371-Where-do-you-store-my-payment-information)).
 
-Lunara currently has no production entitlement model. Required if a paid tier is desired:
+Periodus currently has no production entitlement model. Required if a paid tier is desired:
 
 - product catalog and free/premium feature matrix;
 - StoreKit 2 and Google Play Billing;
@@ -454,7 +454,7 @@ Status meanings:
 - **External**: depends on platform/service/account.
 - **Proprietary**: exact parity is unobtainable from public evidence.
 
-| Capability | Current Lunara status | Local feasibility | Priority |
+| Capability | Current Periodus status | Local feasibility | Priority |
 |---|---:|---:|---:|
 | Adaptive shared onboarding | Foundation | Fully local | P0 |
 | Region-aware age gate | Missing | Fully local | P0 |
@@ -657,7 +657,7 @@ The next Flo research pass should seek behavior, not just more static images:
 11. Capture free vs premium locked/unlocked states on both platforms.
 12. Compare Android navigation, tracker taxonomy, and permission UX.
 
-No capture should include another person's private health information, credentials, payment data, or proprietary asset extraction. The output should be a behavior/state inventory and original Lunara design specification.
+No capture should include another person's private health information, credentials, payment data, or proprietary asset extraction. The output should be a behavior/state inventory and original Periodus design specification.
 
 ## Source register
 

@@ -8,6 +8,7 @@ import {
   clearHealthImportProvenance,
   dailyLogHasEntry,
   db,
+  getPeriodStarts,
   getSetting,
   normalizeDailyLog,
   type ActivityEvent,
@@ -36,6 +37,7 @@ import {
   SYMPTOMS,
   TRACKER_GROUPS,
 } from '../db/taxonomy'
+import { addDays, daysBetween } from '../engine/cycle'
 import { formatLong } from '../lib/dates'
 import { nativeTap } from '../native/runtime'
 import type { TrackerFocus } from '../state/appStore'
@@ -148,9 +150,43 @@ export function LogSheet({
   const sectionStyle = (id: string) => ({ order: customization.order.indexOf(id) })
 
   async function save() {
-    if (!dailyLogHasEntry(draft)) await db.dailyLogs.delete(date)
-    else await db.dailyLogs.put(draft)
+    if (!dailyLogHasEntry(draft)) {
+      await db.dailyLogs.delete(date)
+    } else {
+      await db.dailyLogs.put(draft)
+      if (draft.periodEnd) {
+        const starts = await getPeriodStarts()
+        const precedingStarts = starts.filter((s) => s <= date)
+        if (precedingStarts.length > 0) {
+          const lastStart = precedingStarts[precedingStarts.length - 1]
+          const spanDays = daysBetween(lastStart, date)
+          if (spanDays > 0 && spanDays <= 20) {
+            for (let i = 1; i < spanDays; i++) {
+              const midDate = addDays(lastStart, i)
+              const existingMid = await db.dailyLogs.get(midDate)
+              if (!existingMid || !existingMid.flow) {
+                await db.dailyLogs.put({
+                  ...(existingMid ?? { date: midDate }),
+                  flow: existingMid?.flow ?? 'medium',
+                })
+              }
+            }
+          }
+        }
+      }
+    }
     onClose()
+  }
+
+  function togglePeriodEnd() {
+    void nativeTap()
+    const nextPeriodEnd = draft.periodEnd ? undefined : true
+    const nextFlow = nextPeriodEnd && !draft.flow ? 'light' : draft.flow
+    setDraft({
+      ...clearHealthImportProvenance(draft, 'flow'),
+      periodEnd: nextPeriodEnd,
+      flow: nextFlow,
+    })
   }
 
   function updateSymptomRating(
@@ -296,6 +332,32 @@ export function LogSheet({
             }}
           >
             {draft.checkInComplete ? '✓ Complete' : 'Mark complete'}
+          </button>
+        </div>
+
+        <div
+          className="spread"
+          style={{
+            marginTop: 14,
+            paddingTop: 12,
+            borderTop: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))',
+          }}
+        >
+          <div>
+            <div className="section-label">End of period</div>
+            <div className="muted" style={{ marginTop: 3 }}>
+              {draft.periodEnd
+                ? 'Period marked ended on this date.'
+                : 'Mark this date as the end of your period to lock your actual period length.'}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="chip rose"
+            aria-pressed={draft.periodEnd === true}
+            onClick={togglePeriodEnd}
+          >
+            {draft.periodEnd ? '✓ Period ended' : 'End of period'}
           </button>
         </div>
       </div>

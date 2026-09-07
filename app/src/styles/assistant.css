@@ -94,7 +94,7 @@
   align-items: flex-start;
 }
 
-.assistant-title .lunara-crescent {
+.assistant-title .periodus-crescent {
   color: var(--rose-600);
 }
 
@@ -130,7 +130,7 @@
   font-size: 12px;
 }
 
-.assistant-loading .lunara-crescent {
+.assistant-loading .periodus-crescent {
   animation: assistant-breathe 1.8s var(--ease-soft) infinite;
 }
 
@@ -472,7 +472,7 @@
   box-shadow: -59px 48px 0 -1px var(--teal-500);
 }
 
-.assistant-orb .lunara-crescent {
+.assistant-orb .periodus-crescent {
   position: relative;
   z-index: 1;
   color: inherit;
@@ -615,7 +615,7 @@
   border-radius: 8px;
 }
 
-.chat-bubble-mark .lunara-crescent {
+.chat-bubble-mark .periodus-crescent {
   color: inherit;
 }
 
@@ -1125,7 +1125,7 @@
     border-radius: 18px;
   }
 
-  .assistant-orb .lunara-crescent {
+  .assistant-orb .periodus-crescent {
     width: 29px;
     height: 29px;
   }

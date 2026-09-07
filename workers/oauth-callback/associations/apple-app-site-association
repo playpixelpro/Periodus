@@ -3,12 +3,12 @@
     "details": [
       {
         "appIDs": [
-          "R5R3ZS54LV.app.lunara.mobile"
+          "R5R3ZS54LV.com.playpixelpro.myperiod"
         ],
         "components": [
           {
             "/": "/auth/openrouter",
-            "comment": "Open the OpenRouter OAuth callback in Lunara"
+            "comment": "Open the OpenRouter OAuth callback in Periodus"
           }
         ]
       }

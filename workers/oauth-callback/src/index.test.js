@@ -7,7 +7,7 @@ import {
   handleRequest,
 } from './index.js'
 
-const CALLBACK = 'https://lunara.app/auth/openrouter'
+const CALLBACK = 'https://periodus.app/auth/openrouter'
 const FINGERPRINT = Array.from({ length: 32 }, (_, index) =>
   index.toString(16).padStart(2, '0'),
 )
@@ -25,13 +25,13 @@ describe('OAuth callback fallback', () => {
     expect(response.status).toBe(200)
     expect(response.headers.get('cache-control')).toContain('no-store')
     expect(response.headers.get('referrer-policy')).toBe('no-referrer')
-    expect(response.headers.get('x-lunara-openrouter-callback')).toBe('v1')
+    expect(response.headers.get('x-periodus-openrouter-callback')).toBe('v1')
     expect(response.headers.get('content-security-policy')).toContain(
       "connect-src 'none'",
     )
     expect(html).not.toContain(secretCode)
     expect(html).not.toContain('must-not-forward')
-    expect(html).toContain("'lunara://openrouter/callback?'")
+    expect(html).toContain("'periodus://openrouter/callback?'")
     expect(html.indexOf("addEventListener('click'")).toBeLessThan(
       html.indexOf('window.location.assign'),
     )
@@ -72,7 +72,7 @@ describe('mobile association endpoints', () => {
 
     const response = handleRequest(
       new Request(
-        'https://lunara.app/.well-known/apple-app-site-association',
+        'https://periodus.app/.well-known/apple-app-site-association',
       ),
     )
     expect(response.status).toBe(200)
@@ -84,16 +84,16 @@ describe('mobile association endpoints', () => {
     expect(
       buildAppleAssociation({
         APPLE_TEAM_ID: 'NOT-A-TEAM',
-        APPLE_BUNDLE_ID: 'app.lunara.mobile',
+        APPLE_BUNDLE_ID: 'app.periodus.mobile',
       }),
     ).toBeNull()
   })
 
   it('requires a real Android signing fingerprint instead of inventing one', async () => {
     const response = handleRequest(
-      new Request('https://lunara.app/.well-known/assetlinks.json'),
+      new Request('https://periodus.app/.well-known/assetlinks.json'),
       {
-        ANDROID_PACKAGE_NAME: 'app.lunara.mobile',
+        ANDROID_PACKAGE_NAME: 'app.periodus.mobile',
         ANDROID_SHA256_CERT_FINGERPRINTS: '',
       },
     )
@@ -106,7 +106,7 @@ describe('mobile association endpoints', () => {
   it('serves Android App Links for configured signing fingerprints', () => {
     expect(
       buildAndroidAssociation({
-        ANDROID_PACKAGE_NAME: 'app.lunara.mobile',
+        ANDROID_PACKAGE_NAME: 'app.periodus.mobile',
         ANDROID_SHA256_CERT_FINGERPRINTS: FINGERPRINT,
       }),
     ).toEqual([
@@ -114,7 +114,7 @@ describe('mobile association endpoints', () => {
         relation: ['delegate_permission/common.handle_all_urls'],
         target: {
           namespace: 'android_app',
-          package_name: 'app.lunara.mobile',
+          package_name: 'app.periodus.mobile',
           sha256_cert_fingerprints: [FINGERPRINT],
         },
       },

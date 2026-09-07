@@ -14,7 +14,7 @@ import './styles/health-import.css'
 // palette. ThemeProvider re-applies it on mount and on change.
 document.documentElement.dataset.theme = readStoredTheme()
 
-// Retire service workers left behind by pre-native development builds. Lunara
+// Retire service workers left behind by pre-native development builds. Periodus
 // no longer registers a PWA or depends on service-worker caching.
 if ('serviceWorker' in navigator) {
   void navigator.serviceWorker

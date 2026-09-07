@@ -1,4 +1,4 @@
-import { getLunaraNativeBridge } from './bridge'
+import { getPeriodusNativeBridge } from './bridge'
 import { isNative } from './runtime'
 
 interface NativeReportBridge {
@@ -25,7 +25,7 @@ export async function exportCurrentReport(
 
   if (native) {
     const bridge =
-      dependencies.bridge ?? getLunaraNativeBridge<NativeReportBridge>()
+      dependencies.bridge ?? getPeriodusNativeBridge<NativeReportBridge>()
     await bridge.printReport({ jobName })
     return
   }

@@ -54,7 +54,7 @@ private struct CycleProvider: TimelineProvider {
     }
 }
 
-private struct LunaraCycleWidgetView: View {
+private struct PeriodusCycleWidgetView: View {
     let entry: CycleEntry
 
     @ViewBuilder
@@ -106,12 +106,12 @@ private struct LunaraCycleWidgetView: View {
     }
 }
 
-private struct LunaraCycleWidget: Widget {
-    let kind = "LunaraCycleWidget"
+private struct PeriodusCycleWidget: Widget {
+    let kind = "PeriodusCycleWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: CycleProvider()) { entry in
-            LunaraCycleWidgetView(entry: entry)
+            PeriodusCycleWidgetView(entry: entry)
         }
         .configurationDisplayName("Cycle at a glance")
         .description("See the latest private summary published by Periodus.")
@@ -120,8 +120,8 @@ private struct LunaraCycleWidget: Widget {
 }
 
 @main
-struct LunaraWidgetBundle: WidgetBundle {
+struct PeriodusWidgetBundle: WidgetBundle {
     var body: some Widget {
-        LunaraCycleWidget()
+        PeriodusCycleWidget()
     }
 }

@@ -1,4 +1,4 @@
-import { getLunaraNativeBridge } from './bridge'
+import { getPeriodusNativeBridge } from './bridge'
 import { isNative } from './runtime'
 
 export type BiometricKind =
@@ -30,12 +30,12 @@ export interface BiometricAuthenticationResult {
   errorCode?: string
 }
 
-interface LunaraNativeBiometricPlugin {
+interface PeriodusNativeBiometricPlugin {
   biometricStatus(): Promise<BiometricStatus>
   authenticate(options: { reason: string }): Promise<BiometricAuthenticationResult>
 }
 
-const LunaraNative = getLunaraNativeBridge<LunaraNativeBiometricPlugin>()
+const PeriodusNative = getPeriodusNativeBridge<PeriodusNativeBiometricPlugin>()
 
 export async function getBiometricStatus(): Promise<BiometricStatus> {
   if (!isNative) {
@@ -48,7 +48,7 @@ export async function getBiometricStatus(): Promise<BiometricStatus> {
     }
   }
 
-  return LunaraNative.biometricStatus()
+  return PeriodusNative.biometricStatus()
 }
 
 export async function authenticateWithBiometrics(
@@ -61,5 +61,5 @@ export async function authenticateWithBiometrics(
   const trimmedReason = reason.trim().slice(0, 160)
   if (!trimmedReason) throw new Error('An authentication reason is required.')
 
-  return LunaraNative.authenticate({ reason: trimmedReason })
+  return PeriodusNative.authenticate({ reason: trimmedReason })
 }

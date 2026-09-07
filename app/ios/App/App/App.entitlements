@@ -6,7 +6,7 @@
 	<true/>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:lunara.app</string>
+		<string>applinks:periodus.app</string>
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>

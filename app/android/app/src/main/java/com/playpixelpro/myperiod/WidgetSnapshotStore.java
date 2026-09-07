@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 final class WidgetSnapshotStore {
     static final String REFRESH_ACTION = "com.playpixelpro.myperiod.WIDGET_REFRESH";
-    private static final String PREFERENCES = "lunara.widget.v1";
+    private static final String PREFERENCES = "periodus.widget.v1";
     private static final String SNAPSHOT_KEY = "cycle-widget-snapshot-v1";
 
     private WidgetSnapshotStore() {}

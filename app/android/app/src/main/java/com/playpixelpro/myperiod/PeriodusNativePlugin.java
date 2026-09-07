@@ -71,7 +71,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import org.json.JSONObject;
 
 @CapacitorPlugin(
-    name = "LunaraNative",
+    name = "PeriodusNative",
     permissions = {
         @Permission(alias = "menstrualFlow", strings = { HealthPermissions.READ_MENSTRUATION }),
         @Permission(alias = "basalBodyTemperature", strings = { HealthPermissions.READ_BASAL_BODY_TEMPERATURE }),
@@ -81,11 +81,11 @@ import org.json.JSONObject;
         @Permission(alias = "steps", strings = { HealthPermissions.READ_STEPS })
     }
 )
-public class LunaraNativePlugin extends Plugin {
+public class PeriodusNativePlugin extends Plugin {
 
-    private static final String VAULT_KEY_ALIAS = "lunara-vault-key-v1";
-    private static final String VAULT_PREFERENCES = "lunara.secure.v1";
-    private static final String HEALTH_PREFERENCES = "lunara.health.v1";
+    private static final String VAULT_KEY_ALIAS = "periodus-vault-key-v1";
+    private static final String VAULT_PREFERENCES = "periodus.secure.v1";
+    private static final String HEALTH_PREFERENCES = "periodus.health.v1";
     private static final String HEALTH_REQUESTED_KEY = "authorization-requested";
     private static final String ANDROID_KEYSTORE = "AndroidKeyStore";
     private static final String CIPHER_TRANSFORMATION = "AES/GCM/NoPadding";
@@ -548,7 +548,7 @@ public class LunaraNativePlugin extends Plugin {
     public void widgetStatus(PluginCall call) {
         android.appwidget.AppWidgetManager manager = android.appwidget.AppWidgetManager.getInstance(getContext());
         int configuredWidgets = manager.getAppWidgetIds(
-            new android.content.ComponentName(getContext(), LunaraCycleWidgetProvider.class)
+            new android.content.ComponentName(getContext(), PeriodusCycleWidgetProvider.class)
         ).length;
         call.resolve(
             new JSObject()

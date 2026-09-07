@@ -1,8 +1,8 @@
 /**
  * Gemini Nano on-device inference bridge.
  *
- * Mirrors the LunaraNative bridge pattern but targets the separate
- * `LunaraNano` Capacitor plugin registered by GeminiNanoPlugin.java.
+ * Mirrors the PeriodusNative bridge pattern but targets the separate
+ * `PeriodusNano` Capacitor plugin registered by GeminiNanoPlugin.java.
  *
  * All calls are no-ops when the plugin is unavailable (web build, unsupported
  * device). The status check always resolves — it never rejects.
@@ -15,13 +15,13 @@ import { isNative, nativePlatform } from './runtime'
 // Plugin interface
 // ---------------------------------------------------------------------------
 
-interface LunaraNanoPlugin {
+interface PeriodusNanoPlugin {
   geminiNanoStatus(): Promise<GeminiNanoStatus>
   geminiNanoDownload(): Promise<{ started: boolean }>
   geminiNanoInfer(options: { prompt: string }): Promise<{ text: string }>
 }
 
-const nanoPlugin = registerPlugin<LunaraNanoPlugin>('LunaraNano')
+const nanoPlugin = registerPlugin<PeriodusNanoPlugin>('PeriodusNano')
 
 // ---------------------------------------------------------------------------
 // Public types

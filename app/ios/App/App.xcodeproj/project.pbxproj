@@ -15,10 +15,10 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
-		A81000012DB1000000000001 /* LunaraNativePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81000022DB1000000000001 /* LunaraNativePlugin.swift */; };
-		A81000032DB1000000000001 /* LunaraBridgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81000042DB1000000000001 /* LunaraBridgeViewController.swift */; };
-		B82000012DB2000000000001 /* LunaraCycleWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82000022DB2000000000001 /* LunaraCycleWidget.swift */; };
-		B82000062DB2000000000001 /* LunaraWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B82000052DB2000000000001 /* LunaraWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A81000012DB1000000000001 /* PeriodusNativePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81000022DB1000000000001 /* PeriodusNativePlugin.swift */; };
+		A81000032DB1000000000001 /* PeriodusBridgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81000042DB1000000000001 /* PeriodusBridgeViewController.swift */; };
+		B82000012DB2000000000001 /* PeriodusCycleWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82000022DB2000000000001 /* PeriodusCycleWidget.swift */; };
+		B82000062DB2000000000001 /* PeriodusWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B82000052DB2000000000001 /* PeriodusWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,7 +27,7 @@
 			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B820000B2DB2000000000001;
-			remoteInfo = LunaraWidgetExtension;
+			remoteInfo = PeriodusWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -38,7 +38,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				B82000062DB2000000000001 /* LunaraWidgetExtension.appex in Embed App Extensions */,
+				B82000062DB2000000000001 /* PeriodusWidgetExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,13 +56,13 @@
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
-		A81000022DB1000000000001 /* LunaraNativePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunaraNativePlugin.swift; sourceTree = "<group>"; };
-		A81000042DB1000000000001 /* LunaraBridgeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunaraBridgeViewController.swift; sourceTree = "<group>"; };
+		A81000022DB1000000000001 /* PeriodusNativePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodusNativePlugin.swift; sourceTree = "<group>"; };
+		A81000042DB1000000000001 /* PeriodusBridgeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodusBridgeViewController.swift; sourceTree = "<group>"; };
 		A81000052DB1000000000001 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
-		B82000022DB2000000000001 /* LunaraCycleWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunaraCycleWidget.swift; sourceTree = "<group>"; };
+		B82000022DB2000000000001 /* PeriodusCycleWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodusCycleWidget.swift; sourceTree = "<group>"; };
 		B82000032DB2000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B82000042DB2000000000001 /* LunaraWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LunaraWidgetExtension.entitlements; sourceTree = "<group>"; };
-		B82000052DB2000000000001 /* LunaraWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LunaraWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B82000042DB2000000000001 /* PeriodusWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PeriodusWidgetExtension.entitlements; sourceTree = "<group>"; };
+		B82000052DB2000000000001 /* PeriodusWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PeriodusWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +89,7 @@
 			children = (
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
-				B82000072DB2000000000001 /* LunaraWidgetExtension */,
+				B82000072DB2000000000001 /* PeriodusWidgetExtension */,
 				504EC3051FED79650016851F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,7 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				504EC3041FED79650016851F /* App.app */,
-				B82000052DB2000000000001 /* LunaraWidgetExtension.appex */,
+				B82000052DB2000000000001 /* PeriodusWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,8 +108,8 @@
 			children = (
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
-				A81000022DB1000000000001 /* LunaraNativePlugin.swift */,
-				A81000042DB1000000000001 /* LunaraBridgeViewController.swift */,
+				A81000022DB1000000000001 /* PeriodusNativePlugin.swift */,
+				A81000042DB1000000000001 /* PeriodusBridgeViewController.swift */,
 				A81000052DB1000000000001 /* App.entitlements */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
@@ -121,14 +121,14 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		B82000072DB2000000000001 /* LunaraWidgetExtension */ = {
+		B82000072DB2000000000001 /* PeriodusWidgetExtension */ = {
 			isa = PBXGroup;
 			children = (
-				B82000022DB2000000000001 /* LunaraCycleWidget.swift */,
+				B82000022DB2000000000001 /* PeriodusCycleWidget.swift */,
 				B82000032DB2000000000001 /* Info.plist */,
-				B82000042DB2000000000001 /* LunaraWidgetExtension.entitlements */,
+				B82000042DB2000000000001 /* PeriodusWidgetExtension.entitlements */,
 			);
-			path = LunaraWidgetExtension;
+			path = PeriodusWidgetExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,9 +156,9 @@
 			productReference = 504EC3041FED79650016851F /* App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B820000B2DB2000000000001 /* LunaraWidgetExtension */ = {
+		B820000B2DB2000000000001 /* PeriodusWidgetExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B820000E2DB2000000000001 /* Build configuration list for PBXNativeTarget "LunaraWidgetExtension" */;
+			buildConfigurationList = B820000E2DB2000000000001 /* Build configuration list for PBXNativeTarget "PeriodusWidgetExtension" */;
 			buildPhases = (
 				B82000082DB2000000000001 /* Sources */,
 				B82000092DB2000000000001 /* Frameworks */,
@@ -168,11 +168,11 @@
 			);
 			dependencies = (
 			);
-			name = LunaraWidgetExtension;
+			name = PeriodusWidgetExtension;
 			packageProductDependencies = (
 			);
-			productName = LunaraWidgetExtension;
-			productReference = B82000052DB2000000000001 /* LunaraWidgetExtension.appex */;
+			productName = PeriodusWidgetExtension;
+			productReference = B82000052DB2000000000001 /* PeriodusWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -217,7 +217,7 @@
 			projectRoot = "";
 			targets = (
 				504EC3031FED79650016851F /* App */,
-				B820000B2DB2000000000001 /* LunaraWidgetExtension */,
+				B820000B2DB2000000000001 /* PeriodusWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -251,8 +251,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
-				A81000012DB1000000000001 /* LunaraNativePlugin.swift in Sources */,
-				A81000032DB1000000000001 /* LunaraBridgeViewController.swift in Sources */,
+				A81000012DB1000000000001 /* PeriodusNativePlugin.swift in Sources */,
+				A81000032DB1000000000001 /* PeriodusBridgeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B82000012DB2000000000001 /* LunaraCycleWidget.swift in Sources */,
+				B82000012DB2000000000001 /* PeriodusCycleWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,7 +269,7 @@
 /* Begin PBXTargetDependency section */
 		B82000112DB2000000000001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B820000B2DB2000000000001 /* LunaraWidgetExtension */;
+			target = B820000B2DB2000000000001 /* PeriodusWidgetExtension */;
 			targetProxy = B82000102DB2000000000001 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -455,13 +455,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = LunaraWidgetExtension/LunaraWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = PeriodusWidgetExtension/PeriodusWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = R5R3ZS54LV;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = LunaraWidgetExtension/Info.plist;
+				INFOPLIST_FILE = PeriodusWidgetExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -483,13 +483,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = LunaraWidgetExtension/LunaraWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = PeriodusWidgetExtension/PeriodusWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R5R3ZS54LV;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = LunaraWidgetExtension/Info.plist;
+				INFOPLIST_FILE = PeriodusWidgetExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -528,7 +528,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B820000E2DB2000000000001 /* Build configuration list for PBXNativeTarget "LunaraWidgetExtension" */ = {
+		B820000E2DB2000000000001 /* Build configuration list for PBXNativeTarget "PeriodusWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B820000C2DB2000000000001 /* Debug */,

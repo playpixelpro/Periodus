@@ -28,7 +28,7 @@ import {
   setSecureSecret,
 } from '../native/secureVault'
 import { useApp } from '../state/appStore'
-import { LunaraMark } from './LunaraMark'
+import { PeriodusMark } from './PeriodusMark'
 import '../styles/assistant.css'
 
 const CONSENT_OPTIONS: Array<{
@@ -342,7 +342,7 @@ export function AssistantScreen() {
           ‹
         </button>
         <div className="assistant-title">
-          <LunaraMark decorative size={25} />
+          <PeriodusMark decorative size={25} />
           <span>
             <span className="assistant-kicker">Private companion</span>
             <h2>Periodus AI</h2>
@@ -364,7 +364,7 @@ export function AssistantScreen() {
 
       {loading ? (
         <div className="overlay-body assistant-loading">
-          <LunaraMark decorative size={30} />
+          <PeriodusMark decorative size={30} />
           <span>Preparing your private space…</span>
         </div>
       ) : setupOpen ? (
@@ -659,7 +659,7 @@ export function AssistantScreen() {
               aria-controls="assistant-consent-options"
             >
               <span className="assistant-context-mark" aria-hidden="true">
-                <LunaraMark decorative size={18} />
+                <PeriodusMark decorative size={18} />
               </span>
               <span className="assistant-context-copy">
                 <strong>Tracker context</strong>
@@ -716,7 +716,7 @@ export function AssistantScreen() {
               <div className="assistant-empty">
                 <div className="assistant-orb" aria-hidden="true">
                   <span />
-                  <LunaraMark decorative size={38} />
+                  <PeriodusMark decorative size={38} />
                 </div>
                 <span className="assistant-empty-kicker">Private by design</span>
                 <h3>What would you like to understand?</h3>
@@ -740,7 +740,7 @@ export function AssistantScreen() {
               <div key={index} className={`chat-bubble ${message.role}`}>
                 {message.role === 'assistant' && (
                   <span className="chat-bubble-mark" aria-hidden="true">
-                    <LunaraMark decorative size={14} />
+                    <PeriodusMark decorative size={14} />
                   </span>
                 )}
                 <span>{message.content}</span>
@@ -749,7 +749,7 @@ export function AssistantScreen() {
             {busy && (
               <div className="chat-bubble assistant typing" aria-label="Periodus is thinking">
                 <span className="chat-bubble-mark" aria-hidden="true">
-                  <LunaraMark decorative size={14} />
+                  <PeriodusMark decorative size={14} />
                 </span>
                 <span>Thinking</span>
                 <i /><i /><i />

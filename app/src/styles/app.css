@@ -90,7 +90,7 @@
   border-radius: 18px;
 }
 
-.startup-failure-mark .lunara-crescent {
+.startup-failure-mark .periodus-crescent {
   color: var(--rose-700);
 }
 
@@ -358,6 +358,12 @@ button.card:active {
   border-color: var(--tertiary);
 }
 
+.chip.rose[aria-pressed='true'] {
+  color: var(--on-primary-container);
+  background: var(--primary-container);
+  border-color: var(--primary-container);
+}
+
 .log-group {
   position: relative;
   padding: 16px;
@@ -568,6 +574,13 @@ button.card:active {
 .cal-day.period {
   background: var(--primary-container);
   color: var(--on-primary-container);
+  font-weight: 700;
+}
+
+.cal-day.period-expected {
+  background: rgba(238, 195, 94, 0.22);
+  color: var(--primary);
+  border: 1.5px dashed var(--primary-container);
   font-weight: 700;
 }
 
@@ -1229,9 +1242,9 @@ button.card:active {
 
 .cycle-ring-progress {
   fill: none;
-  stroke: url('#lunara-cycle-gradient');
+  stroke: url('#periodus-cycle-gradient');
   stroke-linecap: round;
-  filter: url('#lunara-ring-glow');
+  filter: url('#periodus-ring-glow');
   transition: stroke-dashoffset 900ms var(--ease-out);
 }
 

@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie'
-import { detectBbtShiftEstimates } from '../engine/cycle'
+import { addDays, daysBetween, detectBbtShiftEstimates } from '../engine/cycle'
 import type { PregnancyDatingMethod } from '../engine/pregnancyDating'
 import type { MissedDoseEvent, RegimenRecord } from './regimen'
 
@@ -250,8 +250,10 @@ export interface DailyLog {
   /** Explicit coverage marker; a missing marker never means “nothing happened.” */
   checkInComplete?: boolean
   flow?: Flow
-  /** Explicit start marker supplied by an imported health record. */
+  /** Explicit start marker supplied by an imported health record or user check-in. */
   periodStart?: boolean
+  /** Explicit end marker indicating the period concluded on this date. */
+  periodEnd?: boolean
   symptoms?: string[]
   /** Optional per-symptom detail; selections remain valid without a rating. */
   symptomRatings?: Record<string, SymptomRating>
@@ -306,7 +308,10 @@ export function clearHealthImportProvenance(
 ): DailyLog {
   const fieldList = Array.isArray(fields) ? fields : [fields]
   const next = { ...log }
-  if (fieldList.includes('flow')) delete next.periodStart
+  if (fieldList.includes('flow')) {
+    delete next.periodStart
+    delete next.periodEnd
+  }
   if (!log.healthImports) return next
   const nextImports = { ...log.healthImports }
   for (const field of fieldList) {
@@ -322,6 +327,8 @@ export function dailyLogHasEntry(log: DailyLog): boolean {
   return Boolean(
     log.checkInComplete ||
       log.flow ||
+      log.periodStart ||
+      log.periodEnd ||
       log.symptoms?.length ||
       Object.keys(log.symptomRatings ?? {}).length ||
       log.moods?.length ||
@@ -377,7 +384,7 @@ export interface GeneratedArticle {
   createdAt: string
 }
 
-export class LunaraDB extends Dexie {
+export class PeriodusDB extends Dexie {
   dailyLogs!: Table<DailyLog, string>
   cycles!: Table<Cycle, string>
   settings!: Table<Setting, string>
@@ -400,7 +407,7 @@ export class LunaraDB extends Dexie {
   generatedArticles!: Table<GeneratedArticle, string>
 
   constructor() {
-    super('lunara')
+    super('periodus')
     this.version(1).stores({
       dailyLogs: 'date',
       cycles: 'startDate',
@@ -447,14 +454,16 @@ export class LunaraDB extends Dexie {
   }
 }
 
-export const db = new LunaraDB()
+export const db = new PeriodusDB()
 
 /**
  * Period starts for the engine: first day of each run of consecutive
- * flow-logged days.
+ * flow-logged days or explicit periodStart.
  */
 export async function getPeriodStarts(): Promise<string[]> {
-  const flowLogs = await db.dailyLogs.filter((l) => l.flow !== undefined).toArray()
+  const flowLogs = await db.dailyLogs
+    .filter((l) => l.flow !== undefined || l.periodStart === true)
+    .toArray()
   flowLogs.sort((a, b) => a.date.localeCompare(b.date))
   const starts: string[] = []
   let prevEpoch = Number.NEGATIVE_INFINITY
@@ -466,6 +475,165 @@ export async function getPeriodStarts(): Promise<string[]> {
     prevEpoch = epoch
   }
   return [...new Set(starts)]
+}
+
+export interface PeriodSpan {
+  startDate: string
+  endDate: string
+  isConfirmedEnd: boolean
+  dates: string[]
+}
+
+/**
+ * Derives menstruation spans from daily logs and configured period length.
+ *
+ * For each period start:
+ * - If an explicit periodEnd is found before the next start, the span is confirmed: [start, end].
+ * - If no explicit periodEnd is found, the span uses the typical period length
+ *   given by the user: [start, start + typicalPeriodLength - 1] (or extends to any
+ *   logged flow days beyond that length).
+ */
+export function calculatePeriodSpans(
+  logs: DailyLog[],
+  typicalPeriodLength = 5,
+  extraStarts: string[] = [],
+): PeriodSpan[] {
+  const sortedLogs = [...logs].sort((a, b) => a.date.localeCompare(b.date))
+  const periodEndSet = new Set(
+    sortedLogs.filter((l) => l.periodEnd === true).map((l) => l.date),
+  )
+
+  // 1. Identify period starts
+  const starts: string[] = []
+  let activeStart: string | null = null
+  let activeEnd: string | null = null
+  let prevFlowEpoch = Number.NEGATIVE_INFINITY
+
+  for (const log of sortedLogs) {
+    const isStart = Boolean(log.periodStart)
+    const isEnd = Boolean(log.periodEnd)
+    const hasFlow = log.flow !== undefined
+
+    if (!isStart && !isEnd && !hasFlow) continue
+
+    const [y, m, day] = log.date.split('-').map(Number)
+    const epoch = Date.UTC(y, m - 1, day) / 86_400_000
+
+    if (isStart) {
+      starts.push(log.date)
+      activeStart = log.date
+      activeEnd = isEnd ? log.date : null
+      prevFlowEpoch = epoch
+      continue
+    }
+
+    if (activeStart) {
+      const diffFromStart = daysBetween(activeStart, log.date)
+
+      if (isEnd && diffFromStart <= 20) {
+        activeEnd = log.date
+        activeStart = null
+        prevFlowEpoch = epoch
+        continue
+      }
+
+      if (!activeEnd && diffFromStart <= 20) {
+        if (hasFlow && epoch - prevFlowEpoch <= 1) {
+          prevFlowEpoch = epoch
+          continue
+        }
+        const hasClosingEnd = [...periodEndSet].some(
+          (d) => d >= log.date && daysBetween(activeStart!, d) <= 20,
+        )
+        if (hasClosingEnd) {
+          prevFlowEpoch = epoch
+          continue
+        }
+      }
+    }
+
+    if (hasFlow && (epoch - prevFlowEpoch > 1 || !activeStart)) {
+      starts.push(log.date)
+      activeStart = log.date
+      activeEnd = isEnd ? log.date : null
+    }
+    prevFlowEpoch = epoch
+  }
+
+  for (const extra of extraStarts) {
+    if (extra && !starts.includes(extra)) starts.push(extra)
+  }
+  starts.sort()
+
+  // 2. Build spans for each start
+  const spans: PeriodSpan[] = []
+  for (let i = 0; i < starts.length; i++) {
+    const start = starts[i]
+    const nextStart = starts[i + 1]
+
+    let explicitEnd: string | undefined
+    for (const endDate of periodEndSet) {
+      if (endDate >= start && (!nextStart || endDate < nextStart) && daysBetween(start, endDate) <= 25) {
+        if (!explicitEnd || endDate < explicitEnd) {
+          explicitEnd = endDate
+        }
+      }
+    }
+
+    if (explicitEnd) {
+      const spanDates: string[] = []
+      const count = daysBetween(start, explicitEnd)
+      for (let d = 0; d <= count; d++) {
+        spanDates.push(addDays(start, d))
+      }
+      spans.push({
+        startDate: start,
+        endDate: explicitEnd,
+        isConfirmedEnd: true,
+        dates: spanDates,
+      })
+    } else {
+      let lastFlowDate = start
+      const flowDaysInCycle = sortedLogs
+        .filter((l) => l.flow !== undefined && l.date >= start && (!nextStart || l.date < nextStart))
+        .map((l) => l.date)
+        .sort()
+
+      for (const fd of flowDaysInCycle) {
+        if (daysBetween(lastFlowDate, fd) <= 1) {
+          lastFlowDate = fd
+        }
+      }
+
+      const lengthInDays = Math.max(1, typicalPeriodLength)
+      const projectedEnd = addDays(start, lengthInDays - 1)
+      const endDate = lastFlowDate > projectedEnd ? lastFlowDate : projectedEnd
+
+      const spanDates: string[] = []
+      const count = daysBetween(start, endDate)
+      for (let d = 0; d <= count; d++) {
+        spanDates.push(addDays(start, d))
+      }
+      spans.push({
+        startDate: start,
+        endDate,
+        isConfirmedEnd: false,
+        dates: spanDates,
+      })
+    }
+  }
+
+  return spans
+}
+
+export async function getPeriodSpans(): Promise<PeriodSpan[]> {
+  const [logs, profile] = await Promise.all([
+    db.dailyLogs.toArray(),
+    getHealthProfile(),
+  ])
+  const typicalPeriodLength = profile.cycle.typicalPeriodLength ?? 5
+  const extraStarts = profile.cycle.lastPeriodStart ? [profile.cycle.lastPeriodStart] : []
+  return calculatePeriodSpans(logs, typicalPeriodLength, extraStarts)
 }
 
 export async function getOvulations(): Promise<string[]> {

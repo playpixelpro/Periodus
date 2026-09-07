@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useState } from 'react'
 import { DateStrip } from '../components/DateStrip'
-import { LunaraMark } from '../components/LunaraMark'
+import { PeriodusMark } from '../components/PeriodusMark'
 import { ARTICLES, type Article } from '../content/articles'
 import { PREGNANCY_WEEKS } from '../content/pregnancyWeeks'
 import {
@@ -967,11 +967,11 @@ function Header({
     <header className="today-header">
       <button
         type="button"
-        className="lunara-brand-button"
+        className="periodus-brand-button"
         onClick={() => setTab('settings')}
         aria-label="Open settings"
       >
-        <LunaraMark decorative />
+        <PeriodusMark decorative />
       </button>
       <div className="today-heading">
         <span>{relativeLabel}</span>

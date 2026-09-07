@@ -20,7 +20,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
  * - On unsupported devices or older Android versions: gracefully reports 'not-supported'.
  * - When AICore system package is present: checks model readiness and manages execution.
  */
-@CapacitorPlugin(name = "LunaraNano")
+@CapacitorPlugin(name = "PeriodusNano")
 public class GeminiNanoPlugin extends Plugin {
 
     private static final String AICORE_PACKAGE = "com.google.android.aicore";

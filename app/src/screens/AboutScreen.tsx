@@ -1,6 +1,6 @@
 import { Browser } from '@capacitor/browser'
 import { Capacitor } from '@capacitor/core'
-import { LunaraMark } from '../components/LunaraMark'
+import { PeriodusMark } from '../components/PeriodusMark'
 import { APP_VERSION } from '../lib/version'
 import '../styles/health.css'
 
@@ -89,7 +89,7 @@ export function AboutScreen({ onBack }: AboutScreenProps) {
                 boxShadow: '0 0 30px rgba(238, 195, 94, 0.15)',
               }}
             >
-              <LunaraMark size={48} decorative />
+              <PeriodusMark size={48} decorative />
             </div>
 
             <div>
@@ -348,7 +348,7 @@ export function AboutScreen({ onBack }: AboutScreenProps) {
           {/* Disclaimer & Attribution */}
           <footer style={{ marginTop: 24, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <p style={{ margin: 0, fontSize: 11, lineHeight: 1.5, color: 'rgba(216, 197, 178, 0.65)' }}>
-              Periodus is an independent hard fork of Lunara. Not affiliated with or endorsed by Flo Health Inc.
+              Periodus is an independent cycle and health companion. Not affiliated with or endorsed by Flo Health Inc.
             </p>
             <p style={{ margin: 0, fontSize: 11, lineHeight: 1.5, color: 'rgba(216, 197, 178, 0.5)' }}>
               Periodus is not a medical device. Predictions are statistical estimates and not contraception or medical diagnosis.

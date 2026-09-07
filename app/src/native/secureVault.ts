@@ -1,8 +1,8 @@
 import { Preferences } from '@capacitor/preferences'
-import { getLunaraNativeBridge } from './bridge'
+import { getPeriodusNativeBridge } from './bridge'
 import { isNative, nativePlatform } from './runtime'
 
-interface LunaraNativeVaultPlugin {
+interface PeriodusNativeVaultPlugin {
   secureVaultStatus(): Promise<NativeVaultStatus>
   secureSet(options: { key: string; value: string }): Promise<void>
   secureGet(options: { key: string }): Promise<{ value: string | null }>
@@ -30,8 +30,8 @@ export const SECURE_SECRET_KEYS = {
   customAiApiKey: 'custom-ai-api-key',
 } as const
 
-const LunaraNative = getLunaraNativeBridge<LunaraNativeVaultPlugin>()
-const VAULT_STORAGE_PREFIX = 'lunara_secure_vault_'
+const PeriodusNative = getPeriodusNativeBridge<PeriodusNativeVaultPlugin>()
+const VAULT_STORAGE_PREFIX = 'periodus_secure_vault_'
 const memorySecrets = new Map<string, string>()
 
 function assertValidKey(key: string): void {
@@ -51,7 +51,7 @@ export async function secureVaultStatus(): Promise<SecureVaultStatus> {
   }
 
   try {
-    return await LunaraNative.secureVaultStatus()
+    return await PeriodusNative.secureVaultStatus()
   } catch {
     return {
       available: true,
@@ -84,10 +84,10 @@ export async function setSecureSecret(key: string, value: string): Promise<void>
     }
   }
 
-  // 3. Persist to LunaraNative hardware-backed vault if available
+  // 3. Persist to PeriodusNative hardware-backed vault if available
   if (isNative) {
     try {
-      await LunaraNative.secureSet({ key, value })
+      await PeriodusNative.secureSet({ key, value })
     } catch {
       // ignore
     }
@@ -100,7 +100,7 @@ export async function getSecureSecret(key: string): Promise<string | null> {
   // 1. Try hardware-backed native vault if on native device
   if (isNative) {
     try {
-      const nativeVal = (await LunaraNative.secureGet({ key })).value
+      const nativeVal = (await PeriodusNative.secureGet({ key })).value
       if (nativeVal) {
         memorySecrets.set(key, nativeVal)
         return nativeVal
@@ -158,7 +158,7 @@ export async function deleteSecureSecret(key: string): Promise<void> {
 
   if (isNative) {
     try {
-      await LunaraNative.secureDelete({ key })
+      await PeriodusNative.secureDelete({ key })
     } catch {
       // ignore
     }
@@ -173,7 +173,7 @@ export async function clearSecureSecrets(): Promise<void> {
 
   if (isNative) {
     try {
-      await LunaraNative.secureClear()
+      await PeriodusNative.secureClear()
     } catch {
       // ignore
     }

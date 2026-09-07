@@ -9,8 +9,8 @@ var APPLE_ASSOCIATION_PATHS = /* @__PURE__ */ new Set([
 ]);
 var ANDROID_ASSOCIATION_PATH = "/.well-known/assetlinks.json";
 var DEFAULT_APPLE_TEAM_ID = "R5R3ZS54LV";
-var DEFAULT_APPLE_BUNDLE_ID = "app.lunara.mobile";
-var DEFAULT_ANDROID_PACKAGE_NAME = "app.lunara.mobile";
+var DEFAULT_APPLE_BUNDLE_ID = "app.Periodus.mobile";
+var DEFAULT_ANDROID_PACKAGE_NAME = "app.Periodus.mobile";
 var JSON_HEADERS = {
   "content-type": "application/json",
   "x-content-type-options": "nosniff"
@@ -79,7 +79,7 @@ function buildAppleAssociation(env = {}) {
           components: [
             {
               "/": CALLBACK_PATH,
-              comment: "Open the OpenRouter OAuth callback in Lunara"
+              comment: "Open the OpenRouter OAuth callback in Periodus"
             }
           ]
         }
@@ -197,7 +197,7 @@ function callbackHTML(nonce) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>Return to Lunara</title>
+  <title>Return to Periodus</title>
   <style nonce="${nonce}">
     :root {
       color-scheme: light;
@@ -280,9 +280,9 @@ function callbackHTML(nonce) {
 <body>
   <main>
     <div class="moon" aria-hidden="true"></div>
-    <h1>Return to Lunara</h1>
+    <h1>Return to Periodus</h1>
     <p id="message">Your OpenRouter connection is ready to finish in the app.</p>
-    <button id="open-app" type="button">Open Lunara</button>
+    <button id="open-app" type="button">Open Periodus</button>
     <small>This page never sees or stores your OpenRouter API key.</small>
   </main>
   <script nonce="${nonce}">
@@ -317,13 +317,13 @@ function callbackHTML(nonce) {
       if (!hasOAuthResponse) {
         button.disabled = true;
         message.textContent =
-          'This callback is incomplete. Return to Lunara and start the connection again.';
+          'This callback is incomplete. Return to Periodus and start the connection again.';
         return;
       }
 
       button.addEventListener('click', () => {
         window.location.assign(
-          'lunara://openrouter/callback?' + forwarded.toString()
+          'Periodus://openrouter/callback?' + forwarded.toString()
         );
       });
     })();

@@ -3,7 +3,9 @@ import { useState } from 'react'
 import {
   clearHealthImportProvenance,
   db,
+  getHealthProfile,
   getOvulations,
+  getPeriodSpans,
   getPeriodStarts,
   getSetting,
   SK,
@@ -21,18 +23,27 @@ function iso(y: number, m: number, d: number): string {
 function dayClass(
   date: string,
   today: string,
-  logged: Set<string>,
+  confirmedPeriod: Set<string>,
+  expectedPeriod: Set<string>,
   prediction: Prediction | null,
   avgPeriodDays: number,
 ): string {
   const cls: string[] = ['cal-day']
-  if (logged.has(date)) cls.push('period')
-  else if (prediction?.nextPeriodStart) {
+  if (confirmedPeriod.has(date)) {
+    cls.push('period')
+  } else if (expectedPeriod.has(date)) {
+    cls.push('period-expected')
+  } else if (prediction?.nextPeriodStart) {
     const e = toEpochDay(date)
     const start = toEpochDay(prediction.nextPeriodStart)
     if (e >= start && e < start + avgPeriodDays) cls.push('predicted')
   }
-  if (!cls.includes('period') && !cls.includes('predicted') && prediction?.fertileWindow) {
+  if (
+    !cls.includes('period') &&
+    !cls.includes('period-expected') &&
+    !cls.includes('predicted') &&
+    prediction?.fertileWindow
+  ) {
     const e = toEpochDay(date)
     if (prediction.ovulationDate === date) cls.push('ovulation')
     else if (
@@ -54,18 +65,39 @@ export function CalendarScreen() {
   const [editingPeriods, setEditingPeriods] = useState(false)
 
   const data = useLiveQuery(async () => {
-    const [periodStarts, ovulations, flowLogs, cycleLength] = await Promise.all([
+    const [periodStarts, ovulations, flowLogs, cycleLength, profile, spans] = await Promise.all([
       getPeriodStarts(),
       getOvulations(),
       db.dailyLogs.filter((l) => l.flow !== undefined).primaryKeys(),
       getSetting(SK.cycleLength),
+      getHealthProfile(),
+      getPeriodSpans(),
     ])
+
+    const confirmed = new Set<string>(flowLogs)
+    const expected = new Set<string>()
+
+    for (const span of spans) {
+      if (span.isConfirmedEnd) {
+        for (const d of span.dates) confirmed.add(d)
+      } else {
+        for (const d of span.dates) {
+          if (confirmed.has(d)) continue
+          expected.add(d)
+        }
+      }
+    }
+
+    const typicalPeriodLength = profile.cycle.typicalPeriodLength ?? 5
+
     return {
       prediction: predict(
         { periodStarts, ovulations, today },
         { baselineCycleLength: Number(cycleLength) || undefined },
       ),
-      logged: new Set(flowLogs),
+      confirmedPeriod: confirmed,
+      expectedPeriod: expected,
+      typicalPeriodLength,
     }
   }, [today])
 
@@ -174,8 +206,13 @@ export function CalendarScreen() {
                     {Array.from({ length: miniLead }).map((_, index) => <i key={`b-${index}`} />)}
                     {Array.from({ length: miniDays }).map((_, index) => {
                       const date = iso(view.year, month, index + 1)
-                      const logged = data?.logged.has(date)
-                      return <i key={date} className={logged ? 'logged' : ''}>{index + 1}</i>
+                      const isPeriod =
+                        data?.confirmedPeriod.has(date) || data?.expectedPeriod.has(date)
+                      return (
+                        <i key={date} className={isPeriod ? 'logged' : ''}>
+                          {index + 1}
+                        </i>
+                      )
                     })}
                   </span>
                 </button>
@@ -196,7 +233,14 @@ export function CalendarScreen() {
                 return (
                   <button
                     key={date}
-                    className={dayClass(date, today, data?.logged ?? new Set(), data?.prediction ?? null, 5)}
+                    className={dayClass(
+                      date,
+                      today,
+                      data?.confirmedPeriod ?? new Set(),
+                      data?.expectedPeriod ?? new Set(),
+                      data?.prediction ?? null,
+                      data?.typicalPeriodLength ?? 5,
+                    )}
                     onClick={() => openDate(date)}
                   >
                     {index + 1}
@@ -211,6 +255,10 @@ export function CalendarScreen() {
           <div className="row">
             <span className="cal-day period" style={{ width: 26, maxHeight: 26, aspectRatio: '1' }} />
             <span className="muted">Logged period</span>
+          </div>
+          <div className="row">
+            <span className="cal-day period-expected" style={{ width: 26, maxHeight: 26, aspectRatio: '1' }} />
+            <span className="muted">Expected period (based on your length)</span>
           </div>
           <div className="row">
             <span className="cal-day predicted" style={{ width: 26, maxHeight: 26, aspectRatio: '1' }} />

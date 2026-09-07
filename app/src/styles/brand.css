@@ -1,11 +1,11 @@
-.lunara-crescent {
+.periodus-crescent {
   display: block;
   flex: 0 0 auto;
   color: var(--rose-600);
   overflow: visible;
 }
 
-.lunara-brand-button {
+.periodus-brand-button {
   width: 42px;
   height: 42px;
   display: grid;
@@ -23,19 +23,19 @@
     box-shadow 160ms var(--ease-soft);
 }
 
-.lunara-brand-button .lunara-crescent {
+.periodus-brand-button .periodus-crescent {
   width: 24px;
   height: 24px;
 }
 
-.lunara-brand-button:active {
+.periodus-brand-button:active {
   color: var(--rose-700);
   transform: scale(0.94);
   box-shadow: 0 3px 10px rgba(184, 62, 88, 0.08);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lunara-brand-button {
+  .periodus-brand-button {
     transition: none;
   }
 }

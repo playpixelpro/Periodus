@@ -3,7 +3,7 @@
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/lunara_widget_background"
+    android:background="@drawable/periodus_widget_background"
     android:contentDescription="@string/widget_description"
     android:gravity="bottom"
     android:orientation="vertical"

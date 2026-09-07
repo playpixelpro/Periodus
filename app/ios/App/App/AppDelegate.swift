@@ -72,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         task.expirationHandler = {}
 
         // The native task can safely refresh the last redacted snapshot without
-        // launching the WebView or reading Lunara's private cycle database.
+        // launching the WebView or reading Periodus's private cycle database.
         WidgetCenter.shared.reloadAllTimelines()
         task.setTaskCompleted(success: true)
     }

@@ -1,4 +1,4 @@
-import { getLunaraNativeBridge } from './bridge'
+import { getPeriodusNativeBridge } from './bridge'
 import { isNative, nativePlatform } from './runtime'
 
 export const SUPPORTED_HEALTH_DATA_TYPES = [
@@ -51,7 +51,7 @@ export interface HealthImportOptions {
   types?: HealthDataType[]
 }
 
-interface LunaraNativeHealthPlugin {
+interface PeriodusNativeHealthPlugin {
   healthStatus(): Promise<HealthPlatformStatus>
   requestHealthAccess(options: { types: HealthDataType[] }): Promise<HealthPlatformStatus>
   importHealthData(options: {
@@ -61,7 +61,7 @@ interface LunaraNativeHealthPlugin {
   }): Promise<{ samples: HealthSample[] }>
 }
 
-const LunaraNative = getLunaraNativeBridge<LunaraNativeHealthPlugin>()
+const PeriodusNative = getPeriodusNativeBridge<PeriodusNativeHealthPlugin>()
 
 function normalizeTypes(types?: HealthDataType[]): HealthDataType[] {
   if (!types?.length) return [...SUPPORTED_HEALTH_DATA_TYPES]
@@ -85,14 +85,14 @@ export async function getHealthPlatformStatus(): Promise<HealthPlatformStatus> {
     }
   }
 
-  return LunaraNative.healthStatus()
+  return PeriodusNative.healthStatus()
 }
 
 export async function requestHealthAccess(
   types?: HealthDataType[],
 ): Promise<HealthPlatformStatus> {
   if (!isNative) return getHealthPlatformStatus()
-  return LunaraNative.requestHealthAccess({ types: normalizeTypes(types) })
+  return PeriodusNative.requestHealthAccess({ types: normalizeTypes(types) })
 }
 
 export async function importHealthData(options: HealthImportOptions): Promise<HealthSample[]> {
@@ -104,7 +104,7 @@ export async function importHealthData(options: HealthImportOptions): Promise<He
   }
   if (!isNative) return []
 
-  const result = await LunaraNative.importHealthData({
+  const result = await PeriodusNative.importHealthData({
     types: normalizeTypes(options.types),
     startDate: options.startDate,
     endDate: options.endDate,

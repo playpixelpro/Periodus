@@ -1,5 +1,5 @@
 import { Children, isValidElement, type ReactNode, useMemo, useState } from 'react'
-import { LunaraMark } from '../components/LunaraMark'
+import { PeriodusMark } from '../components/PeriodusMark'
 import {
   createDefaultHealthProfile,
   db,
@@ -272,8 +272,8 @@ function Frame({
           {showProgress && onBack
             ? <button type="button" className="back-btn" onClick={onBack} aria-label="Go back">‹</button>
             : <span className="ob-appbar-spacer" aria-hidden="true" />}
-          <div className="lunara-brand-button ob-appbar-mark" aria-label="Periodus">
-            <LunaraMark decorative size={24} />
+          <div className="periodus-brand-button ob-appbar-mark" aria-label="Periodus">
+            <PeriodusMark decorative size={24} />
           </div>
           {showProgress && onSkip
             ? <button type="button" className="ob-skip" onClick={onSkip}>Skip</button>
@@ -305,7 +305,7 @@ function Frame({
 
 function CrescentMark({ quiet = false }: { quiet?: boolean }) {
   return (
-    <LunaraMark
+    <PeriodusMark
       className={`ob-crescent-mark ${quiet ? 'quiet' : ''}`}
       decorative
       size={64}
@@ -979,7 +979,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
         {nativePlatform === 'ios' && (
           <section className="ob-health-import" aria-labelledby="apple-health-import-title">
             <div className="ob-health-import-icon" aria-hidden="true">
-              <LunaraMark decorative size={28} />
+              <PeriodusMark decorative size={28} />
             </div>
             <div className="ob-health-import-copy">
               <span className="eyebrow">Optional shortcut</span>

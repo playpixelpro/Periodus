@@ -1,12 +1,12 @@
 /**
- * HTTPS landing point for Lunara's OpenRouter OAuth callback.
+ * HTTPS landing point for Periodus's OpenRouter OAuth callback.
  *
  * This Worker deliberately does not call OpenRouter, exchange authorization
  * codes, receive API keys, store credentials, set cookies, or emit analytics.
  * A verified Universal/App Link opens the native app before this page is
  * requested. If link verification is unavailable, the static fallback offers
  * one explicit button that copies a small allowlist of OAuth response fields
- * into Lunara's custom scheme entirely in the browser.
+ * into Periodus's custom scheme entirely in the browser.
  */
 
 const CALLBACK_PATH = '/auth/openrouter'
@@ -94,7 +94,7 @@ export function buildAppleAssociation(env = {}) {
           components: [
             {
               '/': CALLBACK_PATH,
-              comment: 'Open the OpenRouter OAuth callback in Lunara',
+              comment: 'Open the OpenRouter OAuth callback in Periodus',
             },
           ],
         },
@@ -146,7 +146,7 @@ function callbackResponse() {
     'cross-origin-opener-policy': 'same-origin',
     'cross-origin-resource-policy': 'same-origin',
     expires: '0',
-    'x-lunara-openrouter-callback': 'v1',
+    'x-periodus-openrouter-callback': 'v1',
     'permissions-policy':
       'camera=(), geolocation=(), microphone=(), payment=(), usb=()',
     pragma: 'no-cache',
@@ -225,7 +225,7 @@ function callbackHTML(nonce) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>Return to Lunara</title>
+  <title>Return to Periodus</title>
   <style nonce="${nonce}">
     :root {
       color-scheme: light;
@@ -308,9 +308,9 @@ function callbackHTML(nonce) {
 <body>
   <main>
     <div class="moon" aria-hidden="true"></div>
-    <h1>Return to Lunara</h1>
+    <h1>Return to Periodus</h1>
     <p id="message">Your OpenRouter connection is ready to finish in the app.</p>
-    <button id="open-app" type="button">Open Lunara</button>
+    <button id="open-app" type="button">Open Periodus</button>
     <small>This page never sees or stores your OpenRouter API key.</small>
   </main>
   <script nonce="${nonce}">
@@ -345,13 +345,13 @@ function callbackHTML(nonce) {
       if (!hasOAuthResponse) {
         button.disabled = true;
         message.textContent =
-          'This callback is incomplete. Return to Lunara and start the connection again.';
+          'This callback is incomplete. Return to Periodus and start the connection again.';
         return;
       }
 
       button.addEventListener('click', () => {
         window.location.assign(
-          'lunara://openrouter/callback?' + forwarded.toString()
+          'periodus://openrouter/callback?' + forwarded.toString()
         );
       });
     })();
